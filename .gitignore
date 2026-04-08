@@ -1,0 +1,88 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+ 
+# C extensions
+*.so
+ 
+# Distribution / packaging
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+ 
+# PyPI / packaging artifacts
+*.tar.gz
+*.whl
+ 
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+ 
+# Environment variables
+.env
+.env.*
+ 
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+ 
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+ 
+# Testing / coverage
+.coverage
+.coverage.*
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+ 
+# Type checkers
+.mypy_cache/
+.pyre/
+ 
+# OS files
+.DS_Store
+Thumbs.db
+ 
+# Logs
+*.log
+ 
+# Temporary files
+*.tmp
+*.temp
+ 
+# Local config
+local_settings.py
+ 
+# SQLite / local DB files
+*.db
+*.sqlite3
+ 
+# Ignore test outputs
+htmlcov/
+ 
+# Ignore build artifacts from tools
+*.manifest
+*.spec
+
+pyproject.toml
