@@ -1,43 +1,31 @@
-# Owl Mix
+# 🦉 Owl Mix
  
-**Owl Mix** is a flexible and modular Python pipeline designed for data transformation and exploratory data analysis (EDA), with a strong focus on **Marketing Mix Modeling (MMM)** workflows.
+**Owl Mix** is a Python package designed for **data transformation and exploratory data analysis (EDA)**, specifically tailored for **Marketing Mix Modeling (MMM)** workflows.
  
-It helps practitioners efficiently **explore, analyze, and transform data before model building**, making it particularly useful in MMM use cases where feature engineering plays a critical role.
- 
----
- 
-## 🚀 Features
- 
-- 📊 Built for **MMM data preparation and exploration**
-- 📉 Lag feature generation
-- 🔁 Adstock transformations (capture media carryover effects)
-- 📈 Saturation transformations for diminishing returns:
-  - Hill
-  - Logarithmic
-  - Exponential
-- 🧹 Final cleanup utilities:
-  - Drop NA values
-  - Reset index
-- 🧱 Modular and extensible pipeline design
+It helps data scientists and analysts:
+- Transform raw marketing data into model-ready features
+- Perform structured exploratory analysis
+- Understand relationships between media variables and target outcomes
  
 ---
  
-## 🎯 Use Case
+## 🚀 Key Features
  
-**Owl Mix** is especially helpful for:
+### 🔄 Transformations (MMM-ready)
+- Lag creation
+- Adstock (carryover effects)
+- Saturation (diminishing returns)
+- Pipeline-based transformation workflow
  
-- Marketing Mix Modeling (MMM)
-- Pre-model data transformation
-- Exploratory Data Analysis (EDA)
-- Time series feature engineering
-- Preparing datasets for regression or machine learning models
+### 📊 Exploratory Data Analysis
+- Dataset summary (missing values, types, stats)
+- Correlation analysis
+- Lag correlation with target variable
+- Exportable text reports
  
-In MMM workflows, it is commonly used to:
- 
-- Analyze trends and patterns in marketing data  
-- Transform raw variables into model-ready features  
-- Apply domain-specific transformations like **adstock and saturation**  
-- Clean and finalize datasets before model training  
+### 🧱 Modular Design
+- Clean and extensible architecture
+- Easily add custom transformations and EDA components
  
 ---
  
@@ -47,119 +35,57 @@ In MMM workflows, it is commonly used to:
 pip install owl-mix
 ```
  
-Or install locally:
+Then import in Python:
  
-```bash
-pip install -e .
+```python
+import owlmix
 ```
  
 ---
  
-## 🧠 Core Transformations
- 
-### 1. Lag Transformation
- 
-Shifts a column by `n` time steps.
+## ⚡ Quick Example
  
 ```python
-df["lag_1"] = df["value"].shift(1)
+from owlmix.transform.pipeline import TransformPipeline
+from owlmix.eda import EDAAnalyzer
+from owlmix.utils.cleanup import final_cleanup
+ 
+# Step 1: Transform data
+pipeline = TransformPipeline()
+ 
+pipeline.add_lag("tv_spend", lag=1)
+pipeline.add_adstock("tv_spend", decay=0.5)
+pipeline.add_saturation("tv_spend", method="hill", k=100, s=2)
+ 
+df_transformed = pipeline.run(df)
+ 
+# Step 2: Cleanup
+df_clean = final_cleanup(df_transformed)
+ 
+# Step 3: EDA
+eda = EDAAnalyzer(df_clean, target="sales")
+ 
+print(eda.basic_stats())
+print(eda.correlation())
+ 
+report = eda.summary()
+ 
+with open("eda_report.txt", "w") as f:
+    f.write(report)
 ```
  
 ---
  
-### 2. Adstock Transformation
+## 📁 Project Structure
  
-Captures carryover effects of marketing spend.
- 
-```python
-def adstock(series, decay):
-    result = []
-    prev = 0
-    for val in series:
-        prev = val + decay * prev
-        result.append(prev)
-    return result
-```
- 
----
- 
-### 3. Saturation Functions
- 
-Models diminishing returns of media spend.
- 
-#### Hill Function
- 
-```python
-def hill(x, k, s):
-    return (x ** s) / (x ** s + k ** s)
-```
- 
-#### Logarithmic
- 
-```python
-def log_saturation(x):
-    return np.log1p(x)
-```
- 
-#### Exponential
- 
-```python
-def exp_saturation(x, alpha):
-    return 1 - np.exp(-alpha * x)
-```
- 
----
- 
-### 4. Final Cleanup
- 
-Removes missing values and resets index after transformations.
- 
-```python
-def cleanup_data(df):
-    return df.dropna().reset_index(drop=True)
-```
- 
----
- 
-## 🏗️ Pipeline Usage
- 
-### Example Workflow
- 
-```python
-from owlmix.transform import MMMTransformPipeline
-from owlmix.utils.cleanup import cleanup_data
- 
-pipeline = MMMTransformPipeline()
- 
-pipeline.add_lag(column="sales", lag=1)
-pipeline.add_adstock(column="marketing_spend", decay=0.5)
-pipeline.add_saturation(column="marketing_spend", method="hill", k=100, s=2)
- 
-df_transformed = pipeline.transform(df)
- 
-# Final cleanup
-df_final = cleanup_data(df_transformed)
-```
- 
----
- 
-## ⚙️ Transformation Pipeline Order
- 
-Transformations are applied sequentially:
- 
-1. Lag
-2. Adstock
-3. Saturation
-4. Final cleanup (recommended)
- 
-This mirrors standard MMM preprocessing workflows.
- 
----
- 
-## 📁 Suggested Project Structure
- 
-```
+```text
 owlmix/
+│
+├── eda/
+│   ├── analyzer.py
+│   ├── stats.py
+│   ├── correlation.py
+│   ├── summary.py
 │
 ├── transform/
 │   ├── pipeline.py
@@ -170,36 +96,73 @@ owlmix/
 ├── utils/
 │   ├── cleanup.py
 │
-├── __init__.py
+examples/
+docs/
 ```
  
 ---
  
-## 🧩 Extending the Pipeline
+## 📚 Documentation
  
-You can add custom transformations:
+Detailed documentation is available in the `docs/` folder:
  
-```python
-pipeline.add_custom(func=my_function, column="sales")
-```
+- `docs/eda.md` → EDA module
+- `docs/transform.md` → Transformation pipeline
+- `docs/saturation.md` → Saturation methods
  
 ---
  
-## ⚠️ Notes
+## 🧪 Examples
  
-- Lag and adstock transformations introduce `NaN` values — always apply cleanup.
-- Ensure data is **time-ordered** before applying transformations.
-- Designed with MMM workflows in mind but usable for general feature engineering.
+Ready-to-run examples are available in the `examples/` folder:
+ 
+- `eda_basic.py`
+- `eda_full_workflow.py`
+- `transform_pipeline_example.py`
+- `mmm_workflow_example.py` ⭐
+ 
+---
+ 
+## 🧠 Use Case: Marketing Mix Modeling (MMM)
+ 
+Owl Mix is particularly useful for:
+ 
+- Preprocessing marketing data
+- Feature engineering for MMM
+- Understanding lagged media effects
+- Generating EDA reports before modeling
+ 
+---
+ 
+## 🔧 Roadmap
+ 
+Planned enhancements:
+ 
+- Visualization support (plots, heatmaps)
+- HTML report generation
+- Automated MMM diagnostics
+- CLI support
  
 ---
  
 ## 🤝 Contributing
  
-Contributions are welcome! Feel free to open issues or submit pull requests.
+Contributions are welcome!
+ 
+Feel free to:
+- Open issues
+- Suggest features
+- Submit pull requests
  
 ---
  
 ## 📄 License
  
-MIT License
+This project is licensed under the MIT License.
+ 
+---
+ 
+## ⭐ Support
+ 
+If you find this project useful, consider giving it a star ⭐ on GitHub!
  
