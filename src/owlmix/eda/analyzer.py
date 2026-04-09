@@ -5,10 +5,10 @@ from .stats import get_basic_stats
 from .correlation import get_correlation_matrix, get_lag_correlation
 
 from .charts import (
-    plot_correlation_heatmap,
-    plot_time_series,
-    plot_lag_correlation,
-    plot_boxplot
+    CorrelationChart,
+    TimeSeriesChart,
+    LagCorrelationChart,
+    OutlierChart
 )
 
 from .summary import SummaryBuilder

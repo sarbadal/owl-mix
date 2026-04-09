@@ -50,8 +50,7 @@ class OwlMixEDA:
             .add_descriptive_stats()
         )
  
-        if include_charts:
-            builder = builder.add_charts()
+        builder = builder.add_all()
  
         # Generate final text
         report_text = builder.build()
@@ -96,8 +95,7 @@ class OwlMixEDA:
             .add_descriptive_stats()
         )
 
-        if include_charts:
-            builder.add_charts()
+        builder = builder.add_all()
     
         chart_paths = builder.chart_paths if include_charts else []
     

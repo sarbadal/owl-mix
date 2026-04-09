@@ -1,34 +1,24 @@
 # src/owlmix/eda/charts/correlation.py
  
+import os
 import matplotlib.pyplot as plt
-import numpy as np
+import seaborn as sns
  
  
-def plot_correlation_heatmap(df, title="Correlation Heatmap", show=True):
-    corr = df.corr(numeric_only=True)
+class CorrelationChart:
+    def __init__(self, df, output_dir="charts"):
+        self.df = df
+        self.output_dir = output_dir
  
-    fig, ax = plt.subplots()
+    def generate(self):
+        os.makedirs(self.output_dir, exist_ok=True)
+        corr = self.df.corr(numeric_only=True)
  
-    cax = ax.imshow(corr.values)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(corr, annot=True, cmap="coolwarm")
  
-    ax.set_xticks(range(len(corr.columns)))
-    ax.set_yticks(range(len(corr.columns)))
+        file_path = os.path.join(self.output_dir, "correlation.png")
+        plt.savefig(file_path)
+        plt.close()
  
-    ax.set_xticklabels(corr.columns, rotation=45, ha="right")
-    ax.set_yticklabels(corr.columns)
- 
-    # Annotate values
-    for i in range(len(corr.columns)):
-        for j in range(len(corr.columns)):
-            ax.text(j, i, f"{corr.values[i, j]:.2f}",
-                    ha="center", va="center", fontsize=8)
- 
-    fig.colorbar(cax)
- 
-    fig.suptitle(title)
-    fig.tight_layout()
- 
-    if show:
-        plt.show()
- 
-    return fig
+        return file_path
