@@ -2,6 +2,14 @@
 
 import os
 import pandas as pd
+import json
+
+from owlmix.eda.basic import get_basic_info
+from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
+
+from owlmix.eda.basic import BasicInfo
+from owlmix.eda.stats import BasicStats
+from owlmix.eda.correlation import Correlation
  
 from owlmix.eda.charts.correlation import CorrelationChart
 from owlmix.eda.charts.time_series import TimeSeriesChart
@@ -25,37 +33,23 @@ class SummaryBuilder:
     # =========================
  
     def add_basic_info(self):
-        info = f"""
-        <h2>Basic Information</h2>
-        <ul>
-            <li><b>Rows:</b> {self.df.shape[0]}</li>
-            <li><b>Columns:</b> {self.df.shape[1]}</li>
-        </ul>
-        """
- 
-        self.sections.append(info)
+        basic = BasicInfo(self.df)
+        json_content = basic.to_json()
+        self.sections.append({"basic_info": json.loads(json_content)})
         return self
- 
-    def add_missing_summary(self):
-        missing = self.df.isnull().sum()
- 
-        html = "<h2>Missing Values</h2><ul>"
-        for col, val in missing.items():
-            html += f"<li>{col}: {val}</li>"
-        html += "</ul>"
- 
-        self.sections.append(html)
-        return self
- 
-    def add_descriptive_stats(self):
-        desc = self.df.describe().to_html()
- 
-        html = f"""
-        <h2>Descriptive Statistics</h2>
-        {desc}
-        """
- 
-        self.sections.append(html)
+
+    def add_correlation_matrix(self):
+        corr = Correlation(self.df)
+        self.sections.append({"correlation_matrix": corr.compute_correlation_matrix()})
+        self.sections.append(
+            {
+                "lag_correlation": corr.compute_lag_correlation(
+                    self.target, 
+                    self.target, 
+                    lags=[1, 2, 3]
+                )
+            }
+        )
         return self
  
     # =========================
@@ -65,12 +59,7 @@ class SummaryBuilder:
     def add_correlation_chart(self):
         chart = CorrelationChart(self.df, self.output_dir)
         path = chart.generate()
- 
-        self.chart_paths.append(path)
- 
-        self.sections.append(
-            f"<h2>Correlation Matrix</h2><img src='{path}' width='600'/>"
-        )
+        self.chart_paths.append({"correlation_chart": path})
         return self
  
     def add_time_series_chart(self, columns=None):
@@ -81,23 +70,13 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
- 
-        self.chart_paths.append(path)
- 
-        self.sections.append(
-            f"<h2>Time Series</h2><img src='{path}' width='600'/>"
-        )
+        self.chart_paths.append({"time_series_chart": path})
         return self
  
     def add_outliers_chart(self, columns=None):
         chart = OutlierChart(self.df, columns=columns, output_dir=self.output_dir)
         path = chart.generate()
- 
-        self.chart_paths.append(path)
- 
-        self.sections.append(
-            f"<h2>Outliers (Box Plot)</h2><img src='{path}' width='600'/>"
-        )
+        self.chart_paths.append({"outliers_chart": path})
         return self
  
     def add_lag_correlation(self, lag=1):
@@ -107,12 +86,7 @@ class SummaryBuilder:
             output_dir=self.output_dir, 
             lag=lag)
         path = chart.generate()
- 
-        self.chart_paths.append(path)
- 
-        self.sections.append(
-            f"<h2>Lag Correlation (lag={lag})</h2><img src='{path}' width='600'/>"
-        )
+        self.chart_paths.append({"lag_correlation_chart": path})
         return self
  
     # =========================
@@ -123,8 +97,7 @@ class SummaryBuilder:
         return (
             self
             .add_basic_info()
-            .add_missing_summary()
-            .add_descriptive_stats()
+            .add_correlation_matrix()
             .add_correlation_chart()
             .add_time_series_chart()
             .add_outliers_chart()
@@ -135,50 +108,21 @@ class SummaryBuilder:
     # BUILD OUTPUT
     # =========================
  
-    def build(self) -> str:
-        html = f"""
-        <html>
-        <head>
-            <title>OwlMix EDA Report</title>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    margin: 20px;
-                }}
-                h2 {{
-                    color: #2c3e50;
-                }}
-                img {{
-                    margin-bottom: 20px;
-                    border: 1px solid #ddd;
-                    padding: 5px;
-                }}
-                table {{
-                    border-collapse: collapse;
-                }}
-                table, th, td {{
-                    border: 1px solid #ccc;
-                    padding: 5px;
-                }}
-            </style>
-        </head>
-        <body>
-        """
- 
-        html += "".join(self.sections)
- 
-        html += "</body></html>"
- 
-        return html
- 
-    def save(self, filename: str = "report.html"):
+    def build(self) -> dict:
+        report = {
+            "sections": self.sections,
+            "charts": self.chart_paths
+        }
+        return report
+
+    def save(self, filename: str = "eda_report.json"):
+        print(f"Saving report to {filename}...")
+        result = self.build()
         if os.path.dirname(filename):
             file_path = filename
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
         else:
             file_path = os.path.join(self.output_dir, filename)
- 
+
         with open(file_path, "w", encoding="utf-8") as f:
-            f.write(self.build())
- 
-        return file_path
+            json.dump(result, f, indent=2)

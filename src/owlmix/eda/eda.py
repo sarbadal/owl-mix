@@ -42,14 +42,6 @@ class OwlMixEDA:
             output_dir=self.output_dir,
         )
  
-        # Build report step-by-step
-        builder = (
-            builder
-            .add_basic_info()
-            .add_missing_summary()
-            .add_descriptive_stats()
-        )
- 
         builder = builder.add_all()
  
         # Generate final text
@@ -58,11 +50,8 @@ class OwlMixEDA:
         # Save if needed
         if save:
             if not filepath:
-                filepath = f"{self.output_dir}/eda_report.txt"
- 
+                filepath = f"{self.output_dir}/eda_report.json"
             builder.save(filepath)
- 
-        return report_text
 
     def to_html(self, include_charts: bool = True, save: bool = False, filepath: str = None):
         """
@@ -88,35 +77,39 @@ class OwlMixEDA:
             output_dir=self.output_dir,
         )
     
-        builder = (
-            builder
-            .add_basic_info()
-            .add_missing_summary()
-            .add_descriptive_stats()
-        )
+        # builder = (
+        #     builder
+        #     .add_basic_info()
+        #     .add_missing_summary()
+        #     .add_descriptive_stats()
+        # )
 
         builder = builder.add_all()
-    
-        chart_paths = builder.chart_paths if include_charts else []
-    
-        # Convert to HTML
-        html_content = self._convert_to_html(
-            builder.sections,
-            chart_paths
-        )
-    
-        # Save if required
         if save:
             if not filepath:
-                filepath = f"{self.output_dir}/eda_report.html"
+                filepath = f"{self.output_dir}/eda_report.json"
+            builder.save(filepath)
     
-            import os
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        # chart_paths = builder.chart_paths if include_charts else []
     
-            with open(filepath, "w") as f:
-                f.write(html_content)
+        # Convert to HTML
+        # html_content = self._convert_to_html(
+        #     builder.sections,
+        #     chart_paths
+        # )
     
-        return html_content
+        # Save if required
+        # if save:
+        #     if not filepath:
+        #         filepath = f"{self.output_dir}/eda_report.html"
+    
+        #     import os
+        #     os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    
+        #     with open(filepath, "w") as f:
+        #         f.write(html_content)
+    
+        # return html_content
 
     def _convert_to_html(self, sections, chart_paths):
         """Convert text sections + charts into HTML format."""

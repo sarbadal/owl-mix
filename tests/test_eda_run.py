@@ -60,20 +60,14 @@ def run_eda():
     eda = OwlMixEDA(
         df,
         target="sales",
-        output_dir="outputs"
+        output_dir="outputs",
     )
  
     # Generate text report
     report = eda.report(include_charts=True, save=True)
  
     print("\nTEXT REPORT PREVIEW:\n")
-    print(report[:500])  # print first 500 chars
- 
-    # Generate HTML report
-    html = eda.to_html(save=True)
- 
-    print("\nHTML report generated!")
- 
+    # print(report)
     print("\nCheck the following:")
     print(" - outputs/eda_report.txt")
     print(" - outputs/eda_report.html")
