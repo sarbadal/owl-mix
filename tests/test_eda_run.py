@@ -16,6 +16,7 @@ sys.path.insert(0, SRC_PATH)
 # Now we can import our package
 # --------------------------------------------------
 from owlmix.eda import OwlMixEDA
+from owlmix.report.generator import OwlMixReport
  
 import pandas as pd
 import numpy as np
@@ -74,8 +75,29 @@ def run_eda():
     print(" - outputs/charts/")
  
     print("\nDone!")
+
+
+def test_owlmix_eda_run():
+    """Test the full EDA run."""
+    print("Testing OwlMix EDA run...")
+    print("Creating sample data...")
+    df = create_sample_data()
+ 
+    print("Running OwlMix EDA...")
+    eda = OwlMixReport(
+        df,
+        target="sales",
+        output_dir="outputs",
+    )
+ 
+    # Generate text report
+    report, report_path = eda.generate_json()
+    print(f"Report generated at: {report_path}")
+    print("Report content preview:")
+    # print(report)  # Print first 500
  
  
 if __name__ == "__main__":
-    run_eda()
+    # run_eda()
+    test_owlmix_eda_run()
  
