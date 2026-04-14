@@ -7,9 +7,10 @@ from owlmix.report.renderer import HTMLRenderer
  
 class OwlMixReport:
  
-    def __init__(self, df: "pd.DataFrame", target: str, output_dir: str = "outputs", template_name: str = "report.html", template_path: str = None):
+    def __init__(self, df: "pd.DataFrame", target: str, date_column: str, output_dir: str = "outputs", template_name: str = "report.html", template_path: str = None):
         self.df = df
         self.target = target
+        self.date_column = date_column
         self.output_dir = output_dir
         self.template_name = template_name
         self.template_path = template_path
@@ -18,7 +19,7 @@ class OwlMixReport:
         os.makedirs(self.chart_dir, exist_ok=True)
  
     def generate_json(self):
-        builder = SummaryBuilder(self.df, target=self.target, output_dir=self.chart_dir)
+        builder = SummaryBuilder(self.df, target=self.target, date_column=self.date_column, output_dir=self.chart_dir)
  
         builder = builder.add_all()
         report_dict = builder.build()

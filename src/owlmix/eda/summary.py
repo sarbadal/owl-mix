@@ -19,9 +19,10 @@ from owlmix.eda.charts.lag import LagCorrelationChart
  
  
 class SummaryBuilder:
-    def __init__(self, df: pd.DataFrame, target: str | None, output_dir: str = "eda_output"):
+    def __init__(self, df: pd.DataFrame, target: str | None, date_column: srt, output_dir: str = "eda_output"):
         self.df = df
         self.target = target
+        self.date_column = date_column
         self.output_dir = output_dir
  
         self.sections = []
@@ -76,6 +77,7 @@ class SummaryBuilder:
             self.df, 
             columns=columns, 
             target=self.target,
+            date_column=self.date_column,
             output_dir=self.output_dir
         )
         path = chart.generate()

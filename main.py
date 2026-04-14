@@ -43,11 +43,23 @@ def create_sample_data(n=100):
 
 
 def main():
+    custom_title = {
+        "title": "your own title here",
+        "header_subtitle": "Exploratory Data Analysis for MMM",
+        "lag_correlation": {
+            "1": -0.0134,
+            "2": -0.0601,
+            "3": -0.0902,
+        }
+    }
+
     df = create_sample_data()
     report = OwlMixReport(
         df,
         target="sales",
-        template_name="custom_eda_template.html"
+        date_column="date",
+        template_name="custom_eda_template.html",
+        # custom_json=custom_title,
     )
     report.run()
 

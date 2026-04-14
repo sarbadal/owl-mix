@@ -3,7 +3,9 @@
 import os
 import matplotlib.pyplot as plt
  
- 
+
+# TODO: Add datapoints to the charts
+
 class OutlierChart:
     def __init__(self, df, output_dir, columns=None):
         self.df = df
