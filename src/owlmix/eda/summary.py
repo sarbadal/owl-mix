@@ -2,6 +2,8 @@
 
 import os
 import base64
+from typing import Self
+
 import pandas as pd
 import json
 
@@ -11,6 +13,8 @@ from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
 from owlmix.eda.basic import BasicInfo
 from owlmix.eda.stats import BasicStats
 from owlmix.eda.correlation import Correlation
+from owlmix.eda.time.comparison import TimeComparisonReport
+from owlmix.eda.charts.time.comparison import ComparisonChart
  
 from owlmix.eda.charts.correlation import CorrelationChart
 from owlmix.eda.charts.time_series import TimeSeriesChart
@@ -70,7 +74,7 @@ class SummaryBuilder:
         self.sections.append({"basic_info": json.loads(json_content)})
         return self
 
-    def add_correlation_matrix(self):
+    def add_correlation_matrix(self) -> Self:
         corr = Correlation(self.df)
         self.sections.append({"correlation_matrix": corr.compute_correlation_matrix()})
         self.sections.append(
@@ -82,6 +86,22 @@ class SummaryBuilder:
                 )
             }
         )
+        return self
+
+    def add_time_comparison(self, date_column: str=None, value_columns: list[str]=None, freq: str=None) -> Self:
+        date_column = date_column or self.date_column
+        value_columns = value_columns or [self.target] # self.correlation_chart_config["columns"]
+        # freq = freq or "ME"
+        report = TimeComparisonReport(
+            df=self.df,
+            date_column=date_column,
+            value_columns=value_columns,
+            freq=freq
+        )
+
+        result = report.generate()
+        self.sections.append({"time_comparison": result})
+
         return self
  
     # =========================
@@ -144,7 +164,7 @@ class SummaryBuilder:
             columns = self.outlier_chart_config["columns"]
 
         chart = OutlierChart(
-            self.df, 
+            df=self.df,
             columns=columns, 
             max_cols_per_chart=max_cols_per_chart,
             single_image=single_image,
@@ -160,6 +180,33 @@ class SummaryBuilder:
                 "alt_text": "Outliers Chart"
             }
         )
+        return self
+
+    def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="mom") -> Self:
+        date_column = date_column or self.date_column
+        value_columns = value_columns or [self.target]
+
+        chart = ComparisonChart(
+            df=self.df,
+            date_column=date_column,
+            value_columns=value_columns,
+            freq=freq,
+            comparison=comparison,
+            output_dir=self.output_dir,
+        )
+
+        path = chart.generate()
+
+        self.chart_paths.append(
+            {
+                "title": f"Comparison Chart - {comparison.upper()}",
+                "description": f"Comparison {comparison.upper()} plot for selected columns",
+                "comparison_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": f"Comparison Chart - {comparison.upper()}"
+            }
+        )
+
         return self
  
     def add_lag_correlation(self, lag=1):
@@ -221,9 +268,11 @@ class SummaryBuilder:
             .add_basic_info()
             .add_correlation_matrix()
             .add_correlation_chart()
+            .add_time_comparison()
             .add_time_series_chart()
             .add_outliers_chart()
             .add_lag_correlation()
+            .add_comparison_chart()
         )
  
     # =========================

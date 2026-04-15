@@ -18,7 +18,7 @@ def create_sample_data(n=100):
     """Create sample MMM-like dataset."""
     np.random.seed(42)
  
-    dates = pd.date_range(start="2023-01-01", periods=n, freq="D")
+    dates = pd.date_range(start="2024-01-01", periods=n, freq="D")
  
     df = pd.DataFrame({
         "date": dates,
@@ -61,7 +61,7 @@ def main():
         }
     }
 
-    df = create_sample_data(n=245)
+    df = create_sample_data(n=812)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -72,7 +72,7 @@ def main():
         template_name="custom_eda_template.html",
         # custom_json=custom_title,
     )
-    
+
     # report.set_outlier_chart_layout(
     #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
     #     max_cols_per_chart=5
