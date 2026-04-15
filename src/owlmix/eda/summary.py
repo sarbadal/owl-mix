@@ -27,8 +27,23 @@ class SummaryBuilder:
  
         self.sections = []
         self.chart_paths = []
+        self.outlier_chart_config = {
+            "columns": None,
+            "max_cols_per_chart": 4,
+            "single_image": True
+        }
  
         os.makedirs(self.output_dir, exist_ok=True)
+
+    def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
+        if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
+            raise ValueError("max_cols_per_chart must be a positive integer")
+
+        self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
+        self.outlier_chart_config["single_image"] = single_image
+        self.outlier_chart_config["columns"] = columns
+
+        return self
  
     # =========================
     # TEXT SECTIONS
@@ -92,8 +107,23 @@ class SummaryBuilder:
         )
         return self
  
-    def add_outliers_chart(self, columns=None):
-        chart = OutlierChart(self.df, columns=columns, output_dir=self.output_dir)
+    def add_outliers_chart(self, columns=None, max_cols_per_chart: int=None, single_image: bool=None):
+        if max_cols_per_chart is None:
+            max_cols_per_chart = self.outlier_chart_config["max_cols_per_chart"]
+
+        if single_image is None:
+            single_image = self.outlier_chart_config["single_image"]
+
+        if columns is None:
+            columns = self.outlier_chart_config["columns"]
+
+        chart = OutlierChart(
+            self.df, 
+            columns=columns, 
+            max_cols_per_chart=max_cols_per_chart,
+            single_image=single_image,
+            output_dir=self.output_dir
+        )
         path = chart.generate()
         self.chart_paths.append(
             {

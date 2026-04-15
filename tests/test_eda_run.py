@@ -81,7 +81,9 @@ def test_owlmix_eda_run():
     """Test the full EDA run."""
     print("Testing OwlMix EDA run...")
     print("Creating sample data...")
-    df = create_sample_data()
+    # df = create_sample_data()
+    csv_file = "data/national_all_channels.csv"
+    df = pd.cread_csv(csv_file)
  
     print("Running OwlMix EDA...")
     eda = OwlMixReport(

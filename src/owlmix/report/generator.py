@@ -16,10 +16,34 @@ class OwlMixReport:
         self.template_path = template_path
  
         self.chart_dir = os.path.join(output_dir, "charts")
+
+        self.outlier_chart_config = {
+            "columns": None,
+            "max_cols_per_chart": 4,
+            "single_image": True
+        }
+
         os.makedirs(self.chart_dir, exist_ok=True)
+
+    def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
+        if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
+            raise ValueError("max_cols_per_chart must be a positive integer")
+
+        self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
+        self.outlier_chart_config["single_image"] = single_image
+        self.outlier_chart_config["columns"] = columns
+
+        return self
  
     def generate_json(self):
-        builder = SummaryBuilder(self.df, target=self.target, date_column=self.date_column, output_dir=self.chart_dir)
+        builder = SummaryBuilder(
+            self.df, 
+            target=self.target, 
+            date_column=self.date_column, 
+            output_dir=self.chart_dir
+        )
+
+        builder.set_outlier_chart_layout(**self.outlier_chart_config)
  
         builder = builder.add_all()
         report_dict = builder.build()

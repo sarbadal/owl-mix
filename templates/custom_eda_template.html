@@ -172,28 +172,32 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% set first_col = basic_info.column_names[0] if basic_info.column_names else None %}
-                                {% if first_col and first_col in basic_info.summary_stats %}
-                                    {% for stat_name in basic_info.summary_stats[first_col].keys() %}
+                            {% if basic_info.summary_stats %}
+                                {% set stat_names = basic_info.summary_stats.values() | list | first %}
+                                {% if stat_names %}
+                                    {% for stat_name in stat_names.keys() %}
                                     <tr>
                                         <td><strong>{{ stat_name }}</strong></td>
+                            
                                         {% for col_name in basic_info.column_names %}
-                                        <td>
+                                            <td>
                                             {% if col_name in basic_info.summary_stats and stat_name in basic_info.summary_stats[col_name] %}
                                                 {% set val = basic_info.summary_stats[col_name][stat_name] %}
                                                 {% if val is number %}
-                                                    {{ "%.3f" | format(val) }}
+                                                    {{ "%.3f"|format(val) }}
                                                 {% else %}
                                                     {{ val }}
                                                 {% endif %}
                                             {% else %}
-                                                —
+                                                -
                                             {% endif %}
-                                        </td>
+                                            </td>
                                         {% endfor %}
+                            
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
