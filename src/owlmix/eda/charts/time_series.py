@@ -4,9 +4,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
- 
- 
-# TODO: Add separate chart for Observed, Trend, Seasonal, and Residual  
+
 
 class TimeSeriesChart:
     def __init__(self, df, output_dir, columns=None, target=None, date_column=None, period=None, model="additive"):
@@ -63,14 +61,14 @@ class TimeSeriesChart:
         """Infers seasonality period from date column."""
     
         if self.date_column is None:
-            raise ValueError("❌ date_column must be provided")
+            raise ValueError("date_column must be provided")
     
         # Step 1: prepare date column
         df = self.df.copy()
         df[self.date_column] = pd.to_datetime(df[self.date_column], errors="coerce")
     
         if df[self.date_column].isna().all():
-            raise ValueError("❌ date_column could not be converted to datetime")
+            raise ValueError("date_column could not be converted to datetime")
     
         # Step 2: sort + set index
         df = df.sort_values(self.date_column)
@@ -87,16 +85,15 @@ class TimeSeriesChart:
         # Step 4: map to period
         if "d" in freq:
             return 7
-        elif "w" in freq:
+        if "w" in freq:
             return 52
-        elif "m" in freq:
+        if "m" in freq:
             return 12
-        elif "q" in freq:
+        if "q" in freq:
             return 4
-        elif "h" in freq:
+        if "h" in freq:
             return 24
-        else:
-            return 12  # safe fallback
+        return 12  # safe fallback
 
     def _decompose(self, series):
         if self.period is None:

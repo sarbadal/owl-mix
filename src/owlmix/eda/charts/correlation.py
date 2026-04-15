@@ -5,34 +5,20 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import seaborn as sns
+
+from owlmix.eda.utils import ColumnMixin
  
  
-class CorrelationChart:
+class CorrelationChart(ColumnMixin):
     def __init__(self, df, columns: list[str]=None, output_dir: str="charts", precision: int=2):
-        self.df = df
-        self.columns = columns
+        self.df = df.copy()
+        self.columns = self._get_columns(columns)
         self.output_dir = output_dir
         self.precision = precision
 
-    def _get_columns(self):
-        if self.columns:
-            valid_columns = [col for col in self.df.columns if col in self.columns]
-
-            if not valid_columns:
-                raise ValueError("None of the columns available for correlation")
-
-            numeric_cols = self.df[valid_columns].select_dtypes(include=["number"]).columns.tolist()
-
-            if not numeric_cols:
-                raise ValueError("Provided columns are not numeric")
-
-            return numeric_cols
-
-        return self.df.select_dtypes(include=["number"]).columns.tolist()
-
     def generate(self):
         os.makedirs(self.output_dir, exist_ok=True)
-        cols = self._get_columns()
+        cols = self.columns
         if len(cols) < 2:
             raise ValueError("Need at least 2 columns for correlation")
 

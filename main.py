@@ -61,7 +61,7 @@ def main():
         }
     }
 
-    df = create_sample_data(n=812)
+    df = create_sample_data(n=500)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,

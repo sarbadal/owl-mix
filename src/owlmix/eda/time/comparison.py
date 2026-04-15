@@ -1,13 +1,14 @@
 # src/owlmix/eda/time/comparison.py
 import pandas as pd
 
+from owlmix.eda.utils import ColumnMixin
 
-class TimeComparisonReport:
-    def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str], freq=None):
-        # freq="M"  # "Y", "M", "W"
+
+class TimeComparisonReport(ColumnMixin):
+    def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str]=None, freq=None):
         self.df = df.copy()
         self.date_column = date_column
-        self.value_columns = value_columns
+        self.value_columns = self._get_columns(value_columns)
         self.freq = freq
 
     def _validate(self):

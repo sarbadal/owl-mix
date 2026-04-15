@@ -90,7 +90,7 @@ class SummaryBuilder:
 
     def add_time_comparison(self, date_column: str=None, value_columns: list[str]=None, freq: str=None) -> Self:
         date_column = date_column or self.date_column
-        value_columns = value_columns or [self.target] # self.correlation_chart_config["columns"]
+        # value_columns = value_columns or [self.target]
         # freq = freq or "ME"
         report = TimeComparisonReport(
             df=self.df,
@@ -182,9 +182,9 @@ class SummaryBuilder:
         )
         return self
 
-    def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="mom") -> Self:
+    def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="yoy") -> Self:
         date_column = date_column or self.date_column
-        value_columns = value_columns or [self.target]
+        # value_columns = value_columns or [self.target]
 
         chart = ComparisonChart(
             df=self.df,

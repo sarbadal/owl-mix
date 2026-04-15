@@ -2,16 +2,17 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from owlmix.eda.utils import ColumnMixin
 
-class ComparisonChart:
+
+class ComparisonChart(ColumnMixin):
     def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str], freq: str = "ME", comparison: str = "mom", output_dir: str = "outputs"):
         self.df = df.copy()
         self.date_column = date_column
-        self.value_columns = value_columns
+        self.value_columns = self._get_columns(value_columns)
         self.freq = freq
         self.comparison = comparison.lower()
         self.output_dir = output_dir
-
 
     def _prepare(self):
         self.df[self.date_column] = pd.to_datetime(self.df[self.date_column])
@@ -25,7 +26,7 @@ class ComparisonChart:
             .sort_index()
         )
 
-    def _compute_change(self, df):
+    def _compute_change(self, df: pd.DataFrame) -> pd.DataFrame:
         if self.comparison == "mom":
             return df.pct_change() * 100
         if self.comparison == "yoy":

@@ -5,6 +5,24 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from pandas.core.dtypes.base import ExtensionDtype
+
+
+class ColumnMixin:
+    def _get_columns(self, value_columns):
+        if value_columns:
+            valid_columns = [col for col in self.df.columns if col in value_columns]
+
+            if not valid_columns:
+                raise ValueError("None of the columns available in the dataframe are valid.")
+
+            numeric_cols = self.df[valid_columns].select_dtypes(include=["number"]).columns.tolist()
+
+            if not numeric_cols:
+                raise ValueError("None of the provided columns are not numeric")
+
+            return numeric_cols
+
+        return self.df.select_dtypes(include=["number"]).columns.tolist()
  
  
 class NumpyPandasEncoder(json.JSONEncoder):
