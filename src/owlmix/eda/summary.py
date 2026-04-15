@@ -27,10 +27,16 @@ class SummaryBuilder:
  
         self.sections = []
         self.chart_paths = []
+
         self.outlier_chart_config = {
             "columns": None,
             "max_cols_per_chart": 4,
             "single_image": True
+        }
+
+        self.correlation_chart_config = {
+            "columns": None,
+            "precision": 2
         }
  
         os.makedirs(self.output_dir, exist_ok=True)
@@ -42,6 +48,15 @@ class SummaryBuilder:
         self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
         self.outlier_chart_config["single_image"] = single_image
         self.outlier_chart_config["columns"] = columns
+
+        return self
+
+    def set_correlation_chart_layout(self, columns: list[str]=None, precision: int=2):
+        if not isinstance(precision, int) or precision < 1:
+            raise ValueError("precision must be a positive integer")
+
+        self.correlation_chart_config["columns"] = columns
+        self.correlation_chart_config["precision"] = precision
 
         return self
  
@@ -73,8 +88,19 @@ class SummaryBuilder:
     # CHART SECTIONS
     # =========================
  
-    def add_correlation_chart(self):
-        chart = CorrelationChart(self.df, self.output_dir)
+    def add_correlation_chart(self, columns: list[str]=None, precision: int=None):
+        if columns is None:
+            columns = self.correlation_chart_config["columns"]
+
+        if precision is None:
+            precision = self.correlation_chart_config["precision"]
+
+        chart = CorrelationChart(
+            df=self.df,
+            columns=columns,
+            precision=precision,
+            output_dir=self.output_dir
+        )
         path = chart.generate()
         self.chart_paths.append(
             {
@@ -212,7 +238,6 @@ class SummaryBuilder:
         return report
 
     def save(self, filename: str = "eda_report.json"):
-        print(f"Saving report to {filename}...")
         result = self.build()
         if os.path.dirname(filename):
             file_path = filename

@@ -72,10 +72,16 @@ def main():
         template_name="custom_eda_template.html",
         # custom_json=custom_title,
     )
-    report.set_outlier_chart_layout(
-        columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
-        max_cols_per_chart=10
-    )
+    
+    # report.set_outlier_chart_layout(
+    #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
+    #     max_cols_per_chart=5
+    # )
+
+    # report.set_correlation_chart_layout(
+    #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
+    #     precision=1
+    # )
     report.run()
 
 

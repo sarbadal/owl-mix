@@ -23,6 +23,11 @@ class OwlMixReport:
             "single_image": True
         }
 
+        self.correlation_chart_config = {
+            "columns": None,
+            "precision": 2
+        }
+
         os.makedirs(self.chart_dir, exist_ok=True)
 
     def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
@@ -32,6 +37,15 @@ class OwlMixReport:
         self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
         self.outlier_chart_config["single_image"] = single_image
         self.outlier_chart_config["columns"] = columns
+
+        return self
+
+    def set_correlation_chart_layout(self, columns: list[str] = None, precision: int = 2):
+        if not isinstance(precision, int) or precision < 1:
+            raise ValueError("precision must be a positive integer")
+
+        self.correlation_chart_config["columns"] = columns
+        self.correlation_chart_config["precision"] = precision
 
         return self
  
@@ -44,6 +58,7 @@ class OwlMixReport:
         )
 
         builder.set_outlier_chart_layout(**self.outlier_chart_config)
+        builder.set_correlation_chart_layout(**self.correlation_chart_config)
  
         builder = builder.add_all()
         report_dict = builder.build()
