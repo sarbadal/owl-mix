@@ -210,6 +210,56 @@
                 </section>
                 {% endif %}
 
+
+                <!-- TIME COMPARISON -->
+                {% if time_comparison %}
+                <section>
+                    <h2>📈 Time Comarison</h2>
+                    <p class="section-desc">Simple info to show change over last period.</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <!-- Date column -->
+                                    <th>Date</th>
+                        
+                                    <!-- Dynamic columns -->
+                                    {% for col in sections.time_comparison.columns %}
+                                        <th>{{ col }}</th>
+                                        <th>{{ col }} % Change</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in sections.time_comparison.data %}
+                                <tr>
+                                    <!-- Date -->
+                                    <td>{{ row.date }}</td>
+                        
+                                    <!-- Values + % change -->
+                                    {% for col in sections.time_comparison.columns %}
+                                        <td>{{ row[col] }}</td>
+                                        <td>{{ row[col + '_pct_change'] }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+                {% else %}
+                <section>
+                    <div class="no-data">
+                        ⚠️ No basic information available. Ensure report.json contains 'basic_info' section.
+                    </div>
+                </section>
+                {% endif %}
+
                 <!-- CORRELATION MATRIX -->
                 {% if corr_matrix %}
                 <section>
