@@ -49,7 +49,7 @@ class TimeSeriesChart:
         # Extract numeric target
         series = pd.to_numeric(df[self.target], errors="coerce")
 
-        # Drop NaNs
+        # Drop Null values
         series = series.dropna()
 
         if len(series) < 10:

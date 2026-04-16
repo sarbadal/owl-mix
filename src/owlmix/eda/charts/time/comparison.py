@@ -6,7 +6,7 @@ from owlmix.eda.utils import ColumnMixin
 
 
 class ComparisonChart(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str], freq: str = "ME", comparison: str = "mom", output_dir: str = "outputs"):
+    def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str], freq: str = "ME", comparison: str = "yoy", output_dir: str = "outputs"):
         self.df = df.copy()
         self.date_column = date_column
         self.value_columns = self._get_columns(value_columns)
