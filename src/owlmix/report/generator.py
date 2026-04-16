@@ -1,6 +1,8 @@
 # src/owlmix/report/generator.py
 import os
 import json
+from typing import Self
+
 from owlmix.eda.summary import SummaryBuilder
 from owlmix.report.renderer import HTMLRenderer
  

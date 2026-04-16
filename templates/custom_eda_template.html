@@ -35,12 +35,22 @@
         .card .value { color: #182848; font-size: 1.6rem; font-weight: 700; }
         
         .table-container { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #e0e8f5; }
-        table { width: 100%; border-collapse: collapse; }
+        table { 
+            width: 100%; 
+            table-layout: auto; 
+            border-collapse: collapse; 
+        }
         thead { background: #eef4ff; }
         th { padding: 14px 16px; text-align: left; font-weight: 700; color: #1f2a38; font-size: 0.95rem; border-bottom: 2px solid #d9e4f7; }
         td { padding: 12px 16px; border-bottom: 1px solid #e8edf3; color: #4d5f73; }
         tbody tr:nth-child(even) { background: #fcfdff; }
         tbody tr:hover { background: #f5f8ff; }
+        .date-col { 
+            width: 120px; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         
         .columns-display { display: inline-block; background: #f0f4ff; padding: 8px 12px; border-radius: 6px; color: #3f5a8c; font-size: 0.95rem; }
         
@@ -212,6 +222,47 @@
                         ⚠️ No basic information available. Ensure report.json contains 'basic_info' section.
                     </div>
                 </section>
+                {% endif %}
+
+                <!-- TIME COMPARISON -->
+                {% if time_comparison %}
+                <section>
+                    <h2>📈 Time Comarison</h2>
+                    <p class="section-desc">Simple info to show change over last period.</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <!-- Date column -->
+                                    <th class="date-col" style="background: #e8ecff;">Date</th>
+                        
+                                    <!-- Dynamic columns -->
+                                    {% for col in time_comparison.columns %}
+                                        <th>{{ col }}</th>
+                                        <th>{{ col }} % Change</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in time_comparison.data %}
+                                <tr>
+                                    <!-- Date -->
+                                    <td class="date-col">{{ row.date }}</td>
+                        
+                                    <!-- Values + % change -->
+                                    {% for col in time_comparison.columns %}
+                                        <td>{{ row[col] }}</td>
+                                        <td>{{ row[col + '_pct_change'] }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
                 {% endif %}
 
                 <!-- CORRELATION MATRIX -->

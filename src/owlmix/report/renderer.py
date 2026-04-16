@@ -78,18 +78,28 @@ class HTMLRenderer:
             for section in report_data["sections"]:
                 if "header_title" in section:
                     header_title = section["header_title"]
+
                 if "header_subtitle" in section:
                     header_subtitle = section["header_subtitle"]
+
                 if "title" in section:
                     title = section["title"]
+
                 if "generator" in section:
                     generator = section["generator"]
+
                 if "report_date" in section:
                     report_date = section["report_date"]
+
                 if "basic_info" in section:
                     basic_info = section["basic_info"]
+
+                if "time_comparison" in section:
+                    time_comparison = section["time_comparison"]
+
                 if "correlation_matrix" in section:
                     correlation_matrix = section["correlation_matrix"]
+
                 if "lag_correlation" in section:
                     lag_correlation = section["lag_correlation"]
 
@@ -129,6 +139,7 @@ class HTMLRenderer:
             "basic_info": basic_info,
             "corr_matrix": correlation_matrix,
             "lag_corr": lag_correlation,
+            "time_comparison": time_comparison,
             "charts": charts
         }
 

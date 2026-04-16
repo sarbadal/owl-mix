@@ -51,16 +51,6 @@ def create_sample_data(n=100):
 
 
 def main():
-    custom_title = {
-        "title": "your own title here",
-        "header_subtitle": "Exploratory Data Analysis for MMM",
-        "lag_correlation": {
-            "1": -0.0134,
-            "2": -0.0601,
-            "3": -0.0902,
-        }
-    }
-
     df = create_sample_data(n=500)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
@@ -70,7 +60,6 @@ def main():
         target="sales",
         date_column="date",
         template_name="custom_eda_template.html",
-        # custom_json=custom_title,
     )
 
     # report.set_outlier_chart_layout(

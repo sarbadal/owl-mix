@@ -88,7 +88,7 @@ class SummaryBuilder:
         )
         return self
 
-    def add_time_comparison(self, date_column: str=None, value_columns: list[str]=None, freq: str=None) -> Self:
+    def add_time_comparison(self, date_column: str=None, value_columns: list[str]=None, comparison_type: str = "yoy") -> Self:
         date_column = date_column or self.date_column
         # value_columns = value_columns or [self.target]
         # freq = freq or "ME"
@@ -96,7 +96,7 @@ class SummaryBuilder:
             df=self.df,
             date_column=date_column,
             value_columns=value_columns,
-            freq=freq
+            comparison_type=comparison_type
         )
 
         result = report.generate()
