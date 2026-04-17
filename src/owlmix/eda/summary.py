@@ -13,7 +13,8 @@ from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
 from owlmix.eda.basic import BasicInfo
 from owlmix.eda.stats import BasicStats
 from owlmix.eda.correlation import Correlation
-from owlmix.eda.time.comparison import TimeComparisonReport
+from owlmix.eda.vif import VIFCalculator
+from owlmix.eda.time.comparison import TimeComparisonReport, TimeAggregatorReport
 from owlmix.eda.charts.time.comparison import ComparisonChart
  
 from owlmix.eda.charts.correlation import CorrelationChart
@@ -42,8 +43,36 @@ class SummaryBuilder:
             "columns": None,
             "precision": 2
         }
+
+        self.correlation_config = {
+            "columns": None,
+        }
+
+        self.time_comparison_config = {
+            "value_columns": None,
+            "comparison_type": "yoy",
+            "agg_func": "sum",
+            "precision": 2
+        }
  
         os.makedirs(self.output_dir, exist_ok=True)
+
+    def set_correlation_config(self, columns: list[str] = None) -> Self:
+        self.correlation_config["columns"] = columns
+
+        return self
+
+    def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
+        if not isinstance(precision, int) or precision < 1:
+            raise ValueError("precision must be a positive integer")
+
+        self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
+        self.time_comparison_config["value_columns"] = value_columns
+        self.time_comparison_config["comparison_type"] = comparison_type
+        self.time_comparison_config["agg_func"] = agg_func
+        self.time_comparison_config["precision"] = precision
+
+        return self
 
     def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
         if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
@@ -74,8 +103,21 @@ class SummaryBuilder:
         self.sections.append({"basic_info": json.loads(json_content)})
         return self
 
-    def add_correlation_matrix(self) -> Self:
-        corr = Correlation(self.df)
+    def add_vif_calculator(self, target_column: str = None, features: list[str] = None) -> Self:
+        target_column = target_column or self.target
+
+        vif_calculator = VIFCalculator(
+            df=self.df,
+            target_column=target_column,
+            features=features
+        )
+        self.sections.append({"vif": vif_calculator.compute_vif()})
+
+        return self
+
+    def add_correlation_matrix(self, columns: list[str] = None) -> Self:
+        columns = columns or self.correlation_config["columns"]
+        corr = Correlation(df=self.df, columns=columns)
         self.sections.append({"correlation_matrix": corr.compute_correlation_matrix()})
         self.sections.append(
             {
@@ -88,19 +130,38 @@ class SummaryBuilder:
         )
         return self
 
-    def add_time_comparison(self, date_column: str=None, value_columns: list[str]=None, comparison_type: str = "yoy") -> Self:
-        date_column = date_column or self.date_column
-        # value_columns = value_columns or [self.target]
-        # freq = freq or "ME"
+    def add_time_comparison(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum") -> Self:
+        date_column = date_column or self.time_comparison_config["date_column"]
+        value_columns = value_columns or self.time_comparison_config["value_columns"]
+        comparison_type = comparison_type or self.time_comparison_config["comparison_type"]
+        agg_func = agg_func or self.time_comparison_config["agg_func"]
+        precision = self.time_comparison_config["precision"]
+
         report = TimeComparisonReport(
             df=self.df,
             date_column=date_column,
             value_columns=value_columns,
-            comparison_type=comparison_type
+            comparison_type=comparison_type,
+            agg_func=agg_func,
+            precision=precision
         )
 
         result = report.generate()
         self.sections.append({"time_comparison": result})
+
+        return self
+
+    def add_time_aggregator(self, date_column: str=None, value_columns: list[str]=None, freq: str="YE", agg_func: str="sum") -> Self:
+        date_column = date_column or self.date_column
+        report = TimeAggregatorReport(
+            df=self.df,
+            date_column=date_column,
+            value_columns=value_columns,
+            freq=freq,
+            agg_func=agg_func
+        )
+        result = report.aggregate()
+        self.sections.append({"time_aggregator": result})
 
         return self
  
@@ -268,6 +329,8 @@ class SummaryBuilder:
             .add_basic_info()
             .add_correlation_matrix()
             .add_correlation_chart()
+            .add_vif_calculator()
+            .add_time_aggregator()
             .add_time_comparison()
             .add_time_series_chart()
             .add_outliers_chart()

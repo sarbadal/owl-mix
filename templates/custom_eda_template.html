@@ -224,6 +224,35 @@
                 </section>
                 {% endif %}
 
+                <!-- VIF -->
+                {% if vif %}
+                <section>
+                    <h2>📈 Variance Inflation Factor (VIF)</h2>
+                    <p class="section-desc">VIF values for the feature variables</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="date-col" style="background: #e8ecff;">Feature</th>
+                                    <th class="date-col" style="background: #e8ecff;">VIF</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in range(vif.feature|length) %}
+                                <tr>
+                                    <td class="date-col">{{ vif.feature[row] }}</td>
+                                    <td class="date-col">{{ vif.vif_value[row] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
                 <!-- TIME COMPARISON -->
                 {% if time_comparison %}
                 <section>
@@ -254,6 +283,46 @@
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
                                         <td>{{ row[col + '_pct_change'] }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+
+                <!-- TIME AGGREGATOR -->
+                {% if time_aggregator %}
+                <section>
+                    <h2>📈 Yearly Aggregator</h2>
+                    <p class="section-desc">Simple info to show change over last period.</p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <!-- Date column -->
+                                    <th class="date-col" style="background: #e8ecff;">Year</th>
+                        
+                                    <!-- Dynamic columns -->
+                                    {% for col in time_aggregator.columns %}
+                                        <th>{{ col }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in time_aggregator.data %}
+                                <tr>
+                                    <!-- Date -->
+                                    <td class="date-col">{{ row.date }}</td>
+                        
+                                    <!-- Values + % change -->
+                                    {% for col in time_aggregator.columns %}
+                                        <td>{{ row[col] }}</td>
                                     {% endfor %}
                                 </tr>
                                 {% endfor %}

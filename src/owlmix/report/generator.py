@@ -22,15 +22,47 @@ class OwlMixReport:
         self.outlier_chart_config = {
             "columns": None,
             "max_cols_per_chart": 4,
-            "single_image": True
+            "single_image": True,
         }
 
         self.correlation_chart_config = {
             "columns": None,
+            "precision": 2,
+        }
+
+        self.correlation_config = {
+            "columns": None,
+        }
+
+        self.time_comparison_config = {
+            "date_column": self.date_column,
+            "value_columns": None,
+            "comparison_type": "yoy",
+            "agg_func": "sum",
             "precision": 2
         }
 
         os.makedirs(self.chart_dir, exist_ok=True)
+
+    def _validate_precision(self, precision: int):
+        if not isinstance(precision, int) or precision < 1:
+            raise ValueError("precision must be a positive integer")
+
+    def set_correlation_config(self, columns: list[str] = None) -> Self:
+        self.correlation_config["columns"] = columns
+
+        return self
+
+    def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
+        self._validate_precision(precision)
+
+        self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
+        self.time_comparison_config["value_columns"] = value_columns
+        self.time_comparison_config["comparison_type"] = comparison_type
+        self.time_comparison_config["agg_func"] = agg_func
+        self.time_comparison_config["precision"] = precision
+
+        return self
 
     def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
         if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
@@ -43,8 +75,7 @@ class OwlMixReport:
         return self
 
     def set_correlation_chart_layout(self, columns: list[str] = None, precision: int = 2):
-        if not isinstance(precision, int) or precision < 1:
-            raise ValueError("precision must be a positive integer")
+        self._validate_precision(precision)
 
         self.correlation_chart_config["columns"] = columns
         self.correlation_chart_config["precision"] = precision
@@ -59,6 +90,8 @@ class OwlMixReport:
             output_dir=self.chart_dir
         )
 
+        builder.set_time_comparison_config(**self.time_comparison_config)
+        builder.set_correlation_config(**self.correlation_config)
         builder.set_outlier_chart_layout(**self.outlier_chart_config)
         builder.set_correlation_chart_layout(**self.correlation_chart_config)
  

@@ -23,6 +23,42 @@ class ColumnMixin:
             return numeric_cols
 
         return self.df.select_dtypes(include=["number"]).columns.tolist()
+
+
+class SerializableMixin:
+    def _to_serializable(self, dt_format: str="%Y-%m-%d"):
+        result = {
+            "frequency": self.freq,
+            "columns": self.value_columns,
+            "data": [
+                {
+                    "date": str(idx),
+                    **{k: self._safe(v, dt_format=dt_format) for k, v in row.items()}
+                }
+                for idx, row in self.df.iterrows()
+            ]
+        }
+
+        return result
+
+    def _safe(self, val, dt_format: str="%Y-%m-%d"):
+        if pd.isna(val):
+            if isinstance(val, (pd.Timestamp, pd.DatetimeIndex)):
+                return "1970-01-01"
+            return None
+
+        if isinstance(val, (pd.Timestamp, pd.DatetimeIndex)):
+            return val.strftime(dt_format)
+
+        if isinstance(val, (str, int, float)):
+            rounded = round(float(val), self.precision)
+
+            if rounded.is_integer():
+                return int(rounded)
+
+            return rounded
+
+        return str(val)
  
  
 class NumpyPandasEncoder(json.JSONEncoder):

@@ -5,7 +5,7 @@ from jinja2 import Template
 
 class HTMLRenderer:
 
-    def __init__(self, template_name="report.html", template_path=None):
+    def __init__(self, template_name: str = "report.html", template_path: str = None):
         """
         template_name: file name (e.g., report.html)
         template_path: full custom path (highest priority)
@@ -24,7 +24,6 @@ class HTMLRenderer:
 
             if os.path.exists(user_templates_dir):
                 candidate = os.path.join(user_templates_dir, template_name)
-                print(candidate)
 
                 if os.path.exists(candidate):
                     template_dir = user_templates_dir
@@ -37,9 +36,6 @@ class HTMLRenderer:
                 # Step 3: fallback to package default
                 template_dir, template_file = self._get_default_template()
 
-        # Setup Jinja
-        print("template_dir: ", template_dir)
-        print("template_file: ", template_file)
         with open(os.path.join(template_dir, template_name), "r", encoding="utf-8") as f:
             template_content = f.read()
 
@@ -97,6 +93,12 @@ class HTMLRenderer:
                 if "time_comparison" in section:
                     time_comparison = section["time_comparison"]
 
+                if "vif" in section:
+                    vif = section["vif"]
+
+                if "time_aggregator" in section:
+                    time_aggregator = section["time_aggregator"]
+
                 if "correlation_matrix" in section:
                     correlation_matrix = section["correlation_matrix"]
 
@@ -140,6 +142,8 @@ class HTMLRenderer:
             "corr_matrix": correlation_matrix,
             "lag_corr": lag_correlation,
             "time_comparison": time_comparison,
+            "vif": vif,
+            # "time_aggregator": time_aggregator,
             "charts": charts
         }
 

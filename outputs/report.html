@@ -80,7 +80,7 @@
                 <h1>🦉 OwlMix EDA Report</h1>
                 <p>Exploratory Data Analysis for Marketing Mix Modeling</p>
                 <div class="meta-info">
-                    <span>📅 2026-04-16T22:48:48.366887</span>
+                    <span>📅 2026-04-17T19:04:12.601902</span>
                     <span>📊 0 section(s)</span>
                 </div>
             </header>
@@ -937,6 +937,60 @@
 
                 
 
+                <!-- VIF -->
+                
+                <section>
+                    <h2>📈 Variance Inflation Factor (VIF)</h2>
+                    <p class="section-desc">VIF values for the feature variables</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="date-col" style="background: #e8ecff;">Feature</th>
+                                    <th class="date-col" style="background: #e8ecff;">VIF</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr>
+                                    <td class="date-col">tv_spend</td>
+                                    <td class="date-col">6.19</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="date-col">digital_spend</td>
+                                    <td class="date-col">5.71</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="date-col">radio_spend</td>
+                                    <td class="date-col">5.06</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="date-col">tv_grp</td>
+                                    <td class="date-col">4.57</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="date-col">radio_grp</td>
+                                    <td class="date-col">4.99</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="date-col">digital_imp</td>
+                                    <td class="date-col">4.83</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                
+
                 <!-- TIME COMPARISON -->
                 
                 <section>
@@ -961,15 +1015,6 @@
                                         <th>radio_spend</th>
                                         <th>radio_spend % Change</th>
                                     
-                                        <th>tv_grp</th>
-                                        <th>tv_grp % Change</th>
-                                    
-                                        <th>radio_grp</th>
-                                        <th>radio_grp % Change</th>
-                                    
-                                        <th>digital_imp</th>
-                                        <th>digital_imp % Change</th>
-                                    
                                         <th>sales</th>
                                         <th>sales % Change</th>
                                     
@@ -979,494 +1024,41 @@
                                 
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col">2024-01-31</td>
+                                    <td class="date-col">2024</td>
                         
                                     <!-- Values + % change -->
                                     
-                                        <td>8122</td>
+                                        <td>109432</td>
                                         <td>None</td>
                                     
-                                        <td>6269</td>
+                                        <td>66901</td>
                                         <td>None</td>
                                     
-                                        <td>2193</td>
+                                        <td>30405</td>
                                         <td>None</td>
                                     
-                                        <td>1652</td>
-                                        <td>None</td>
-                                    
-                                        <td>2696</td>
-                                        <td>None</td>
-                                    
-                                        <td>1467</td>
-                                        <td>None</td>
-                                    
-                                        <td>7491.07</td>
+                                        <td>87619.192</td>
                                         <td>None</td>
                                     
                                 </tr>
                                 
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col">2025-01-31</td>
+                                    <td class="date-col">2025</td>
                         
                                     <!-- Values + % change -->
                                     
-                                        <td>9050</td>
-                                        <td>11.43</td>
+                                        <td>40502</td>
+                                        <td>-62.989</td>
                                     
-                                        <td>5267</td>
-                                        <td>-15.98</td>
+                                        <td>22793</td>
+                                        <td>-65.93</td>
                                     
-                                        <td>2490</td>
-                                        <td>13.54</td>
+                                        <td>10690</td>
+                                        <td>-64.841</td>
                                     
-                                        <td>1559</td>
-                                        <td>-5.63</td>
-                                    
-                                        <td>2371</td>
-                                        <td>-12.05</td>
-                                    
-                                        <td>1686</td>
-                                        <td>14.93</td>
-                                    
-                                        <td>7036.21</td>
-                                        <td>-6.07</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-02-29</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>8810</td>
-                                        <td>None</td>
-                                    
-                                        <td>5140</td>
-                                        <td>None</td>
-                                    
-                                        <td>2467</td>
-                                        <td>None</td>
-                                    
-                                        <td>1669</td>
-                                        <td>None</td>
-                                    
-                                        <td>2427</td>
-                                        <td>None</td>
-                                    
-                                        <td>1623</td>
-                                        <td>None</td>
-                                    
-                                        <td>6968.87</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2025-02-28</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9102</td>
-                                        <td>3.31</td>
-                                    
-                                        <td>4773</td>
-                                        <td>-7.14</td>
-                                    
-                                        <td>2354</td>
-                                        <td>-4.58</td>
-                                    
-                                        <td>1478</td>
-                                        <td>-11.44</td>
-                                    
-                                        <td>2647</td>
-                                        <td>9.06</td>
-                                    
-                                        <td>1611</td>
-                                        <td>-0.74</td>
-                                    
-                                        <td>6797.02</td>
-                                        <td>-2.47</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-03-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9658</td>
-                                        <td>None</td>
-                                    
-                                        <td>5319</td>
-                                        <td>None</td>
-                                    
-                                        <td>2519</td>
-                                        <td>None</td>
-                                    
-                                        <td>1628</td>
-                                        <td>None</td>
-                                    
-                                        <td>2870</td>
-                                        <td>None</td>
-                                    
-                                        <td>1680</td>
-                                        <td>None</td>
-                                    
-                                        <td>7312.51</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2025-03-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>8867</td>
-                                        <td>-8.19</td>
-                                    
-                                        <td>5483</td>
-                                        <td>3.08</td>
-                                    
-                                        <td>2422</td>
-                                        <td>-3.85</td>
-                                    
-                                        <td>1457</td>
-                                        <td>-10.5</td>
-                                    
-                                        <td>2361</td>
-                                        <td>-17.74</td>
-                                    
-                                        <td>1745</td>
-                                        <td>3.87</td>
-                                    
-                                        <td>7008.91</td>
-                                        <td>-4.15</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-04-30</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>8981</td>
-                                        <td>None</td>
-                                    
-                                        <td>5327</td>
-                                        <td>None</td>
-                                    
-                                        <td>2535</td>
-                                        <td>None</td>
-                                    
-                                        <td>1842</td>
-                                        <td>None</td>
-                                    
-                                        <td>2285</td>
-                                        <td>None</td>
-                                    
-                                        <td>1708</td>
-                                        <td>None</td>
-                                    
-                                        <td>7040.29</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2025-04-30</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9775</td>
-                                        <td>8.84</td>
-                                    
-                                        <td>5270</td>
-                                        <td>-1.07</td>
-                                    
-                                        <td>2358</td>
-                                        <td>-6.98</td>
-                                    
-                                        <td>1542</td>
-                                        <td>-16.29</td>
-                                    
-                                        <td>2676</td>
-                                        <td>17.11</td>
-                                    
-                                        <td>1752</td>
-                                        <td>2.58</td>
-                                    
-                                        <td>7188.23</td>
-                                        <td>2.1</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-05-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9329</td>
-                                        <td>None</td>
-                                    
-                                        <td>5839</td>
-                                        <td>None</td>
-                                    
-                                        <td>2431</td>
-                                        <td>None</td>
-                                    
-                                        <td>1605</td>
-                                        <td>None</td>
-                                    
-                                        <td>2831</td>
-                                        <td>None</td>
-                                    
-                                        <td>1874</td>
-                                        <td>None</td>
-                                    
-                                        <td>7494.99</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2025-05-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>3708</td>
-                                        <td>-60.25</td>
-                                    
-                                        <td>2000</td>
-                                        <td>-65.75</td>
-                                    
-                                        <td>1066</td>
-                                        <td>-56.15</td>
-                                    
-                                        <td>777</td>
-                                        <td>-51.59</td>
-                                    
-                                        <td>1168</td>
-                                        <td>-58.74</td>
-                                    
-                                        <td>642</td>
-                                        <td>-65.74</td>
-                                    
-                                        <td>2882.76</td>
-                                        <td>-61.54</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-06-30</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>7703</td>
-                                        <td>None</td>
-                                    
-                                        <td>5271</td>
-                                        <td>None</td>
-                                    
-                                        <td>2471</td>
-                                        <td>None</td>
-                                    
-                                        <td>1761</td>
-                                        <td>None</td>
-                                    
-                                        <td>2505</td>
-                                        <td>None</td>
-                                    
-                                        <td>1800</td>
-                                        <td>None</td>
-                                    
-                                        <td>6799.35</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-07-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>10547</td>
-                                        <td>None</td>
-                                    
-                                        <td>5816</td>
-                                        <td>None</td>
-                                    
-                                        <td>2472</td>
-                                        <td>None</td>
-                                    
-                                        <td>1593</td>
-                                        <td>None</td>
-                                    
-                                        <td>2459</td>
-                                        <td>None</td>
-                                    
-                                        <td>1886</td>
-                                        <td>None</td>
-                                    
-                                        <td>7885.53</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-08-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9010</td>
-                                        <td>None</td>
-                                    
-                                        <td>5492</td>
-                                        <td>None</td>
-                                    
-                                        <td>2870</td>
-                                        <td>None</td>
-                                    
-                                        <td>1696</td>
-                                        <td>None</td>
-                                    
-                                        <td>2526</td>
-                                        <td>None</td>
-                                    
-                                        <td>1677</td>
-                                        <td>None</td>
-                                    
-                                        <td>7198.21</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-09-30</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9826</td>
-                                        <td>None</td>
-                                    
-                                        <td>5473</td>
-                                        <td>None</td>
-                                    
-                                        <td>2417</td>
-                                        <td>None</td>
-                                    
-                                        <td>1470</td>
-                                        <td>None</td>
-                                    
-                                        <td>2400</td>
-                                        <td>None</td>
-                                    
-                                        <td>1628</td>
-                                        <td>None</td>
-                                    
-                                        <td>7380.42</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-10-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>8819</td>
-                                        <td>None</td>
-                                    
-                                        <td>5926</td>
-                                        <td>None</td>
-                                    
-                                        <td>2738</td>
-                                        <td>None</td>
-                                    
-                                        <td>1757</td>
-                                        <td>None</td>
-                                    
-                                        <td>2476</td>
-                                        <td>None</td>
-                                    
-                                        <td>1047</td>
-                                        <td>None</td>
-                                    
-                                        <td>7218.1</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-11-30</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>9775</td>
-                                        <td>None</td>
-                                    
-                                        <td>4930</td>
-                                        <td>None</td>
-                                    
-                                        <td>2558</td>
-                                        <td>None</td>
-                                    
-                                        <td>1707</td>
-                                        <td>None</td>
-                                    
-                                        <td>2568</td>
-                                        <td>None</td>
-                                    
-                                        <td>1589</td>
-                                        <td>None</td>
-                                    
-                                        <td>7016.48</td>
-                                        <td>None</td>
-                                    
-                                </tr>
-                                
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">2024-12-31</td>
-                        
-                                    <!-- Values + % change -->
-                                    
-                                        <td>8852</td>
-                                        <td>None</td>
-                                    
-                                        <td>6099</td>
-                                        <td>None</td>
-                                    
-                                        <td>2734</td>
-                                        <td>None</td>
-                                    
-                                        <td>1765</td>
-                                        <td>None</td>
-                                    
-                                        <td>2826</td>
-                                        <td>None</td>
-                                    
-                                        <td>1708</td>
-                                        <td>None</td>
-                                    
-                                        <td>7813.38</td>
-                                        <td>None</td>
+                                        <td>30913.141</td>
+                                        <td>-64.719</td>
                                     
                                 </tr>
                                 
@@ -1476,6 +1068,10 @@
                 </section>
 
                 <div class="divider"></div>
+                
+
+
+                <!-- TIME AGGREGATOR -->
                 
 
                 <!-- CORRELATION MATRIX -->
@@ -2105,7 +1701,7 @@
             <footer>
                 <div>
                     <strong>Generated by OwlMix EDA</strong><br/>
-                    Report generated on 2026-04-16T22:48:48.366887
+                    Report generated on 2026-04-17T19:04:12.601902
                 </div>
             </footer>
         </div>

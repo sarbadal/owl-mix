@@ -12,7 +12,8 @@ sys.path.insert(0, SRC_PATH)
 import pandas as pd
 import numpy as np
 
-from owlmix.report.generator import OwlMixReport
+# from owlmix.report.generator import OwlMixReport
+from owlmix.report import OwlMixReport
 
 def create_sample_data(n=100):
     """Create sample MMM-like dataset."""
@@ -61,6 +62,16 @@ def main():
         date_column="date",
         template_name="custom_eda_template.html",
     )
+
+    report.set_time_comparison_config(
+        date_column="date",
+        value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
+        precision=3,
+    )
+
+    # report.set_correlation_config(
+    #     columns=["tv_spend", "radio_spend", "digital_spend"]
+    # )
 
     # report.set_outlier_chart_layout(
     #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],

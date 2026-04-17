@@ -2,7 +2,7 @@
 import json 
 import pandas as pd
 
-from .utils import to_json
+from .utils import to_json, ColumnMixin
  
  
 def get_correlation_matrix(df: pd.DataFrame) -> dict:
@@ -21,14 +21,15 @@ def get_lag_correlation(df: pd.DataFrame, column: str, target: str, lags: list[i
     return json.dumps(results, indent=2)
 
 
-class Correlation:
-    def __init__(self, df: pd.DataFrame):
+class Correlation(ColumnMixin):
+    def __init__(self, df: pd.DataFrame, columns: list[str]=None):
         self.df = df
         self.corr_matrix = None
         self.lag_corr = None
+        self.columns = self._get_columns(columns)
  
     def compute_correlation_matrix(self) -> dict:
-        corr = self.df.corr(numeric_only=True)
+        corr = self.df[self.columns].corr(numeric_only=True)
         self.corr_matrix = corr.to_dict()
         return self.corr_matrix
  
