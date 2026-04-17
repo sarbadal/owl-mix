@@ -17,9 +17,9 @@ from owlmix.report import OwlMixReport
 
 def create_sample_data(n=100):
     """Create sample MMM-like dataset."""
-    np.random.seed(42)
+    # np.random.seed(46)
  
-    dates = pd.date_range(start="2024-01-01", periods=n, freq="D")
+    dates = pd.date_range(start="2021-01-01", periods=n, freq="D")
  
     df = pd.DataFrame({
         "date": dates,
@@ -29,6 +29,8 @@ def create_sample_data(n=100):
         "tv_grp": np.random.randint(10, 100, size=n),
         "radio_grp": np.random.randint(20, 150, size=n),
         "digital_imp": np.random.randint(10, 100, size=n),
+        "radio_imp": np.random.randint(20, 150, size=n),
+        "inflation": np.random.randint(10, 100, size=n),
     })
 
     df['date'] = df['date'].dt.strftime("%Y-%m-%d")
@@ -52,7 +54,7 @@ def create_sample_data(n=100):
 
 
 def main():
-    df = create_sample_data(n=500)
+    df = create_sample_data(n=1000)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -63,11 +65,11 @@ def main():
         template_name="custom_eda_template.html",
     )
 
-    report.set_time_comparison_config(
-        date_column="date",
-        value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
-        precision=3,
-    )
+    # report.set_time_comparison_config(
+    #     date_column="date",
+    #     value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
+    #     precision=3,
+    # )
 
     # report.set_correlation_config(
     #     columns=["tv_spend", "radio_spend", "digital_spend"]

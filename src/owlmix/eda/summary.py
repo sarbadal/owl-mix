@@ -21,6 +21,7 @@ from owlmix.eda.charts.correlation import CorrelationChart
 from owlmix.eda.charts.time_series import TimeSeriesChart
 from owlmix.eda.charts.outliers import OutlierChart
 from owlmix.eda.charts.lag import LagCorrelationChart
+from owlmix.eda.charts.distribution import DistributionChart
  
  
 class SummaryBuilder:
@@ -168,6 +169,26 @@ class SummaryBuilder:
     # =========================
     # CHART SECTIONS
     # =========================
+
+    def add_distribution_chart(self, columns: list[str] = None) -> Self:
+        columns = columns or self.correlation_config["columns"]
+
+        chart = DistributionChart(
+            df=self.df,
+            columns=columns,
+            output_dir=self.output_dir
+        )
+        path = chart.generate()
+        self.chart_paths.append(
+            {
+                "title": "Distribution Chart",
+                "description": "Distribution chart plot",
+                "distribution_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": "Distribution Chart"
+            }
+        )
+        return self
  
     def add_correlation_chart(self, columns: list[str]=None, precision: int=None):
         if columns is None:
@@ -336,6 +357,7 @@ class SummaryBuilder:
             .add_outliers_chart()
             .add_lag_correlation()
             .add_comparison_chart()
+            .add_distribution_chart()
         )
  
     # =========================
