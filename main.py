@@ -63,7 +63,13 @@ def main():
         target="sales",
         date_column="date",
         template_name="custom_eda_template.html",
+        # template_name="custom_eda_template_dark.html",
     )
+
+    # report.set_vif_config(
+    #     features=["tv_spend", "digital_spend", "radio_spend"],
+    #     precision=5,
+    # )
 
     # report.set_time_comparison_config(
     #     date_column="date",
@@ -84,7 +90,10 @@ def main():
     #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
     #     precision=1
     # )
-    report.run()
+    report.run(
+        json_file_name="report2.json",
+        html_file_name="report2.html",
+    )
 
 
 if __name__ == "__main__":

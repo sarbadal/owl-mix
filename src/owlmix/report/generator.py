@@ -42,11 +42,26 @@ class OwlMixReport:
             "precision": 2
         }
 
+        self.vif_config = {
+            "target_column": self.target,
+            "features": None,
+            "precision": 3
+        }
+
         os.makedirs(self.chart_dir, exist_ok=True)
 
     def _validate_precision(self, precision: int):
         if not isinstance(precision, int) or precision < 1:
             raise ValueError("precision must be a positive integer")
+
+    def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
+        self._validate_precision(precision)
+
+        self.vif_config["target_column"] = target_column
+        self.vif_config["features"] = features
+        self.vif_config["precision"] = precision
+
+        return self
 
     def set_correlation_config(self, columns: list[str] = None) -> Self:
         self.correlation_config["columns"] = columns
@@ -82,7 +97,7 @@ class OwlMixReport:
 
         return self
  
-    def generate_json(self):
+    def generate_json(self, out_file_name: str = "report.json") -> tuple:
         builder = SummaryBuilder(
             self.df, 
             target=self.target, 
@@ -91,6 +106,7 @@ class OwlMixReport:
         )
 
         builder.set_time_comparison_config(**self.time_comparison_config)
+        builder.set_vif_config(**self.vif_config)
         builder.set_correlation_config(**self.correlation_config)
         builder.set_outlier_chart_layout(**self.outlier_chart_config)
         builder.set_correlation_chart_layout(**self.correlation_chart_config)
@@ -98,25 +114,24 @@ class OwlMixReport:
         builder = builder.add_all()
         report_dict = builder.build()
  
-        json_path = os.path.join(self.output_dir, "report.json")
+        json_path = os.path.join(self.output_dir, out_file_name)
         builder.save(json_path)
  
         return report_dict, json_path
  
-    def generate_html(self) -> str:
+    def generate_html(self, out_file_name: str = "report.html") -> str:
         report_dict, _ = self.generate_json()
-        html_output_path = os.path.join(self.output_dir, "report.html")
+        html_output_path = os.path.join(self.output_dir, out_file_name)
 
         renderer = HTMLRenderer(
             template_name=self.template_name, 
             template_path=self.template_path
         )
-        html_output_path = os.path.join(self.output_dir, "report.html")
 
         renderer.render(report_dict, html_output_path)
 
         return html_output_path
  
-    def run(self):
-        self.generate_json()
-        self.generate_html()
+    def run(self, json_file_name: str = "report.json", html_file_name: str = "report.html"):
+        self.generate_json(out_file_name=json_file_name)
+        self.generate_html(out_file_name=html_file_name)

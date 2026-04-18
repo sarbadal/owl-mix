@@ -22,6 +22,7 @@ from owlmix.eda.charts.time_series import TimeSeriesChart
 from owlmix.eda.charts.outliers import OutlierChart
 from owlmix.eda.charts.lag import LagCorrelationChart
 from owlmix.eda.charts.distribution import DistributionChart
+from owlmix.eda.charts.vif import VIFChart
  
  
 class SummaryBuilder:
@@ -46,7 +47,7 @@ class SummaryBuilder:
         }
 
         self.correlation_config = {
-            "columns": None,
+            "columns": None
         }
 
         self.time_comparison_config = {
@@ -55,8 +56,24 @@ class SummaryBuilder:
             "agg_func": "sum",
             "precision": 2
         }
+
+        self.vif_config = {
+            "target_column": self.target,
+            "features": None,
+            "precision": 3
+        }
  
         os.makedirs(self.output_dir, exist_ok=True)
+
+    def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
+        if not isinstance(precision, int) or precision < 1:
+            raise ValueError("precision must be a positive integer")
+
+        self.vif_config["target_column"] = target_column
+        self.vif_config["features"] = features
+        self.vif_config["precision"] = precision
+
+        return self
 
     def set_correlation_config(self, columns: list[str] = None) -> Self:
         self.correlation_config["columns"] = columns
@@ -104,13 +121,16 @@ class SummaryBuilder:
         self.sections.append({"basic_info": json.loads(json_content)})
         return self
 
-    def add_vif_calculator(self, target_column: str = None, features: list[str] = None) -> Self:
-        target_column = target_column or self.target
+    def add_vif_calculator(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
+        target_column = target_column or self.vif_config["target_column"]
+        features = features or self.vif_config["features"]
+        precision = self.vif_config["precision"]
 
         vif_calculator = VIFCalculator(
             df=self.df,
             target_column=target_column,
-            features=features
+            features=features,
+            precision=precision
         )
         self.sections.append({"vif": vif_calculator.compute_vif()})
 
@@ -169,6 +189,29 @@ class SummaryBuilder:
     # =========================
     # CHART SECTIONS
     # =========================
+
+    def add_vif_chart(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
+        target_column = target_column or self.vif_config["target_column"]
+        features = features or self.vif_config["features"]
+        precision = self.vif_config["precision"]
+
+        chart = VIFChart(
+            df=self.df,
+            target_column=target_column,
+            features=features,
+            precision=precision
+        )
+        path = chart.generate()
+        self.chart_paths.append(
+            {
+                "title": "VIF Chart",
+                "description": "VIF chart plot",
+                "vif_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": "VIF Chart"
+            }
+        )
+        return self
 
     def add_distribution_chart(self, columns: list[str] = None) -> Self:
         columns = columns or self.correlation_config["columns"]
@@ -357,6 +400,7 @@ class SummaryBuilder:
             .add_outliers_chart()
             .add_lag_correlation()
             .add_comparison_chart()
+            .add_vif_chart()
             .add_distribution_chart()
         )
  

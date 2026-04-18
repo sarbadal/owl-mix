@@ -14,6 +14,8 @@ class DistributionChart(ColumnMixin):
         self.columns = self._get_columns(columns)
         self.output_dir = output_dir
 
+        os.makedirs(self.output_dir, exist_ok=True)
+
     def generate(self, max_charts_per_row: int = 3) -> str:
         n = len(self.columns)
 
