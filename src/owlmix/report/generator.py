@@ -57,6 +57,14 @@ class OwlMixReport:
             "columns": None
         }
 
+        self.kpi_vs_feature_config = {
+            "target_column": self.target,
+            "columns": None,
+            "date_format": "%Y-%m-%d",
+            "date_column": self.date_column,
+            "agg_func": "sum",
+        }
+
         os.makedirs(self.chart_dir, exist_ok=True)
 
     def _validate_precision(self, precision: int):
@@ -69,6 +77,15 @@ class OwlMixReport:
         self.vif_config["target_column"] = target_column
         self.vif_config["features"] = features
         self.vif_config["precision"] = precision
+
+        return self
+
+    def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
+        self.kpi_vs_feature_config["target_column"] = target_column or self.target
+        self.kpi_vs_feature_config["date_format"] = date_format
+        self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
+        self.kpi_vs_feature_config["agg_func"] = agg_func
+        self.kpi_vs_feature_config["columns"] = columns
 
         return self
 
@@ -127,6 +144,7 @@ class OwlMixReport:
 
         builder.set_time_comparison_config(**self.time_comparison_config)
         builder.set_vif_config(**self.vif_config)
+        builder.set_kpi_vs_feature_config(**self.kpi_vs_feature_config)
         builder.set_acf_pacf_config(**self.acf_pacf_config)
         builder.set_categorical_columns(**self.categorical_columns)
         builder.set_correlation_config(**self.correlation_config)

@@ -19,7 +19,7 @@ class CategoricalDistributionChart:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def generate(self, output_path="categorical_distribution.png"):
+    def generate(self):
         n = len(self.data)
         n_cols = 2
         n_rows = math.ceil(n / n_cols)
@@ -65,8 +65,10 @@ class CategoricalDistributionChart:
             ax.tick_params(axis='y', labelsize=8)
 
         plt.tight_layout()
-        plt.savefig(output_path, dpi=150)
+
+        file_path = os.path.join(self.output_dir, "categorical_distribution.png")
+        plt.savefig(file_path, dpi=150)
         plt.close()
 
-        return output_path
+        return file_path
  

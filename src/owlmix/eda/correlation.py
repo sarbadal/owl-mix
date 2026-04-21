@@ -23,7 +23,7 @@ def get_lag_correlation(df: pd.DataFrame, column: str, target: str, lags: list[i
 
 class Correlation(ColumnMixin):
     def __init__(self, df: pd.DataFrame, columns: list[str]=None):
-        self.df = df
+        self.df = df.copy()
         self.corr_matrix = None
         self.lag_corr = None
         self.columns = self._get_columns(columns)

@@ -183,14 +183,34 @@ def main():
         ]
     )
 
+    report.set_kpi_vs_feature_config(
+        columns=[
+            "tv_spend",
+            "digital_spend",
+            "radio_spend",
+            # "tv_grp",
+            # "radio_grp",
+            # "digital_imp",
+
+        ],
+        date_format="%Y",
+    )
+
     # report.set_vif_config(
     #     features=["tv_spend", "digital_spend", "radio_spend"],
     #     precision=5,
     # )
 
     report.set_acf_pacf_config(
-        columns=["tv_spend", "digital_spend", "radio_spend"],
-        n_lags=6
+        columns=[
+            # "tv_spend",
+            # "digital_spend",
+            # "radio_spend",
+            # "tv_grp",
+            # "radio_grp",
+            # "digital_imp",
+        ],
+        n_lags=15
     )
 
     # report.set_time_comparison_config(

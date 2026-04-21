@@ -7,6 +7,7 @@ from typing import Self
 import pandas as pd
 import json
 
+from owlmix.eda import kpi_vs_feature
 from owlmix.eda.basic import get_basic_info
 from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
 
@@ -18,6 +19,7 @@ from owlmix.eda.acf_pacf import ACFPACFCalculator
 from owlmix.eda.time.comparison import TimeComparisonReport, TimeAggregatorReport
 from owlmix.eda.causality import CausalityTest
 from owlmix.eda.categorical_distribution_generator import CategoricalDistributionGenerator
+from owlmix.eda.kpi_vs_feature import DualAxisLineChartDataGenerator
  
 from owlmix.eda.charts.time.comparison import ComparisonChart
 from owlmix.eda.charts.correlation import CorrelationChart
@@ -27,6 +29,7 @@ from owlmix.eda.charts.lag import LagCorrelationChart
 from owlmix.eda.charts.distribution import DistributionChart
 from owlmix.eda.charts.categorical_distribution import CategoricalDistributionChart
 from owlmix.eda.charts.vif import VIFChart
+from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
  
  
 class SummaryBuilder:
@@ -75,6 +78,14 @@ class SummaryBuilder:
         self.categorical_columns = {
             "columns": None
         }
+
+        self.kpi_vs_feature_config = {
+            "target_column": self.target,
+            "columns": None,
+            "date_format": "%Y-%m-%d",
+            "date_column": self.date_column,
+            "agg_func": "sum",
+        }
  
         os.makedirs(self.output_dir, exist_ok=True)
 
@@ -85,6 +96,15 @@ class SummaryBuilder:
         self.vif_config["target_column"] = target_column
         self.vif_config["features"] = features
         self.vif_config["precision"] = precision
+
+        return self
+
+    def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
+        self.kpi_vs_feature_config["target_column"] = target_column or self.target
+        self.kpi_vs_feature_config["date_format"] = date_format
+        self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
+        self.kpi_vs_feature_config["agg_func"] = agg_func
+        self.kpi_vs_feature_config["columns"] = columns
 
         return self
 
@@ -157,6 +177,26 @@ class SummaryBuilder:
             precision=precision
         )
         self.sections.append({"vif": vif_calculator.compute_vif()})
+
+        return self
+
+    def add_kpi_vs_feature(self, target_column: str = None, features: list[str] = None) -> Self:
+        target_column = target_column or self.kpi_vs_feature_config["target_column"]
+        date_format = self.kpi_vs_feature_config["date_format"]
+        date_column = self.kpi_vs_feature_config["date_column"]
+        agg_func = self.kpi_vs_feature_config["agg_func"]
+        columns = self.kpi_vs_feature_config["columns"]
+
+        kpi_vs_feature_generator = DualAxisLineChartDataGenerator(
+            df=self.df,
+            target_column=target_column,
+            columns=columns,
+            date_format=date_format,
+            date_column=date_column,
+            agg_func=agg_func,
+        )
+        result = kpi_vs_feature_generator.generate()
+        self.sections.append({"kpi_vs_features": result})
 
         return self
 
@@ -275,6 +315,26 @@ class SummaryBuilder:
                 "vif_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "VIF Chart"
+            }
+        )
+        return self
+
+    def add_acf_pacf_chart(self) -> Self:
+        chart = ACFPACFPlotter(
+            data=self._acf_pacf_chart_data,
+            output_dir=self.output_dir
+        )
+        path = chart.generate()
+        if path is None:
+            return self
+
+        self.chart_paths.append(
+            {
+                "title": "ACF PACF Chart",
+                "description": "ACF PACF chart plot",
+                "acf_pacf_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": "ACF PACF Chart"
             }
         )
         return self
@@ -480,6 +540,7 @@ class SummaryBuilder:
             .add_correlation_matrix()
             .add_correlation_chart()
             .add_vif_calculator()
+            .add_kpi_vs_feature()
             .add_acf_pacf_calculator()
             .add_causality_test()
             .add_categorical_distribution()
@@ -490,6 +551,7 @@ class SummaryBuilder:
             .add_lag_correlation()
             .add_comparison_chart()
             .add_vif_chart()
+            .add_acf_pacf_chart()
             .add_distribution_chart()
             .add_categorical_distribution_chart()
         )
