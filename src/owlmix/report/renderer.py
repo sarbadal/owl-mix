@@ -93,6 +93,9 @@ class HTMLRenderer:
                 if "time_comparison" in section:
                     time_comparison = section["time_comparison"]
 
+                if "causality_test" in section:
+                    causality_test = section["causality_test"]
+
                 if "vif" in section:
                     vif = section["vif"]
 
@@ -142,6 +145,7 @@ class HTMLRenderer:
             "corr_matrix": correlation_matrix,
             "lag_corr": lag_correlation,
             "time_comparison": time_comparison,
+            "causality_test": causality_test,
             "vif": vif,
             # "time_aggregator": time_aggregator,
             "charts": charts

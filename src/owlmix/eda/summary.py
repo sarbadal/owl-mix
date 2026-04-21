@@ -15,13 +15,16 @@ from owlmix.eda.stats import BasicStats
 from owlmix.eda.correlation import Correlation
 from owlmix.eda.vif import VIFCalculator
 from owlmix.eda.time.comparison import TimeComparisonReport, TimeAggregatorReport
-from owlmix.eda.charts.time.comparison import ComparisonChart
+from owlmix.eda.causality import CausalityTest
+from owlmix.eda.categorical_distribution_generator import CategoricalDistributionGenerator
  
+from owlmix.eda.charts.time.comparison import ComparisonChart
 from owlmix.eda.charts.correlation import CorrelationChart
 from owlmix.eda.charts.time_series import TimeSeriesChart
 from owlmix.eda.charts.outliers import OutlierChart
 from owlmix.eda.charts.lag import LagCorrelationChart
 from owlmix.eda.charts.distribution import DistributionChart
+from owlmix.eda.charts.categorical_distribution import CategoricalDistributionChart
 from owlmix.eda.charts.vif import VIFChart
  
  
@@ -61,6 +64,10 @@ class SummaryBuilder:
             "target_column": self.target,
             "features": None,
             "precision": 3
+        }
+
+        self.categorical_columns = {
+            "columns": None
         }
  
         os.makedirs(self.output_dir, exist_ok=True)
@@ -110,6 +117,11 @@ class SummaryBuilder:
         self.correlation_chart_config["precision"] = precision
 
         return self
+
+    def set_categorical_columns(self, columns: list[str] = None) -> Self:
+        self.categorical_columns["columns"] = columns
+
+        return self
  
     # =========================
     # TEXT SECTIONS
@@ -133,6 +145,20 @@ class SummaryBuilder:
             precision=precision
         )
         self.sections.append({"vif": vif_calculator.compute_vif()})
+
+        return self
+
+    def add_causality_test(self, target_column: str = None, columns: list[str] = None, max_lag: int = 5, error_threshold: float = 0.30) -> Self:
+        target_column = target_column or self.target
+
+        causality_test = CausalityTest(
+            df=self.df,
+            target_column=target_column,
+            columns=columns
+        )
+
+        result = causality_test.run(max_lag=max_lag, error_threshold=error_threshold)
+        self.sections.append({"causality_test": result})
 
         return self
 
@@ -185,6 +211,16 @@ class SummaryBuilder:
         self.sections.append({"time_aggregator": result})
 
         return self
+
+    def add_categorical_distribution(self, columns: list[str] = None) -> Self:
+        columns = columns or self.categorical_columns["columns"]
+        generator = CategoricalDistributionGenerator(df=self.df, columns=columns)
+        result = generator.generate()
+        self.sections.append({"categorical_distribution": result})
+
+        self._categorical_chart_data = result["data"]
+
+        return self
  
     # =========================
     # CHART SECTIONS
@@ -232,7 +268,24 @@ class SummaryBuilder:
             }
         )
         return self
- 
+
+    def add_categorical_distribution_chart(self) -> Self:
+        chart = CategoricalDistributionChart(
+            data=self._categorical_chart_data,
+            output_dir=self.output_dir
+        )
+        path = chart.generate()
+        self.chart_paths.append(
+            {
+                "title": "Categorical Distribution Chart",
+                "description": "Categorical distribution chart plot",
+                "categorical_distribution_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": "Categorical Distribution Chart"
+            }
+        )
+        return self
+
     def add_correlation_chart(self, columns: list[str]=None, precision: int=None):
         if columns is None:
             columns = self.correlation_chart_config["columns"]
@@ -351,7 +404,7 @@ class SummaryBuilder:
             }
         )
         return self
- 
+
     def add_report_title(self, title: str = "OwlMix EDA Report"):
         self.sections.append({"title": title})
         return self
@@ -394,6 +447,8 @@ class SummaryBuilder:
             .add_correlation_matrix()
             .add_correlation_chart()
             .add_vif_calculator()
+            .add_causality_test()
+            .add_categorical_distribution()
             .add_time_aggregator()
             .add_time_comparison()
             .add_time_series_chart()
@@ -402,6 +457,7 @@ class SummaryBuilder:
             .add_comparison_chart()
             .add_vif_chart()
             .add_distribution_chart()
+            .add_categorical_distribution_chart()
         )
  
     # =========================

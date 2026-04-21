@@ -4,107 +4,312 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title or "OwlMix EDA Report" }}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html, body { min-height: 100%; background: #f4f7fb; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #24303f; }
-        
-        .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        .report-shell { background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-        
-        header { padding: 48px; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); color: #ffffff; text-align: center; }
-        .report-tag { display: inline-block; margin-bottom: 16px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 0.9rem; }
-        header h1 { font-size: 3rem; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; }
-        header p { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; }
-        
-        .meta-info { margin-top: 20px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .meta-info span { background: rgba(255,255,255,0.1); padding: 8px 14px; border-radius: 6px; font-size: 0.95rem; }
-        
-        main { padding: 48px; }
-        
-        section { margin-bottom: 50px; }
-        section:last-child { margin-bottom: 0; }
-        
-        h2 { font-size: 1.8rem; color: #1e293b; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 3px solid #4b6cb7; }
-        .section-desc { color: #55687d; margin: 12px 0 24px; line-height: 1.7; }
-        
-        .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .card { background: #f8fbff; border: 1px solid #e0e8f5; border-radius: 12px; padding: 20px; }
-        .card strong { color: #3f5a8c; font-size: 0.9rem; display: block; margin-bottom: 6px; }
-        .card .value { color: #182848; font-size: 1.6rem; font-weight: 700; }
-        
-        .table-container { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #e0e8f5; }
-        table { 
-            width: 100%; 
-            table-layout: auto; 
-            border-collapse: collapse; 
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --light-bg: #f8fbff;
+            --border-color: #e0e8f5;
+            --text-muted: #5c6f84;
         }
-        thead { background: #eef4ff; }
-        th { padding: 14px 16px; text-align: left; font-weight: 700; color: #1f2a38; font-size: 0.95rem; border-bottom: 2px solid #d9e4f7; }
-        td { padding: 12px 16px; border-bottom: 1px solid #e8edf3; color: #4d5f73; }
-        tbody tr:nth-child(even) { background: #fcfdff; }
-        tbody tr:hover { background: #f5f8ff; }
-        .date-col { 
-            width: 120px; 
+
+        body {
+            background: #f4f7fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #24303f;
+        }
+
+        .report-container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin: 24px auto;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .report-tag {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.15);
+            font-size: 0.9rem;
+        }
+
+        .report-header h1 {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .report-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .meta-info {
+            margin-top: 20px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .report-main {
+            padding: 48px 24px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .section-desc {
+            color: #55687d;
+            margin: 12px 0 24px;
+            line-height: 1.7;
+        }
+
+        .info-card {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .info-card strong {
+            color: #3f5a8c;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .info-card .value {
+            color: #182848;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .table-responsive-custom {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: #eef4ff;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 700;
+            color: #1f2a38;
+            font-size: 0.95rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8edf3;
+            color: #4d5f73;
+        }
+
+        .table tbody tr {
+            background: #ffffff;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background: #fcfdff;
+        }
+
+        .table tbody tr:hover {
+            background: #f5f8ff;
+        }
+
+        .columns-display {
+            display: inline-block;
+            background: #f0f4ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: #3f5a8c;
+            font-size: 0.95rem;
+        }
+
+        .badge-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .badge-item {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .badge-item.ok {
+            color: #185e3b;
+            background: #d1f3e0;
+            border: 1px solid #a8e6c5;
+        }
+
+        .badge-item.missing {
+            color: #832020;
+            background: #fdd9d9;
+            border: 1px solid #fbacac;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 32px;
+            margin-top: 24px;
+        }
+
+        .chart-card {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-card h3 {
+            font-size: 1.15rem;
+            color: #212c3b;
+            margin-bottom: 8px;
+        }
+
+        .chart-card p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .chart-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--border-color), transparent);
+            margin: 40px 0;
+        }
+
+        .no-data {
+            background: #fff9e6;
+            border: 1px solid #ffe680;
+            border-radius: 8px;
+            padding: 16px;
+            color: #996600;
+        }
+
+        .report-footer {
+            padding: 24px 48px;
+            background: var(--light-bg);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .date-col {
+            width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
-        .columns-display { display: inline-block; background: #f0f4ff; padding: 8px 12px; border-radius: 6px; color: #3f5a8c; font-size: 0.95rem; }
-        
-        .badge-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
-        .badge { padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-align: center; }
-        .badge.ok { color: #185e3b; background: #d1f3e0; border: 1px solid #a8e6c5; }
-        .badge.missing { color: #832020; background: #fdd9d9; border: 1px solid #fbacac; }
-        
-        .chart-grid { display: grid; gap: 32px; margin-top: 24px; }
-        .chart-card { background: #f8fbff; border: 1px solid #e0e8f5; border-radius: 12px; padding: 24px; }
-        .chart-card h3 { font-size: 1.15rem; color: #212c3b; margin-bottom: 8px; }
-        .chart-card p { color: #5c6f84; margin-bottom: 16px; line-height: 1.6; }
-        .chart-card img { width: 100%; height: auto; border-radius: 10px; display: block; }
-        
-        footer { padding: 24px 48px; background: #f8fbff; border-top: 1px solid #e0e8f5; text-align: center; color: #5c6f84; font-size: 0.9rem; }
-        
-        .divider { height: 2px; background: linear-gradient(to right, transparent, #e0e8f5, transparent); margin: 40px 0; }
-        
-        .no-data { background: #fff9e6; border: 1px solid #ffe680; border-radius: 8px; padding: 16px; color: #996600; }
+
+        @media (max-width: 768px) {
+            .report-header {
+                padding: 32px 16px;
+            }
+
+            .report-header h1 {
+                font-size: 2rem;
+            }
+
+            .report-main {
+                padding: 24px 16px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="page">
-        <div class="report-shell">
-            <header>
+    <div class="container-lg">
+        <div class="report-container">
+            <!-- HEADER -->
+            <div class="report-header">
                 <div class="report-tag">{{ generator or "OwlMix EDA Module" }}</div>
                 <h1>{{ header_title or "🦉 OwlMix EDA Report" }}</h1>
                 <p>{{ header_subtitle or "Exploratory Data Analysis for Marketing Mix Modeling" }}</p>
                 <div class="meta-info">
                     <span>📅 {{ report_date or "Unknown" }}</span>
                 </div>
-            </header>
+            </div>
 
-            <main>
+            <!-- MAIN CONTENT -->
+            <main class="report-main">
 
                 <!-- DATASET OVERVIEW -->
                 {% if basic_info %}
-                <section>
-                    <h2>📊 Dataset Overview</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📊 Dataset Overview</h2>
                     <p class="section-desc">High-level summary of the dataset structure and composition.</p>
                     
-                    <div class="info-cards">
-                        <div class="card">
-                            <strong>Total Records</strong>
-                            <div class="value">{{ basic_info.num_rows | default("N/A") }}</div>
+                    <!-- Info Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <strong>Total Records</strong>
+                                <div class="value">{{ basic_info.num_rows | default("N/A") }}</div>
+                            </div>
                         </div>
-                        <div class="card">
-                            <strong>Total Columns</strong>
-                            <div class="value">{{ basic_info.num_columns | default("N/A") }}</div>
+                        <div class="col-md-4">
+                            <div class="info-card">
+                                <strong>Total Columns</strong>
+                                <div class="value">{{ basic_info.num_columns | default("N/A") }}</div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Column Names -->
                     {% if basic_info.column_names %}
-                    <div>
+                    <div class="mb-4">
                         <strong style="display: block; margin-bottom: 8px; color: #1e293b;">Column Names:</strong>
                         <div class="columns-display">
                             {{ basic_info.column_names | join(", ") }}
@@ -116,9 +321,9 @@
 
                     <!-- DATA TYPES TABLE -->
                     {% if basic_info.data_types %}
-                    <h3 style="font-size: 1.3rem; color: #1e293b; margin-top: 24px; margin-bottom: 12px;">📝 Data Types & Missing Values</h3>
-                    <div class="table-container">
-                        <table>
+                    <h3 class="mt-4 mb-3" style="font-size: 1.3rem; color: #1e293b;">📝 Data Types & Missing Values</h3>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Column</th>
@@ -149,10 +354,10 @@
 
                     <!-- MISSING VALUES SUMMARY -->
                     {% if basic_info.missing_values %}
-                    <h3 style="font-size: 1.3rem; color: #1e293b; margin-top: 24px; margin-bottom: 12px;">🔍 Missing Values Summary</h3>
-                    <div class="badge-group">
+                    <h3 class="mt-4 mb-3" style="font-size: 1.3rem; color: #1e293b;">🔍 Missing Values Summary</h3>
+                    <div class="badge-container">
                         {% for col_name, count in basic_info.missing_values.items() %}
-                        <div class="badge {% if count | int == 0 %}ok{% else %}missing{% endif %}">
+                        <div class="badge-item {% if count | int == 0 %}ok{% else %}missing{% endif %}">
                             <strong>{{ col_name }}</strong><br/>
                             {{ count }} missing
                         </div>
@@ -166,12 +371,12 @@
 
                 <!-- SUMMARY STATISTICS -->
                 {% if basic_info.summary_stats %}
-                <section>
-                    <h2>📈 Summary Statistics</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📈 Summary Statistics</h2>
                     <p class="section-desc">Descriptive statistics for all numerical and datetime variables.</p>
                     
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Statistic</th>
@@ -216,7 +421,7 @@
                 {% endif %}
 
                 {% else %}
-                <section>
+                <section class="mb-5">
                     <div class="no-data">
                         ⚠️ No basic information available. Ensure report.json contains 'basic_info' section.
                     </div>
@@ -225,83 +430,23 @@
 
                 <!-- VIF -->
                 {% if vif %}
-                <section>
-                    <h2>📈 Variance Inflation Factor (VIF)</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📈 Variance Inflation Factor (VIF)</h2>
                     <p class="section-desc">VIF values for the feature variables</p>
 
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th class="date-col" style="background: #e8ecff;">Feature</th>
-                                    <th class="date-col" style="background: #e8ecff;">Variance Inflation Factor (VIF)</th>
+                                    <th class="date-col" style="background: #e8ecff;">VIF</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
-                                                        else 'green' }}; font-weight: bold;">
-                                        {{ vif.feature[row] }}
-                                    </td>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
-                                                        else 'green' }}; font-weight: bold;">
-                                        {{ vif.vif_value[row] }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <div class="divider"></div>
-                {% endif %}
-
-                <!-- CAUSALITY TEST -->
-                {% if causality_test %}
-                <section>
-                    <h2>🧠 Causality Test</h2>
-                    <p class="section-desc">Granger causality test results for each variable.</p>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Variable</th>
-                                    <th>Causal</th>
-                                    <th>Coefficient Sign</th>
-                                    <th>Best Lag</th>
-                                    <th>P-value</th>
-                                    <th>Min P-value</th>
-                                    <th>Number of Lags Tested</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for result in causality_test.causality_test_results %}
-                                <tr>
-                                    <td><strong>{{ result.variable }}</strong></td>
-                                    <td style="font-weight: 700; color: {% if result.causal %}#16a34a{% else %}#dc2626{% endif %};">
-                                        {% if result.causal %}
-                                            Yes &#x1F44D;
-                                        {% else %}
-                                            No &#x1F44E;
-                                        {% endif %}
-                                    </td>
-                                    <td style="font-weight: 700; color: {% if result.coefficient_sign == 'positive' %}#16a34a{% else %}#dc2626{% endif %};">
-                                        {% if result.coefficient_sign == 'positive' %}
-                                            Positive &uarr;
-                                        {% else %}
-                                            Negative &darr;
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ result.best_lag }}</td>
-                                    <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
-                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>
-                                    <td>{{ result.number_of_lags_tested }}</td>
+                                    <td class="date-col">{{ vif.feature[row] }}</td>
+                                    <td class="date-col">{{ vif.vif_value[row] }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -314,16 +459,16 @@
 
                 <!-- TIME COMPARISON -->
                 {% if time_comparison %}
-                <section>
-                    <h2>📈 Time Comparison</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📈 Time Comparison</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
                     
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <!-- Date column -->
-                                    <th class="date-col" style="background: #e8ecff;">Year</th>
+                                    <th class="date-col" style="background: #e8ecff;">Date</th>
                         
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
@@ -336,7 +481,7 @@
                                 {% for row in time_comparison.data %}
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
+                                    <td class="date-col">{{ row.date }}</td>
                         
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
@@ -353,15 +498,14 @@
                 <div class="divider"></div>
                 {% endif %}
 
-
                 <!-- TIME AGGREGATOR -->
                 {% if time_aggregator %}
-                <section>
-                    <h2>📈 Yearly Aggregator</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📈 Yearly Aggregator</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
                     
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <!-- Date column -->
@@ -395,12 +539,12 @@
 
                 <!-- CORRELATION MATRIX -->
                 {% if corr_matrix %}
-                <section>
-                    <h2>🔗 Correlation Matrix</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">🔗 Correlation Matrix</h2>
                     <p class="section-desc">Pairwise correlations between variables (ranges from -1 to +1).</p>
                     
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th style="background: #e8ecff;">Variable</th>
@@ -437,12 +581,12 @@
 
                 <!-- LAG CORRELATION -->
                 {% if lag_corr %}
-                <section>
-                    <h2>⏱️ Lag Correlation</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">⏱️ Lag Correlation</h2>
                     <p class="section-desc">Correlation values for different lag periods in time series data.</p>
                     
-                    <div class="table-container">
-                        <table>
+                    <div class="table-responsive-custom">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Lag Period</th>
@@ -472,8 +616,8 @@
 
                 <!-- VISUALIZATIONS -->
                 {% if charts %}
-                <section>
-                    <h2>📊 Visualizations</h2>
+                <section class="mb-5">
+                    <h2 class="section-title">📊 Visualizations</h2>
                     <p class="section-desc">Embedded charts and plots for visual data exploration.</p>
                     
                     <div class="chart-grid">
@@ -495,7 +639,8 @@
 
             </main>
 
-            <footer>
+            <!-- FOOTER -->
+            <footer class="report-footer">
                 <div>
                     <strong>{{ generator or "OwlMix EDA Module" }}</strong><br/>
                     Report generated on {{ report_date or "Unknown date" }}
@@ -503,5 +648,8 @@
             </footer>
         </div>
     </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

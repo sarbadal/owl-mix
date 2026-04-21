@@ -7,8 +7,21 @@ from datetime import datetime
 from pandas.core.dtypes.base import ExtensionDtype
 
 
+class CategoricalColumnMixin:
+    def _get_columns(self, columns: list[str] = None):
+        if columns:
+            valid_columns = [col for col in self.df.columns if col in columns]
+
+            if not valid_columns:
+                raise ValueError("None of the columns available in the dataframe are valid.")
+
+            return valid_columns
+
+        return self.df.select_dtypes(include=["object", "category"]).columns.tolist()
+
+
 class ColumnMixin:
-    def _get_columns(self, value_columns):
+    def _get_columns(self, value_columns: list[str] = None):
         if value_columns:
             valid_columns = [col for col in self.df.columns if col in value_columns]
 

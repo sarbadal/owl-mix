@@ -48,6 +48,10 @@ class OwlMixReport:
             "precision": 3
         }
 
+        self.categorical_columns = {
+            "columns": None
+        }
+
         os.makedirs(self.chart_dir, exist_ok=True)
 
     def _validate_precision(self, precision: int):
@@ -60,6 +64,11 @@ class OwlMixReport:
         self.vif_config["target_column"] = target_column
         self.vif_config["features"] = features
         self.vif_config["precision"] = precision
+
+        return self
+
+    def set_categorical_columns(self, columns: list[str] = None) -> Self:
+        self.categorical_columns["columns"] = columns
 
         return self
 
@@ -107,6 +116,7 @@ class OwlMixReport:
 
         builder.set_time_comparison_config(**self.time_comparison_config)
         builder.set_vif_config(**self.vif_config)
+        builder.set_categorical_columns(**self.categorical_columns)
         builder.set_correlation_config(**self.correlation_config)
         builder.set_outlier_chart_layout(**self.outlier_chart_config)
         builder.set_correlation_chart_layout(**self.correlation_chart_config)

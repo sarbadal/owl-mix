@@ -4,8 +4,13 @@ from typing import Callable
 
 from owlmix.eda.utils import ColumnMixin, SerializableMixin
 
+class TimeColumnRenamer:
+    def rename_date_column(self, new_name: str = "date"):
+        self.df = self.df.rename(columns={self.date_column: new_name})
+        self.date_column = new_name
 
-class TimeComparisonReport(ColumnMixin, SerializableMixin):
+
+class TimeComparisonReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
     def __init__(self, df: pd.DataFrame, date_column: str, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2):
         self.df = df.copy()
         self.date_column = date_column
@@ -14,6 +19,7 @@ class TimeComparisonReport(ColumnMixin, SerializableMixin):
         self.agg_func = agg_func
         self.precision = precision
 
+        self.rename_date_column(new_name="date")
         self._validate()
         self._prepare()
 
@@ -73,7 +79,7 @@ class TimeComparisonReport(ColumnMixin, SerializableMixin):
         return self._to_serializable(dt_format="%Y")
 
 
-class TimeAggregatorReport(ColumnMixin, SerializableMixin):
+class TimeAggregatorReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
     def __init__(self, df, date_column: str, value_columns: list[str]=None, freq: str="Y", agg_func: str | Callable="sum", precision: int = 2):
         self.df = df.copy()
         self.date_column = date_column
@@ -82,6 +88,8 @@ class TimeAggregatorReport(ColumnMixin, SerializableMixin):
         self.agg_func = agg_func
         self.precision = precision
 
+        
+        self.rename_date_column(new_name="date")
         self._validate()
         self._prepare()
 

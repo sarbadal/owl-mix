@@ -3,4 +3,5 @@ numpy>=1.23
 matplotlib>=3.7
 seaborn>=0.12
 statsmodels>=0.14.6
+scikit-learn>=1.8
 Jinja2>=3.1
