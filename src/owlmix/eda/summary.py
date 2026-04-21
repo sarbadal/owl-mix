@@ -14,6 +14,7 @@ from owlmix.eda.basic import BasicInfo
 from owlmix.eda.stats import BasicStats
 from owlmix.eda.correlation import Correlation
 from owlmix.eda.vif import VIFCalculator
+from owlmix.eda.acf_pacf import ACFPACFCalculator
 from owlmix.eda.time.comparison import TimeComparisonReport, TimeAggregatorReport
 from owlmix.eda.causality import CausalityTest
 from owlmix.eda.categorical_distribution_generator import CategoricalDistributionGenerator
@@ -66,6 +67,11 @@ class SummaryBuilder:
             "precision": 3
         }
 
+        self.acf_pacf_config = {
+            "columns": None,
+            "n_lags": 15
+        }
+
         self.categorical_columns = {
             "columns": None
         }
@@ -79,6 +85,12 @@ class SummaryBuilder:
         self.vif_config["target_column"] = target_column
         self.vif_config["features"] = features
         self.vif_config["precision"] = precision
+
+        return self
+
+    def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
+        self.acf_pacf_config["columns"] = columns
+        self.acf_pacf_config["n_lags"] = n_lags
 
         return self
 
@@ -214,11 +226,29 @@ class SummaryBuilder:
 
     def add_categorical_distribution(self, columns: list[str] = None) -> Self:
         columns = columns or self.categorical_columns["columns"]
-        generator = CategoricalDistributionGenerator(df=self.df, columns=columns)
+        generator = CategoricalDistributionGenerator(
+            df=self.df,
+            columns=columns
+        )
         result = generator.generate()
-        self.sections.append({"categorical_distribution": result})
 
+        self.sections.append({"categorical_distribution": result})
         self._categorical_chart_data = result["data"]
+
+        return self
+
+    def add_acf_pacf_calculator(self, columns: list[str]=None, n_lags: int = None) -> Self:
+        columns = columns or self.acf_pacf_config["columns"]
+        n_lags = n_lags or self.acf_pacf_config["n_lags"]
+        generator = ACFPACFCalculator(
+            df=self.df,
+            columns=columns,
+            n_lags=n_lags
+        )
+        result = generator.generate()
+
+        self.sections.append({"acf_pacf": result})
+        self._acf_pacf_chart_data = result["data"]
 
         return self
  
@@ -270,6 +300,9 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution_chart(self) -> Self:
+        if not self.categorical_columns["columns"]:
+            return self
+
         chart = CategoricalDistributionChart(
             data=self._categorical_chart_data,
             output_dir=self.output_dir
@@ -447,6 +480,7 @@ class SummaryBuilder:
             .add_correlation_matrix()
             .add_correlation_chart()
             .add_vif_calculator()
+            .add_acf_pacf_calculator()
             .add_causality_test()
             .add_categorical_distribution()
             .add_time_aggregator()

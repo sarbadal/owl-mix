@@ -99,6 +99,9 @@ class HTMLRenderer:
                 if "vif" in section:
                     vif = section["vif"]
 
+                if "acf_pacf" in section:
+                    acf_pacf = section["acf_pacf"]
+
                 if "time_aggregator" in section:
                     time_aggregator = section["time_aggregator"]
 
@@ -147,6 +150,7 @@ class HTMLRenderer:
             "time_comparison": time_comparison,
             "causality_test": causality_test,
             "vif": vif,
+            "acf_pacf": acf_pacf,
             # "time_aggregator": time_aggregator,
             "charts": charts
         }

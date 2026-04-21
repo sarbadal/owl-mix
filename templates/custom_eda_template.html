@@ -262,6 +262,56 @@
                 <div class="divider"></div>
                 {% endif %}
 
+                <!-- ACF & PACF -->
+                {% if acf_pacf %}
+                <section>
+                    <h2>📊 ACF & PACF Analysis</h2>
+                    <p class="section-desc">Autocorrelation (ACF) and Partial Autocorrelation (PACF) values for each variable across different lags.</p>
+
+                    {% for item in acf_pacf.data %}
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.3rem; color: #1e293b; margin-bottom: 12px;">{{ item.column }}</h3>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Lag</th>
+                                        <th>ACF</th>
+                                        <th>PACF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for idx in range(item.lags | length) %}
+                                    <tr>
+                                        <td><strong>{{ item.lags[idx] }}</strong></td>
+                                        <td>
+                                            {% if item.acf[idx] is number %}
+                                                {{ "%.6f" | format(item.acf[idx]) }}
+                                            {% else %}
+                                                {{ item.acf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.pacf[idx] is number %}
+                                                {{ "%.6f" | format(item.pacf[idx]) }}
+                                            {% else %}
+                                                {{ item.pacf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+
                 <!-- CAUSALITY TEST -->
                 {% if causality_test %}
                 <section>
@@ -276,7 +326,7 @@
                                     <th>Coefficient Sign</th>
                                     <th>Best Lag</th>
                                     <th>P-value</th>
-                                    <th>Min P-value</th>
+{#                                    <th>Min P-value</th>#}
                                     <th>Number of Lags Tested</th>
                                 </tr>
                             </thead>
@@ -300,7 +350,7 @@
                                     </td>
                                     <td>{{ result.best_lag }}</td>
                                     <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
-                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>
+{#                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>#}
                                     <td>{{ result.number_of_lags_tested }}</td>
                                 </tr>
                                 {% endfor %}

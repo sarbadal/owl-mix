@@ -175,13 +175,23 @@ def main():
     )
 
     report.set_categorical_columns(
-        columns=["color", "smartphone", "car_model", "language"]
+        columns=[
+            "color",
+            "smartphone",
+            "car_model",
+            "language"
+        ]
     )
 
     # report.set_vif_config(
     #     features=["tv_spend", "digital_spend", "radio_spend"],
     #     precision=5,
     # )
+
+    report.set_acf_pacf_config(
+        columns=["tv_spend", "digital_spend", "radio_spend"],
+        n_lags=6
+    )
 
     # report.set_time_comparison_config(
     #     date_column="date",

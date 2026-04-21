@@ -48,6 +48,11 @@ class OwlMixReport:
             "precision": 3
         }
 
+        self.acf_pacf_config = {
+            "columns": None,
+            "n_lags": 15
+        }
+
         self.categorical_columns = {
             "columns": None
         }
@@ -64,6 +69,12 @@ class OwlMixReport:
         self.vif_config["target_column"] = target_column
         self.vif_config["features"] = features
         self.vif_config["precision"] = precision
+
+        return self
+
+    def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
+        self.acf_pacf_config["columns"] = columns
+        self.acf_pacf_config["n_lags"] = n_lags
 
         return self
 
@@ -116,6 +127,7 @@ class OwlMixReport:
 
         builder.set_time_comparison_config(**self.time_comparison_config)
         builder.set_vif_config(**self.vif_config)
+        builder.set_acf_pacf_config(**self.acf_pacf_config)
         builder.set_categorical_columns(**self.categorical_columns)
         builder.set_correlation_config(**self.correlation_config)
         builder.set_outlier_chart_layout(**self.outlier_chart_config)
