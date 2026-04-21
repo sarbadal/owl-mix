@@ -29,6 +29,7 @@ from owlmix.eda.charts.lag import LagCorrelationChart
 from owlmix.eda.charts.distribution import DistributionChart
 from owlmix.eda.charts.categorical_distribution import CategoricalDistributionChart
 from owlmix.eda.charts.vif import VIFChart
+from owlmix.eda.charts.dualaxis_line_plot import DualAxisLinePlotter
 from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
  
  
@@ -197,6 +198,7 @@ class SummaryBuilder:
         )
         result = kpi_vs_feature_generator.generate()
         self.sections.append({"kpi_vs_features": result})
+        self._dual_axis_chart_data = result["data"]
 
         return self
 
@@ -335,6 +337,26 @@ class SummaryBuilder:
                 "acf_pacf_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "ACF PACF Chart"
+            }
+        )
+        return self
+
+    def add_kpi_vs_feature_chart(self) -> Self:
+        chart = DualAxisLinePlotter(
+            data=self._dual_axis_chart_data,
+            output_dir=self.output_dir
+        )
+        path = chart.generate()
+        if path is None:
+            return self
+
+        self.chart_paths.append(
+            {
+                "title": "KPI VS Feature Chart",
+                "description": "KPI VS feature chart plot",
+                "kpi_vs_feature_chart": path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": "KPI VS Feature Chart"
             }
         )
         return self
@@ -547,6 +569,7 @@ class SummaryBuilder:
             .add_time_aggregator()
             .add_time_comparison()
             .add_time_series_chart()
+            .add_kpi_vs_feature_chart()
             .add_outliers_chart()
             .add_lag_correlation()
             .add_comparison_chart()

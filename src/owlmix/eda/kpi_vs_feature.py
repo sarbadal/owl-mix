@@ -54,6 +54,7 @@ class DualAxisLineChartDataGenerator(ColumnMixin):
             feature_values = grouped[col].tolist()
 
             output.append({
+                "kpi": self.target_column,
                 "column": col,
                 "x": x_values,
                 "target": target_values,

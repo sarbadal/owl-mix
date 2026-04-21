@@ -161,7 +161,7 @@ def create_sample_data(n=100):
 
 
 def main():
-    df = create_sample_data(n=2365)
+    df = create_sample_data(n=463)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -185,15 +185,15 @@ def main():
 
     report.set_kpi_vs_feature_config(
         columns=[
-            "tv_spend",
-            "digital_spend",
-            "radio_spend",
+            # "tv_spend",
+            # "digital_spend",
+            # "radio_spend",
             # "tv_grp",
             # "radio_grp",
             # "digital_imp",
 
         ],
-        date_format="%Y",
+        date_format="%Y-%m",
     )
 
     # report.set_vif_config(
