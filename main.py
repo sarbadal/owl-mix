@@ -171,7 +171,7 @@ def main():
         date_column="time",
         # template_name="bootstrap_eda_template.html",
         # template_name="custom_eda_template.html",
-        # template_name="custom_eda_template_dark.html",
+        template_name="custom_eda_template_dark.html",
     )
 
     report.set_categorical_columns(
@@ -233,8 +233,8 @@ def main():
     #     precision=1
     # )
     report.run(
-        json_file_name="report_custom.json",
-        html_file_name="report_custom.html",
+        json_file_name="report_custom_dark.json",
+        html_file_name="report_custom_dark.html",
     )
 
 

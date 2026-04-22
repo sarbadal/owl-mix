@@ -7,44 +7,44 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        html, body { min-height: 100%; background: #0f1419; }
+        html, body { min-height: 100%; background: #0f0f1e; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #e0e0e0; }
         
         .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        .report-shell { background: #1a1f2e; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .report-shell { background: #1a1a2e; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
-        header { padding: 48px; background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%); color: #ffffff; text-align: center; }
-        .report-tag { display: inline-block; margin-bottom: 16px; padding: 8px 16px; border-radius: 999px; background: rgba(100,200,255,0.15); font-size: 0.9rem; border: 1px solid rgba(100,200,255,0.3); }
+        header { padding: 48px; background: linear-gradient(135deg, #2d3e5f 0%, #0d0f1f 100%); color: #ffffff; text-align: center; }
+        .report-tag { display: inline-block; margin-bottom: 16px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,0.1); font-size: 0.9rem; }
         header h1 { font-size: 3rem; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; }
         header p { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; }
         
         .meta-info { margin-top: 20px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .meta-info span { background: rgba(100,200,255,0.1); padding: 8px 14px; border-radius: 6px; font-size: 0.95rem; border: 1px solid rgba(100,200,255,0.2); }
+        .meta-info span { background: rgba(255,255,255,0.1); padding: 8px 14px; border-radius: 6px; font-size: 0.95rem; }
         
         main { padding: 48px; }
         
         section { margin-bottom: 50px; }
         section:last-child { margin-bottom: 0; }
         
-        h2 { font-size: 1.8rem; color: #e0e0e0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 3px solid #64c8ff; }
-        .section-desc { color: #a0a8b8; margin: 12px 0 24px; line-height: 1.7; }
+        h2 { font-size: 1.8rem; color: #e8e8ff; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 3px solid #5b7dd1; }
+        .section-desc { color: #b0b0c0; margin: 12px 0 24px; line-height: 1.7; }
         
         .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .card { background: #242e3f; border: 1px solid #3a4558; border-radius: 12px; padding: 20px; }
-        .card strong { color: #64c8ff; font-size: 0.9rem; display: block; margin-bottom: 6px; }
-        .card .value { color: #e0e0e0; font-size: 1.6rem; font-weight: 700; }
+        .card { background: #252540; border: 1px solid #404050; border-radius: 12px; padding: 20px; }
+        .card strong { color: #8fa3d1; font-size: 0.9rem; display: block; margin-bottom: 6px; }
+        .card .value { color: #e8e8ff; font-size: 1.6rem; font-weight: 700; }
         
-        .table-container { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #3a4558; }
+        .table-container { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #404050; }
         table { 
             width: 100%; 
             table-layout: auto; 
             border-collapse: collapse; 
         }
-        thead { background: #1e2a3a; }
-        th { padding: 14px 16px; text-align: left; font-weight: 700; color: #e0e0e0; font-size: 0.95rem; border-bottom: 2px solid #3a4558; }
-        td { padding: 12px 16px; border-bottom: 1px solid #2a3540; color: #b8c0d0; }
-        tbody tr:nth-child(even) { background: #1e2530; }
-        tbody tr:hover { background: #262f3f; }
+        thead { background: #252540; }
+        th { padding: 14px 16px; text-align: left; font-weight: 700; color: #d0d8ff; font-size: 0.95rem; border-bottom: 2px solid #404050; }
+        td { padding: 12px 16px; border-bottom: 1px solid #363648; color: #c0c0d0; }
+        tbody tr:nth-child(even) { background: #1f1f2e; }
+        tbody tr:hover { background: #2a2a3e; }
         .date-col { 
             width: 120px; 
             white-space: nowrap;
@@ -52,24 +52,24 @@
             text-overflow: ellipsis;
         }
         
-        .columns-display { display: inline-block; background: #242e3f; padding: 8px 12px; border-radius: 6px; color: #64c8ff; font-size: 0.95rem; border: 1px solid #3a4558; }
+        .columns-display { display: inline-block; background: #303050; padding: 8px 12px; border-radius: 6px; color: #a0b0e0; font-size: 0.95rem; }
         
         .badge-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
         .badge { padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-align: center; }
-        .badge.ok { color: #90ee90; background: #1a3a1f; border: 1px solid #3a7a3a; }
-        .badge.missing { color: #ff6b6b; background: #3a1515; border: 1px solid #7a3535; }
+        .badge.ok { color: #90ee90; background: #1a3a1a; border: 1px solid #4a6a4a; }
+        .badge.missing { color: #ff8080; background: #3a1a1a; border: 1px solid #6a3a3a; }
         
         .chart-grid { display: grid; gap: 32px; margin-top: 24px; }
-        .chart-card { background: #242e3f; border: 1px solid #3a4558; border-radius: 12px; padding: 24px; }
-        .chart-card h3 { font-size: 1.15rem; color: #e0e0e0; margin-bottom: 8px; }
-        .chart-card p { color: #a0a8b8; margin-bottom: 16px; line-height: 1.6; }
+        .chart-card { background: #252540; border: 1px solid #404050; border-radius: 12px; padding: 24px; }
+        .chart-card h3 { font-size: 1.15rem; color: #d8d8ff; margin-bottom: 8px; }
+        .chart-card p { color: #a8a8b8; margin-bottom: 16px; line-height: 1.6; }
         .chart-card img { width: 100%; height: auto; border-radius: 10px; display: block; }
         
-        footer { padding: 24px 48px; background: #1a1f2e; border-top: 1px solid #3a4558; text-align: center; color: #a0a8b8; font-size: 0.9rem; }
+        footer { padding: 24px 48px; background: #252540; border-top: 1px solid #404050; text-align: center; color: #a8a8b8; font-size: 0.9rem; }
         
-        .divider { height: 2px; background: linear-gradient(to right, transparent, #3a4558, transparent); margin: 40px 0; }
+        .divider { height: 2px; background: linear-gradient(to right, transparent, #404050, transparent); margin: 40px 0; }
         
-        .no-data { background: #2a2a1a; border: 1px solid #5a5a2a; border-radius: 8px; padding: 16px; color: #d4a574; }
+        .no-data { background: #3a3a2a; border: 1px solid #5a5a40; border-radius: 8px; padding: 16px; color: #d0a060; }
     </style>
 </head>
 <body>
@@ -105,7 +105,7 @@
 
                     {% if basic_info.column_names %}
                     <div>
-                        <strong style="display: block; margin-bottom: 8px; color: #e0e0e0;">Column Names:</strong>
+                        <strong style="display: block; margin-bottom: 8px; color: #e8e8ff;">Column Names:</strong>
                         <div class="columns-display">
                             {{ basic_info.column_names | join(", ") }}
                         </div>
@@ -116,7 +116,7 @@
 
                     <!-- DATA TYPES TABLE -->
                     {% if basic_info.data_types %}
-                    <h3 style="font-size: 1.3rem; color: #e0e0e0; margin-top: 24px; margin-bottom: 12px;">📝 Data Types & Missing Values</h3>
+                    <h3 style="font-size: 1.3rem; color: #e8e8ff; margin-top: 24px; margin-bottom: 12px;">📝 Data Types & Missing Values</h3>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -130,7 +130,7 @@
                                 {% for col_name, dtype in basic_info.data_types.items() %}
                                 <tr>
                                     <td><strong>{{ col_name }}</strong></td>
-                                    <td><code style="background: #1e2a3a; padding: 2px 6px; border-radius: 4px; color: #64c8ff;">{{ dtype }}</code></td>
+                                    <td><code style="background: #303050; padding: 2px 6px; border-radius: 4px; color: #a0b0e0;">{{ dtype }}</code></td>
                                     <td>
                                         {% set missing = basic_info.missing_values[col_name] if basic_info.missing_values and col_name in basic_info.missing_values else 0 %}
                                         {{ missing }}
@@ -149,7 +149,7 @@
 
                     <!-- MISSING VALUES SUMMARY -->
                     {% if basic_info.missing_values %}
-                    <h3 style="font-size: 1.3rem; color: #e0e0e0; margin-top: 24px; margin-bottom: 12px;">🔍 Missing Values Summary</h3>
+                    <h3 style="font-size: 1.3rem; color: #e8e8ff; margin-top: 24px; margin-bottom: 12px;">🔍 Missing Values Summary</h3>
                     <div class="badge-group">
                         {% for col_name, count in basic_info.missing_values.items() %}
                         <div class="badge {% if count | int == 0 %}ok{% else %}missing{% endif %}">
@@ -168,7 +168,11 @@
                 {% if basic_info.summary_stats %}
                 <section>
                     <h2>📈 Summary Statistics</h2>
-                    <p class="section-desc">Descriptive statistics for all numerical and datetime variables.</p>
+                    <p class="section-desc">The Summary Statistics table provides a comprehensive overview of key descriptive metrics
+                        for each numerical variable, including count, mean, standard deviation, minimum, quartiles, and maximum values.
+                        This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
+                        as a foundational step for exploratory analysis and data quality assessment.
+                    </p>
                     
                     <div class="table-container">
                         <table>
@@ -227,21 +231,136 @@
                 {% if vif %}
                 <section>
                     <h2>📈 Variance Inflation Factor (VIF)</h2>
-                    <p class="section-desc">VIF values for the feature variables</p>
+                    <p class="section-desc">The VIF table provides the exact Variance Inflation Factor values for each feature,
+                        offering a precise measure of multicollinearity within the dataset. By examining these values, one can
+                        identify variables that may be redundant or highly correlated with others. This detailed representation
+                        complements the chart by supporting informed decisions on feature elimination, transformation, or
+                        regularization to improve model robustness and reliability.
+                    </p>
 
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="date-col" style="background: #1e2a3a;">Feature</th>
-                                    <th class="date-col" style="background: #1e2a3a;">VIF</th>
+                                    <th class="date-col" style="background: #303050;">Feature</th>
+                                    <th class="date-col" style="background: #303050;">Variance Inflation Factor (VIF)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col">{{ vif.feature[row] }}</td>
-                                    <td class="date-col">{{ vif.vif_value[row] }}</td>
+                                    <td class="date-col" 
+                                        style="color: {{ '#ff6b6b' if vif.vif_value[row] > 10 
+                                                        else '#ffa500' if vif.vif_value[row] > 5 
+                                                        else '#90ee90' }}; font-weight: bold;">
+                                        {{ vif.feature[row] }}
+                                    </td>
+                                    <td class="date-col" 
+                                        style="color: {{ '#ff6b6b' if vif.vif_value[row] > 10 
+                                                        else '#ffa500' if vif.vif_value[row] > 5 
+                                                        else '#90ee90' }}; font-weight: bold;">
+                                        {{ vif.vif_value[row] }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+                <!-- ACF & PACF -->
+                {% if acf_pacf %}
+                <section>
+                    <h2>📊 ACF & PACF Analysis</h2>
+                    <p class="section-desc">The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation coefficients for each variable across specified lags. These tabulated values enable precise identification of statistically significant lags and the strength of relationships over time. By complementing the visual insights from the plots, the tables support more detailed analysis and help validate lag selection decisions for modeling and forecasting purposes.</p>
+
+                    {% for item in acf_pacf.data %}
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.3rem; color: #e8e8ff; margin-bottom: 12px;">{{ item.column }}</h3>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Lag</th>
+                                        <th>ACF</th>
+                                        <th>PACF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for idx in range(item.lags | length) %}
+                                    <tr>
+                                        <td><strong>{{ item.lags[idx] }}</strong></td>
+                                        <td>
+                                            {% if item.acf[idx] is number %}
+                                                {{ "%.6f" | format(item.acf[idx]) }}
+                                            {% else %}
+                                                {{ item.acf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.pacf[idx] is number %}
+                                                {{ "%.6f" | format(item.pacf[idx]) }}
+                                            {% else %}
+                                                {{ item.pacf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+
+                <!-- CAUSALITY TEST -->
+                {% if causality_test %}
+                <section>
+                    <h2>🧠 Granger Causality Test</h2>
+                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance. Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Causal</th>
+                                    <th>Coefficient Sign</th>
+                                    <th>Best Lag</th>
+                                    <th>P-value</th>
+{#                                    <th>Min P-value</th>#}
+                                    <th>Number of Lags Tested</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in causality_test.causality_test_results %}
+                                <tr>
+                                    <td><strong>{{ result.variable }}</strong></td>
+                                    <td style="font-weight: 700; color: {% if result.causal %}#90ee90{% else %}#ff6b6b{% endif %};">
+                                        {% if result.causal %}
+                                            Yes &#x1F44D;
+                                        {% else %}
+                                            No &#x1F44E;
+                                        {% endif %}
+                                    </td>
+                                    <td style="font-weight: 700; color: {% if result.coefficient_sign == 'positive' %}#90ee90{% else %}#ff6b6b{% endif %};">
+                                        {% if result.coefficient_sign == 'positive' %}
+                                            Positive &uarr;
+                                        {% else %}
+                                            Negative &darr;
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ result.best_lag }}</td>
+                                    <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
+{#                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>#}
+                                    <td>{{ result.number_of_lags_tested }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -256,14 +375,18 @@
                 {% if time_comparison %}
                 <section>
                     <h2>📈 Time Comparison</h2>
-                    <p class="section-desc">Simple info to show change over last period.</p>
+                    <p class="section-desc">The YoY table presents yearly aggregated values for each variable alongside
+                        their corresponding percentage changes compared to the previous year. This structured view allows
+                        for precise comparison of annual performance and growth rates, supporting detailed analysis of
+                        trends and facilitating data-driven decision-making.
+                    </p>
                     
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
-                                    <th class="date-col" style="background: #1e2a3a;">Date</th>
+                                    <th class="date-col" style="background: #303050;">Year</th>
                         
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
@@ -276,7 +399,7 @@
                                 {% for row in time_comparison.data %}
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col">{{ row.date }}</td>
+                                    <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
                         
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
@@ -305,7 +428,7 @@
                             <thead>
                                 <tr>
                                     <!-- Date column -->
-                                    <th class="date-col" style="background: #1e2a3a;">Year</th>
+                                    <th class="date-col" style="background: #303050;">Year</th>
                         
                                     <!-- Dynamic columns -->
                                     {% for col in time_aggregator.columns %}
@@ -337,13 +460,17 @@
                 {% if corr_matrix %}
                 <section>
                     <h2>🔗 Correlation Matrix</h2>
-                    <p class="section-desc">Pairwise correlations between variables (ranges from -1 to +1).</p>
+                    <p class="section-desc">The correlation heatmap visualizes pairwise relationships between variables
+                        using color intensity to represent the strength and direction of correlations. This chart
+                        enables quick identification of highly correlated variable pairs, patterns, and potential
+                        multicollinearity within the dataset.
+                    </p>
                     
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="background: #1e2a3a;">Variable</th>
+                                    <th style="background: #303050;">Variable</th>
                                     {% for col_name in corr_matrix.keys() %}
                                     <th>{{ col_name }}</th>
                                     {% endfor %}
@@ -352,12 +479,12 @@
                             <tbody>
                                 {% for row_name, row_values in corr_matrix.items() %}
                                 <tr>
-                                    <td style="background: #1e2a3a;"><strong>{{ row_name }}</strong></td>
+                                    <td style="background: #303050;"><strong>{{ row_name }}</strong></td>
                                     {% for col_name in corr_matrix.keys() %}
                                     {% set corr_val = row_values[col_name] if row_values[col_name] is defined else None %}
                                     <td>
                                         {% if corr_val is not none and corr_val is number %}
-                                            <span style="{% if corr_val > 0.7 %}color: #ff6b6b; font-weight: 700;{% elif corr_val < -0.7 %}color: #64c8ff; font-weight: 700;{% endif %}">
+                                            <span style="{% if corr_val > 0.7 %}color: #ff6b6b; font-weight: 700;{% elif corr_val < -0.7 %}color: #80d8ff; font-weight: 700;{% endif %}">
                                                 {{ "%.3f" | format(corr_val) }}
                                             </span>
                                         {% else %}
@@ -379,7 +506,11 @@
                 {% if lag_corr %}
                 <section>
                     <h2>⏱️ Lag Correlation</h2>
-                    <p class="section-desc">Correlation values for different lag periods in time series data.</p>
+                    <p class="section-desc">The Lag Correlation table presents the correlation of the target (KPI)
+                        variable with its past values across different lag periods (e.g., T vs. T−1, T−2, T−3).
+                        It helps identify temporal dependencies and persistence in the series,
+                        supporting informed lag selection for time-series modeling.
+                    </p>
                     
                     <div class="table-container">
                         <table>
