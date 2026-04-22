@@ -16,8 +16,9 @@ class CorrelationChart(ColumnMixin):
         self.output_dir = output_dir
         self.precision = precision
 
-    def generate(self):
         os.makedirs(self.output_dir, exist_ok=True)
+
+    def generate(self):
         cols = self.columns
         if len(cols) < 2:
             raise ValueError("Need at least 2 columns for correlation")

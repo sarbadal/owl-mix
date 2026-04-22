@@ -134,6 +134,12 @@ class OwlMixReport:
 
         return self
  
+    def _set_out_file_name(self, json_file_name: str = "report.json", html_file_name: str = "report.html") -> Self:
+        self.json_file_name = json_file_name
+        self.html_file_name = html_file_name
+
+        return self
+
     def generate_json(self, out_file_name: str = "report.json") -> tuple:
         builder = SummaryBuilder(
             self.df, 
@@ -159,9 +165,13 @@ class OwlMixReport:
  
         return report_dict, json_path
  
-    def generate_html(self, out_file_name: str = "report.html") -> str:
-        report_dict, _ = self.generate_json()
-        html_output_path = os.path.join(self.output_dir, out_file_name)
+    def generate_html(self, out_file_name: str = None) -> str:
+        html_file_name = out_file_name or self.html_file_name or "report.html"
+        html_output_path = os.path.join(self.output_dir, html_file_name)
+
+        json_file_name = self.json_file_name or "report.json"
+
+        report_dict, _ = self.generate_json(out_file_name=json_file_name)
 
         renderer = HTMLRenderer(
             template_name=self.template_name, 
@@ -172,6 +182,10 @@ class OwlMixReport:
 
         return html_output_path
  
-    def run(self, json_file_name: str = "report.json", html_file_name: str = "report.html"):
-        self.generate_json(out_file_name=json_file_name)
+    def run(self, json_file_name: str = "report.json", html_file_name: str = "report.html") -> None:
+        self._set_out_file_name(
+            json_file_name=json_file_name,
+            html_file_name=html_file_name
+        )
+
         self.generate_html(out_file_name=html_file_name)

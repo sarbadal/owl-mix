@@ -168,8 +168,12 @@
                 {% if basic_info.summary_stats %}
                 <section>
                     <h2>📈 Summary Statistics</h2>
-                    <p class="section-desc">Descriptive statistics for all numerical and datetime variables.</p>
-                    
+                    <p class="section-desc">The Summary Statistics table provides a comprehensive overview of key descriptive metrics
+                        for each numerical variable, including count, mean, standard deviation, minimum, quartiles, and maximum values.
+                        This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
+                        as a foundational step for exploratory analysis and data quality assessment.
+                    </p>
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -187,7 +191,7 @@
                                     {% for stat_name in stat_names.keys() %}
                                     <tr>
                                         <td><strong>{{ stat_name }}</strong></td>
-                            
+
                                         {% for col_name in basic_info.column_names %}
                                             <td>
                                             {% if col_name in basic_info.summary_stats and stat_name in basic_info.summary_stats[col_name] %}
@@ -202,7 +206,7 @@
                                             {% endif %}
                                             </td>
                                         {% endfor %}
-                            
+
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -227,21 +231,136 @@
                 {% if vif %}
                 <section>
                     <h2>📈 Variance Inflation Factor (VIF)</h2>
-                    <p class="section-desc">VIF values for the feature variables</p>
+                    <p class="section-desc">The VIF table provides the exact Variance Inflation Factor values for each feature,
+                        offering a precise measure of multicollinearity within the dataset. By examining these values, one can
+                        identify variables that may be redundant or highly correlated with others. This detailed representation
+                        complements the chart by supporting informed decisions on feature elimination, transformation, or
+                        regularization to improve model robustness and reliability.
+                    </p>
 
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <th class="date-col" style="background: #e8ecff;">Feature</th>
-                                    <th class="date-col" style="background: #e8ecff;">VIF</th>
+                                    <th class="date-col" style="background: #e8ecff;">Variance Inflation Factor (VIF)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col">{{ vif.feature[row] }}</td>
-                                    <td class="date-col">{{ vif.vif_value[row] }}</td>
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
+                                                        else 'green' }}; font-weight: bold;">
+                                        {{ vif.feature[row] }}
+                                    </td>
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
+                                                        else 'green' }}; font-weight: bold;">
+                                        {{ vif.vif_value[row] }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+                <!-- ACF & PACF -->
+                {% if acf_pacf %}
+                <section>
+                    <h2>📊 ACF & PACF Analysis</h2>
+                    <p class="section-desc">The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation coefficients for each variable across specified lags. These tabulated values enable precise identification of statistically significant lags and the strength of relationships over time. By complementing the visual insights from the plots, the tables support more detailed analysis and help validate lag selection decisions for modeling and forecasting purposes.</p>
+
+                    {% for item in acf_pacf.data %}
+                    <div style="margin-bottom: 32px;">
+                        <h3 style="font-size: 1.3rem; color: #1e293b; margin-bottom: 12px;">{{ item.column }}</h3>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Lag</th>
+                                        <th>ACF</th>
+                                        <th>PACF</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for idx in range(item.lags | length) %}
+                                    <tr>
+                                        <td><strong>{{ item.lags[idx] }}</strong></td>
+                                        <td>
+                                            {% if item.acf[idx] is number %}
+                                                {{ "%.6f" | format(item.acf[idx]) }}
+                                            {% else %}
+                                                {{ item.acf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.pacf[idx] is number %}
+                                                {{ "%.6f" | format(item.pacf[idx]) }}
+                                            {% else %}
+                                                {{ item.pacf[idx] }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <div class="divider"></div>
+                {% endif %}
+
+
+                <!-- CAUSALITY TEST -->
+                {% if causality_test %}
+                <section>
+                    <h2>🧠 Granger Causality Test</h2>
+                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance. Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Causal</th>
+                                    <th>Coefficient Sign</th>
+                                    <th>Best Lag</th>
+                                    <th>P-value</th>
+{#                                    <th>Min P-value</th>#}
+                                    <th>Number of Lags Tested</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in causality_test.causality_test_results %}
+                                <tr>
+                                    <td><strong>{{ result.variable }}</strong></td>
+                                    <td style="font-weight: 700; color: {% if result.causal %}#16a34a{% else %}#dc2626{% endif %};">
+                                        {% if result.causal %}
+                                            Yes &#x1F44D;
+                                        {% else %}
+                                            No &#x1F44E;
+                                        {% endif %}
+                                    </td>
+                                    <td style="font-weight: 700; color: {% if result.coefficient_sign == 'positive' %}#16a34a{% else %}#dc2626{% endif %};">
+                                        {% if result.coefficient_sign == 'positive' %}
+                                            Positive &uarr;
+                                        {% else %}
+                                            Negative &darr;
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ result.best_lag }}</td>
+                                    <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
+{#                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>#}
+                                    <td>{{ result.number_of_lags_tested }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -255,16 +374,20 @@
                 <!-- TIME COMPARISON -->
                 {% if time_comparison %}
                 <section>
-                    <h2>📈 Time Comarison</h2>
-                    <p class="section-desc">Simple info to show change over last period.</p>
-                    
+                    <h2>📈 Time Comparison</h2>
+                    <p class="section-desc">The YoY table presents yearly aggregated values for each variable alongside
+                        their corresponding percentage changes compared to the previous year. This structured view allows
+                        for precise comparison of annual performance and growth rates, supporting detailed analysis of
+                        trends and facilitating data-driven decision-making.
+                    </p>
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
-                                    <th class="date-col" style="background: #e8ecff;">Date</th>
-                        
+                                    <th class="date-col" style="background: #e8ecff;">Year</th>
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
                                         <th>{{ col }}</th>
@@ -276,8 +399,8 @@
                                 {% for row in time_comparison.data %}
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col">{{ row.date }}</td>
-                        
+                                    <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
+
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
@@ -299,14 +422,14 @@
                 <section>
                     <h2>📈 Yearly Aggregator</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_aggregator.columns %}
                                         <th>{{ col }}</th>
@@ -318,7 +441,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col">{{ row.date }}</td>
-                        
+
                                     <!-- Values + % change -->
                                     {% for col in time_aggregator.columns %}
                                         <td>{{ row[col] }}</td>
@@ -337,8 +460,12 @@
                 {% if corr_matrix %}
                 <section>
                     <h2>🔗 Correlation Matrix</h2>
-                    <p class="section-desc">Pairwise correlations between variables (ranges from -1 to +1).</p>
-                    
+                    <p class="section-desc">The correlation heatmap visualizes pairwise relationships between variables
+                        using color intensity to represent the strength and direction of correlations. This chart
+                        enables quick identification of highly correlated variable pairs, patterns, and potential
+                        multicollinearity within the dataset.
+                    </p>
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -379,7 +506,11 @@
                 {% if lag_corr %}
                 <section>
                     <h2>⏱️ Lag Correlation</h2>
-                    <p class="section-desc">Correlation values for different lag periods in time series data.</p>
+                    <p class="section-desc">The Lag Correlation table presents the correlation of the target (KPI)
+                        variable with its past values across different lag periods (e.g., T vs. T−1, T−2, T−3).
+                        It helps identify temporal dependencies and persistence in the series,
+                        supporting informed lag selection for time-series modeling.
+                    </p>
                     
                     <div class="table-container">
                         <table>

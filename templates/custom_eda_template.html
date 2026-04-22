@@ -168,7 +168,11 @@
                 {% if basic_info.summary_stats %}
                 <section>
                     <h2>📈 Summary Statistics</h2>
-                    <p class="section-desc">Descriptive statistics for all numerical and datetime variables.</p>
+                    <p class="section-desc">The Summary Statistics table provides a comprehensive overview of key descriptive metrics
+                        for each numerical variable, including count, mean, standard deviation, minimum, quartiles, and maximum values.
+                        This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
+                        as a foundational step for exploratory analysis and data quality assessment.
+                    </p>
                     
                     <div class="table-container">
                         <table>
@@ -227,7 +231,12 @@
                 {% if vif %}
                 <section>
                     <h2>📈 Variance Inflation Factor (VIF)</h2>
-                    <p class="section-desc">VIF values for the feature variables</p>
+                    <p class="section-desc">The VIF table provides the exact Variance Inflation Factor values for each feature,
+                        offering a precise measure of multicollinearity within the dataset. By examining these values, one can
+                        identify variables that may be redundant or highly correlated with others. This detailed representation
+                        complements the chart by supporting informed decisions on feature elimination, transformation, or
+                        regularization to improve model robustness and reliability.
+                    </p>
 
                     <div class="table-container">
                         <table>
@@ -266,7 +275,7 @@
                 {% if acf_pacf %}
                 <section>
                     <h2>📊 ACF & PACF Analysis</h2>
-                    <p class="section-desc">Autocorrelation (ACF) and Partial Autocorrelation (PACF) values for each variable across different lags.</p>
+                    <p class="section-desc">The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation coefficients for each variable across specified lags. These tabulated values enable precise identification of statistically significant lags and the strength of relationships over time. By complementing the visual insights from the plots, the tables support more detailed analysis and help validate lag selection decisions for modeling and forecasting purposes.</p>
 
                     {% for item in acf_pacf.data %}
                     <div style="margin-bottom: 32px;">
@@ -315,8 +324,8 @@
                 <!-- CAUSALITY TEST -->
                 {% if causality_test %}
                 <section>
-                    <h2>🧠 Causality Test</h2>
-                    <p class="section-desc">Granger causality test results for each variable.</p>
+                    <h2>🧠 Granger Causality Test</h2>
+                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance. Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.</p>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -366,7 +375,11 @@
                 {% if time_comparison %}
                 <section>
                     <h2>📈 Time Comparison</h2>
-                    <p class="section-desc">Simple info to show change over last period.</p>
+                    <p class="section-desc">The YoY table presents yearly aggregated values for each variable alongside
+                        their corresponding percentage changes compared to the previous year. This structured view allows
+                        for precise comparison of annual performance and growth rates, supporting detailed analysis of
+                        trends and facilitating data-driven decision-making.
+                    </p>
                     
                     <div class="table-container">
                         <table>
@@ -447,7 +460,11 @@
                 {% if corr_matrix %}
                 <section>
                     <h2>🔗 Correlation Matrix</h2>
-                    <p class="section-desc">Pairwise correlations between variables (ranges from -1 to +1).</p>
+                    <p class="section-desc">The correlation heatmap visualizes pairwise relationships between variables
+                        using color intensity to represent the strength and direction of correlations. This chart
+                        enables quick identification of highly correlated variable pairs, patterns, and potential
+                        multicollinearity within the dataset.
+                    </p>
                     
                     <div class="table-container">
                         <table>
@@ -489,7 +506,11 @@
                 {% if lag_corr %}
                 <section>
                     <h2>⏱️ Lag Correlation</h2>
-                    <p class="section-desc">Correlation values for different lag periods in time series data.</p>
+                    <p class="section-desc">The Lag Correlation table presents the correlation of the target (KPI)
+                        variable with its past values across different lag periods (e.g., T vs. T−1, T−2, T−3).
+                        It helps identify temporal dependencies and persistence in the series,
+                        supporting informed lag selection for time-series modeling.
+                    </p>
                     
                     <div class="table-container">
                         <table>

@@ -9,7 +9,7 @@ from owlmix.eda.utils import ColumnMixin
 
 
 class VIFChart(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, target_column: str, features: list[str] = None, precision: int = 2, output_dir: str = "outputs"):
+    def __init__(self, df: pd.DataFrame, target_column: str, features: list[str] = None, precision: int = 2, output_dir: str = "charts"):
         self.df = df.copy()
         self.target_column = target_column
         self.features = [
@@ -46,7 +46,7 @@ class VIFChart(ColumnMixin):
 
         return colors
 
-    def generate(self, filename: str = "vif_chart.png") -> str:
+    def generate(self) -> str:
         """
         Generates and saves the VIF bar chart.
         Returns the saved file path.
@@ -78,7 +78,7 @@ class VIFChart(ColumnMixin):
 
         plt.tight_layout()
 
-        file_path = os.path.join(self.output_dir, filename)
+        file_path = os.path.join(self.output_dir, "vif_chart.png")
         plt.savefig(file_path, bbox_inches="tight", dpi=150)
         plt.close()
 

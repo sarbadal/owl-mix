@@ -303,17 +303,27 @@ class SummaryBuilder:
         features = features or self.vif_config["features"]
         precision = self.vif_config["precision"]
 
+        description = (
+            "The Variance Inflation Factor (VIF) chart visualizes the degree of multicollinearity "
+            "among the feature variables by displaying their respective VIF values. Higher VIF values "
+            "indicate stronger linear relationships with other predictors, which may lead to instability "
+            "in model coefficients and reduced interpretability. This chart enables quick identification "
+            "of problematic variables by highlighting those exceeding commonly accepted thresholds, "
+            "helping guide feature selection and dimensionality reduction decisions."
+        )
+
         chart = VIFChart(
             df=self.df,
             target_column=target_column,
             features=features,
-            precision=precision
+            precision=precision,
+            output_dir=self.output_dir
         )
         path = chart.generate()
         self.chart_paths.append(
             {
                 "title": "VIF Chart",
-                "description": "VIF chart plot",
+                "description": description,
                 "vif_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "VIF Chart"
@@ -322,6 +332,16 @@ class SummaryBuilder:
         return self
 
     def add_acf_pacf_chart(self) -> Self:
+        description = (
+            "The ACF (Autocorrelation Function) and PACF (Partial Autocorrelation Function) plots "
+            "illustrate the correlation of each variable with its past values across different lag intervals. "
+            "These charts help identify temporal dependencies, seasonality, and potential lag effects within "
+            "the data. The inclusion of a smoothed trend line provides a clearer view of how correlations "
+            "decay or persist as the lag increases, aiding in the detection of significant lag structures. "
+            "This visualization is particularly useful for determining appropriate lag selections and "
+            "understanding the underlying time-series behavior of the variables."
+        )
+
         chart = ACFPACFPlotter(
             data=self._acf_pacf_chart_data,
             output_dir=self.output_dir
@@ -333,7 +353,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": "ACF PACF Chart",
-                "description": "ACF PACF chart plot",
+                "description": description,
                 "acf_pacf_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "ACF PACF Chart"
@@ -350,10 +370,16 @@ class SummaryBuilder:
         if path is None:
             return self
 
+        description = (
+            "This chart compares the target (KPI) variable with an individual feature variable over time using dual axes. "
+            "By plotting both series together, it helps visually assess co-movement, trends, and potential "
+            "relationships between the KPI and each feature across different periods."
+        )
+
         self.chart_paths.append(
             {
                 "title": "KPI VS Feature Chart",
-                "description": "KPI VS feature chart plot",
+                "description": description,
                 "kpi_vs_feature_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "KPI VS Feature Chart"
@@ -362,6 +388,15 @@ class SummaryBuilder:
         return self
 
     def add_distribution_chart(self, columns: list[str] = None) -> Self:
+        description = (
+            "The distribution chart illustrates the frequency distribution of the selected "
+            "numerical variable across defined bins, providing a clear view of its spread and concentration. "
+            "The overlaid normal distribution curve serves as a reference to assess how closely the data follows "
+            "a Gaussian pattern, helping identify skewness, kurtosis, or deviations from normality. "
+            "This visualization is useful for detecting outliers, understanding variability, and evaluating whether "
+            "statistical assumptions (e.g., normality) are appropriate for subsequent modeling."
+        )
+
         columns = columns or self.correlation_config["columns"]
 
         chart = DistributionChart(
@@ -373,7 +408,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": "Distribution Chart",
-                "description": "Distribution chart plot",
+                "description": description,
                 "distribution_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Distribution Chart"
@@ -382,6 +417,14 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution_chart(self) -> Self:
+        description = (
+            "The categorical distribution chart presents the frequency of each category, allowing "
+            "for a clear comparison of how observations are distributed across different groups. "
+            "The categories are ordered by their counts to form a bell-shaped pattern, making "
+            "it easier to visually identify the most and least dominant categories. This arrangement "
+            "highlights concentration, imbalance, or sparsity within the data, helping uncover dominant "
+            "segments and potential data skew that may influence downstream analysis or modeling decisions."
+        )
         if not self.categorical_columns["columns"]:
             return self
 
@@ -393,7 +436,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": "Categorical Distribution Chart",
-                "description": "Categorical distribution chart plot",
+                "description": description,
                 "categorical_distribution_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Categorical Distribution Chart"
@@ -408,6 +451,12 @@ class SummaryBuilder:
         if precision is None:
             precision = self.correlation_chart_config["precision"]
 
+        description = (
+            "The correlation heatmap visualizes pairwise relationships between variables using color "
+            "intensity to represent the strength and direction of correlations. This chart enables quick "
+            "identification of highly correlated variable pairs, patterns, and potential multicollinearity within the dataset."
+        )
+
         chart = CorrelationChart(
             df=self.df,
             columns=columns,
@@ -418,7 +467,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": "Correlation Chart",
-                "description": "Correlation matrix plot",
+                "description": description,
                 "correlation_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Correlation Chart"
@@ -427,6 +476,12 @@ class SummaryBuilder:
         return self
  
     def add_time_series_chart(self, columns=None):
+        description = (
+            "This chart presents the target (KPI) variable over time, along with its decomposition "
+            "into trend, seasonality, and residual components. The observed series reflects the actual values, "
+            "while the decomposed plots isolate underlying patterns, helping to understand long-term movement, "
+            "recurring seasonal effects, and unexplained variations in the data."
+        )
         chart = TimeSeriesChart(
             self.df, 
             columns=columns, 
@@ -438,7 +493,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": "Time Series Chart",
-                "description": "Time series plot for selected columns",
+                "description": description,
                 "time_series_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Time Series Chart"
@@ -464,10 +519,16 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
+        description = (
+            "The box plot visualizes the distribution of the target and feature variables, highlighting "
+            "their median, spread, and potential outliers. It enables quick identification of extreme values "
+            "and variability across variables, supporting data quality assessment and informed preprocessing decisions."
+        )
+
         self.chart_paths.append(
             {
                 "title": "Outliers Chart",
-                "description": "Outliers plot for selected columns",
+                "description": description,
                 "outliers_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Outliers Chart"
@@ -478,6 +539,14 @@ class SummaryBuilder:
     def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="yoy") -> Self:
         date_column = date_column or self.date_column
         # value_columns = value_columns or [self.target]
+
+        description = (
+            "The Year-over-Year (YoY) line chart visualizes the annual percentage change in key variables, "
+            "enabling a clear comparison of growth or decline trends over time. Each line represents a "
+            "distinct variable, highlighting how its performance evolves relative to the previous year. "
+            "This chart helps identify consistent trends, seasonal patterns, and periods of significant "
+            "change across multiple variables."
+        )
 
         chart = ComparisonChart(
             df=self.df,
@@ -493,7 +562,7 @@ class SummaryBuilder:
         self.chart_paths.append(
             {
                 "title": f"Comparison Chart - {comparison.upper()}",
-                "description": f"Comparison {comparison.upper()} plot for selected columns",
+                "description": description,
                 "comparison_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": f"Comparison Chart - {comparison.upper()}"
@@ -509,10 +578,17 @@ class SummaryBuilder:
             output_dir=self.output_dir, 
             lag=lag)
         path = chart.generate()
+        description = (
+            "This scatter plot illustrates the relationship between the target (KPI) variable and "
+            "its lagged value (lag 1), comparing current values (T) against the previous period (T−1). "
+            "It helps visualize the strength and direction of short-term temporal dependency, indicating "
+            "how strongly the current value is influenced by its immediate past."
+        )
+
         self.chart_paths.append(
             {
                 "title": "Lag Correlation Chart",
-                "description": f"Lag correlation plot for {self.target}",
+                "description": description,
                 "lag_correlation_chart": path,
                 "image_data": self._image_to_base64(path),
                 "alt_text": "Lag Correlation Chart"

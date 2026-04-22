@@ -161,7 +161,7 @@ def create_sample_data(n=100):
 
 
 def main():
-    df = create_sample_data(n=463)
+    df = create_sample_data(n=963)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -170,7 +170,7 @@ def main():
         target="sales",
         date_column="time",
         # template_name="bootstrap_eda_template.html",
-        template_name="custom_eda_template.html",
+        # template_name="custom_eda_template.html",
         # template_name="custom_eda_template_dark.html",
     )
 

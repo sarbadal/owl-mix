@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import os
 
-MAX_X_TICKS = 15
+MAX_X_TICKS = 18
 
 
 class DualAxisLinePlotter:
