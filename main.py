@@ -170,8 +170,8 @@ def main():
         target="sales",
         date_column="time",
         # template_name="bootstrap_eda_template.html",
-        # template_name="custom_eda_template.html",
-        template_name="custom_eda_template_dark.html",
+        template_name="custom_eda_template.html",
+        # template_name="custom_eda_template_dark.html",
     )
 
     report.set_categorical_columns(
@@ -203,13 +203,15 @@ def main():
 
     report.set_acf_pacf_config(
         columns=[
-            # "tv_spend",
-            # "digital_spend",
-            # "radio_spend",
-            # "tv_grp",
-            # "radio_grp",
-            # "digital_imp",
+        #     "tv_spend",
+        #     "digital_spend",
+        #     "radio_spend",
+        #     "tv_grp",
+        #     "radio_grp",
+        #     "digital_imp",
+        #     "sales",
         ],
+        # columns=None,
         n_lags=15
     )
 
@@ -233,8 +235,8 @@ def main():
     #     precision=1
     # )
     report.run(
-        json_file_name="report_custom_dark.json",
-        html_file_name="report_custom_dark.html",
+        json_file_name="report_custom2.json",
+        html_file_name="report_custom2.html",
     )
 
 

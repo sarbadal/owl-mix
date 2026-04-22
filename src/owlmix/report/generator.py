@@ -5,6 +5,8 @@ from typing import Self
 
 from owlmix.eda.summary import SummaryBuilder
 from owlmix.report.renderer import HTMLRenderer
+
+from owlmix.eda.summary_builder_config import SummaryBuilderConfig
  
  
 class OwlMixReport:
@@ -18,52 +20,57 @@ class OwlMixReport:
         self.template_path = template_path
  
         self.chart_dir = os.path.join(output_dir, "charts")
+        self.config = SummaryBuilderConfig(
+            df=self.df,
+            target=self.target,
+            date_column=self.date_column
+        )
 
-        self.outlier_chart_config = {
-            "columns": None,
-            "max_cols_per_chart": 4,
-            "single_image": True,
-        }
-
-        self.correlation_chart_config = {
-            "columns": None,
-            "precision": 2,
-        }
-
-        self.correlation_config = {
-            "columns": None,
-        }
-
-        self.time_comparison_config = {
-            "date_column": self.date_column,
-            "value_columns": None,
-            "comparison_type": "yoy",
-            "agg_func": "sum",
-            "precision": 2
-        }
-
-        self.vif_config = {
-            "target_column": self.target,
-            "features": None,
-            "precision": 3
-        }
-
-        self.acf_pacf_config = {
-            "columns": None,
-            "n_lags": 15
-        }
-
-        self.categorical_columns = {
-            "columns": None
-        }
-
-        self.kpi_vs_feature_config = {
-            "target_column": self.target,
-            "columns": None,
-            "date_format": "%Y-%m-%d",
-            "date_column": self.date_column,
-            "agg_func": "sum",
-        }
+        # self.outlier_chart_config = {
+        #     "columns": None,
+        #     "max_cols_per_chart": 4,
+        #     "single_image": True,
+        # }
+        #
+        # self.correlation_chart_config = {
+        #     "columns": None,
+        #     "precision": 2,
+        # }
+        #
+        # self.correlation_config = {
+        #     "columns": None,
+        # }
+        #
+        # self.time_comparison_config = {
+        #     "date_column": self.date_column,
+        #     "value_columns": None,
+        #     "comparison_type": "yoy",
+        #     "agg_func": "sum",
+        #     "precision": 2
+        # }
+        #
+        # self.vif_config = {
+        #     "target_column": self.target,
+        #     "features": None,
+        #     "precision": 3
+        # }
+        #
+        # self.acf_pacf_config = {
+        #     "columns": None,
+        #     "n_lags": 15
+        # }
+        #
+        # self.categorical_columns = {
+        #     "columns": None
+        # }
+        #
+        # self.kpi_vs_feature_config = {
+        #     "target_column": self.target,
+        #     "columns": None,
+        #     "date_format": "%Y-%m-%d",
+        #     "date_column": self.date_column,
+        #     "agg_func": "sum",
+        # }
 
         os.makedirs(self.chart_dir, exist_ok=True)
 
@@ -72,65 +79,91 @@ class OwlMixReport:
             raise ValueError("precision must be a positive integer")
 
     def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
-        self._validate_precision(precision)
+        self.config.set_vif_config(target_column=target_column, features=features, precision=precision)
 
-        self.vif_config["target_column"] = target_column
-        self.vif_config["features"] = features
-        self.vif_config["precision"] = precision
+        # self.vif_config["target_column"] = target_column
+        # self.vif_config["features"] = features
+        # self.vif_config["precision"] = precision
 
         return self
 
     def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
-        self.kpi_vs_feature_config["target_column"] = target_column or self.target
-        self.kpi_vs_feature_config["date_format"] = date_format
-        self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
-        self.kpi_vs_feature_config["agg_func"] = agg_func
-        self.kpi_vs_feature_config["columns"] = columns
+        # self.kpi_vs_feature_config["target_column"] = target_column or self.target
+        # self.kpi_vs_feature_config["date_format"] = date_format
+        # self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
+        # self.kpi_vs_feature_config["agg_func"] = agg_func
+        # self.kpi_vs_feature_config["columns"] = columns
+        self.config.set_kpi_vs_feature_config(
+            target_column=target_column,
+            columns=columns,
+            date_column=date_column,
+            date_format=date_format,
+            agg_func=agg_func,
+        )
 
         return self
 
     def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
-        self.acf_pacf_config["columns"] = columns
-        self.acf_pacf_config["n_lags"] = n_lags
+        # self.acf_pacf_config["columns"] = columns
+        # self.acf_pacf_config["n_lags"] = n_lags
+        self.config.set_acf_pacf_config(columns=columns, n_lags=n_lags)
 
         return self
 
     def set_categorical_columns(self, columns: list[str] = None) -> Self:
-        self.categorical_columns["columns"] = columns
+        # self.categorical_columns["columns"] = columns
+        self.config.set_categorical_columns(columns=columns)
 
         return self
 
     def set_correlation_config(self, columns: list[str] = None) -> Self:
-        self.correlation_config["columns"] = columns
+        # self.correlation_config["columns"] = columns
+        self.config.set_correlation_config(columns=columns)
 
         return self
 
     def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
-        self._validate_precision(precision)
+        # self._validate_precision(precision)
 
-        self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
-        self.time_comparison_config["value_columns"] = value_columns
-        self.time_comparison_config["comparison_type"] = comparison_type
-        self.time_comparison_config["agg_func"] = agg_func
-        self.time_comparison_config["precision"] = precision
+        # self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
+        # self.time_comparison_config["value_columns"] = value_columns
+        # self.time_comparison_config["comparison_type"] = comparison_type
+        # self.time_comparison_config["agg_func"] = agg_func
+        # self.time_comparison_config["precision"] = precision
+        self.config.set_time_comparison_config(
+            date_column=date_column,
+            value_columns=value_columns,
+            comparison_type=comparison_type,
+            agg_func=agg_func,
+            precision=precision
+        )
 
         return self
 
     def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
-        if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
-            raise ValueError("max_cols_per_chart must be a positive integer")
+        # if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
+        #     raise ValueError("max_cols_per_chart must be a positive integer")
 
-        self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
-        self.outlier_chart_config["single_image"] = single_image
-        self.outlier_chart_config["columns"] = columns
+        # self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
+        # self.outlier_chart_config["single_image"] = single_image
+        # self.outlier_chart_config["columns"] = columns
+        self.config.set_outlier_chart_layout(
+            columns=columns,
+            max_cols_per_chart=max_cols_per_chart,
+            single_image=single_image
+        )
 
         return self
 
     def set_correlation_chart_layout(self, columns: list[str] = None, precision: int = 2):
-        self._validate_precision(precision)
+        # self._validate_precision(precision)
 
-        self.correlation_chart_config["columns"] = columns
-        self.correlation_chart_config["precision"] = precision
+        # self.correlation_chart_config["columns"] = columns
+        # self.correlation_chart_config["precision"] = precision
+        self.config.set_correlation_chart_layout(
+            columns=columns,
+            precision=precision
+        )
 
         return self
  
@@ -145,17 +178,27 @@ class OwlMixReport:
             self.df, 
             target=self.target, 
             date_column=self.date_column, 
-            output_dir=self.chart_dir
+            output_dir=self.chart_dir,
+            config=self.config
         )
 
-        builder.set_time_comparison_config(**self.time_comparison_config)
-        builder.set_vif_config(**self.vif_config)
-        builder.set_kpi_vs_feature_config(**self.kpi_vs_feature_config)
-        builder.set_acf_pacf_config(**self.acf_pacf_config)
-        builder.set_categorical_columns(**self.categorical_columns)
-        builder.set_correlation_config(**self.correlation_config)
-        builder.set_outlier_chart_layout(**self.outlier_chart_config)
-        builder.set_correlation_chart_layout(**self.correlation_chart_config)
+        builder.config.set_time_comparison_config(**self.config.time_comparison_config)
+        builder.config.set_vif_config(**self.config.vif_config)
+        builder.config.set_kpi_vs_feature_config(**self.config.kpi_vs_feature_config)
+        builder.config.set_acf_pacf_config(**self.config.acf_pacf_config)
+        builder.config.set_categorical_columns(**self.config.categorical_columns)
+        builder.config.set_correlation_config(**self.config.correlation_config)
+        builder.config.set_outlier_chart_layout(**self.config.outlier_chart_config)
+        builder.config.set_correlation_chart_layout(**self.config.correlation_chart_config)
+
+        # builder.set_time_comparison_config(**self.time_comparison_config)
+        # builder.set_vif_config(**self.vif_config)
+        # builder.set_kpi_vs_feature_config(**self.kpi_vs_feature_config)
+        # builder.set_acf_pacf_config(**self.acf_pacf_config)
+        # builder.set_categorical_columns(**self.categorical_columns)
+        # builder.set_correlation_config(**self.correlation_config)
+        # builder.set_outlier_chart_layout(**self.outlier_chart_config)
+        # builder.set_correlation_chart_layout(**self.correlation_chart_config)
  
         builder = builder.add_all()
         report_dict = builder.build()

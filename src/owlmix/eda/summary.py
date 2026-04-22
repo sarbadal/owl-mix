@@ -31,10 +31,14 @@ from owlmix.eda.charts.categorical_distribution import CategoricalDistributionCh
 from owlmix.eda.charts.vif import VIFChart
 from owlmix.eda.charts.dualaxis_line_plot import DualAxisLinePlotter
 from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
+
+from owlmix.eda.summary_builder_config import SummaryBuilderConfig
+
+from owlmix.eda.causality import ERROR_THRESHOLD
  
  
 class SummaryBuilder:
-    def __init__(self, df: pd.DataFrame, target: str | None, date_column: str, output_dir: str = "eda_output"):
+    def __init__(self, df: pd.DataFrame, target: str | None, date_column: str, output_dir: str = "eda_output", config: SummaryBuilderConfig = None):
         self.df = df
         self.target = target
         self.date_column = date_column
@@ -43,118 +47,120 @@ class SummaryBuilder:
         self.sections = []
         self.chart_paths = []
 
-        self.outlier_chart_config = {
-            "columns": None,
-            "max_cols_per_chart": 4,
-            "single_image": True
-        }
+        self.config = config
 
-        self.correlation_chart_config = {
-            "columns": None,
-            "precision": 2
-        }
-
-        self.correlation_config = {
-            "columns": None
-        }
-
-        self.time_comparison_config = {
-            "value_columns": None,
-            "comparison_type": "yoy",
-            "agg_func": "sum",
-            "precision": 2
-        }
-
-        self.vif_config = {
-            "target_column": self.target,
-            "features": None,
-            "precision": 3
-        }
-
-        self.acf_pacf_config = {
-            "columns": None,
-            "n_lags": 15
-        }
-
-        self.categorical_columns = {
-            "columns": None
-        }
-
-        self.kpi_vs_feature_config = {
-            "target_column": self.target,
-            "columns": None,
-            "date_format": "%Y-%m-%d",
-            "date_column": self.date_column,
-            "agg_func": "sum",
-        }
+        # self.outlier_chart_config = {
+        #     "columns": None,
+        #     "max_cols_per_chart": 4,
+        #     "single_image": True
+        # }
+        #
+        # self.correlation_chart_config = {
+        #     "columns": None,
+        #     "precision": 2
+        # }
+        #
+        # self.correlation_config = {
+        #     "columns": None
+        # }
+        #
+        # self.time_comparison_config = {
+        #     "value_columns": None,
+        #     "comparison_type": "yoy",
+        #     "agg_func": "sum",
+        #     "precision": 2
+        # }
+        #
+        # self.vif_config = {
+        #     "target_column": self.target,
+        #     "features": None,
+        #     "precision": 3
+        # }
+        #
+        # self.acf_pacf_config = {
+        #     "columns": [self.target],
+        #     "n_lags": 15
+        # }
+        #
+        # self.categorical_columns = {
+        #     "columns": None
+        # }
+        #
+        # self.kpi_vs_feature_config = {
+        #     "target_column": self.target,
+        #     "columns": None,
+        #     "date_format": "%Y-%m-%d",
+        #     "date_column": self.date_column,
+        #     "agg_func": "sum",
+        # }
  
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
-        if not isinstance(precision, int) or precision < 1:
-            raise ValueError("precision must be a positive integer")
-
-        self.vif_config["target_column"] = target_column
-        self.vif_config["features"] = features
-        self.vif_config["precision"] = precision
-
-        return self
-
-    def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
-        self.kpi_vs_feature_config["target_column"] = target_column or self.target
-        self.kpi_vs_feature_config["date_format"] = date_format
-        self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
-        self.kpi_vs_feature_config["agg_func"] = agg_func
-        self.kpi_vs_feature_config["columns"] = columns
-
-        return self
-
-    def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
-        self.acf_pacf_config["columns"] = columns
-        self.acf_pacf_config["n_lags"] = n_lags
-
-        return self
-
-    def set_correlation_config(self, columns: list[str] = None) -> Self:
-        self.correlation_config["columns"] = columns
-
-        return self
-
-    def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
-        if not isinstance(precision, int) or precision < 1:
-            raise ValueError("precision must be a positive integer")
-
-        self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
-        self.time_comparison_config["value_columns"] = value_columns
-        self.time_comparison_config["comparison_type"] = comparison_type
-        self.time_comparison_config["agg_func"] = agg_func
-        self.time_comparison_config["precision"] = precision
-
-        return self
-
-    def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
-        if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
-            raise ValueError("max_cols_per_chart must be a positive integer")
-
-        self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
-        self.outlier_chart_config["single_image"] = single_image
-        self.outlier_chart_config["columns"] = columns
-
-        return self
-
-    def set_correlation_chart_layout(self, columns: list[str]=None, precision: int=2):
-        if not isinstance(precision, int) or precision < 1:
-            raise ValueError("precision must be a positive integer")
-
-        self.correlation_chart_config["columns"] = columns
-        self.correlation_chart_config["precision"] = precision
-
-        return self
-
-    def set_categorical_columns(self, columns: list[str] = None) -> Self:
-        self.categorical_columns["columns"] = columns
-
-        return self
+    # def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
+    #     if not isinstance(precision, int) or precision < 1:
+    #         raise ValueError("precision must be a positive integer")
+    #
+    #     self.vif_config["target_column"] = target_column
+    #     self.vif_config["features"] = features
+    #     self.vif_config["precision"] = precision
+    #
+    #     return self
+    #
+    # def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
+    #     self.kpi_vs_feature_config["target_column"] = target_column or self.target
+    #     self.kpi_vs_feature_config["date_format"] = date_format
+    #     self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
+    #     self.kpi_vs_feature_config["agg_func"] = agg_func
+    #     self.kpi_vs_feature_config["columns"] = columns
+    #
+    #     return self
+    #
+    # def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
+    #     self.acf_pacf_config["columns"] = columns or [self.target]
+    #     self.acf_pacf_config["n_lags"] = n_lags
+    #
+    #     return self
+    #
+    # def set_correlation_config(self, columns: list[str] = None) -> Self:
+    #     self.correlation_config["columns"] = columns
+    #
+    #     return self
+    #
+    # def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
+    #     if not isinstance(precision, int) or precision < 1:
+    #         raise ValueError("precision must be a positive integer")
+    #
+    #     self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
+    #     self.time_comparison_config["value_columns"] = value_columns
+    #     self.time_comparison_config["comparison_type"] = comparison_type
+    #     self.time_comparison_config["agg_func"] = agg_func
+    #     self.time_comparison_config["precision"] = precision
+    #
+    #     return self
+    #
+    # def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
+    #     if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
+    #         raise ValueError("max_cols_per_chart must be a positive integer")
+    #
+    #     self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
+    #     self.outlier_chart_config["single_image"] = single_image
+    #     self.outlier_chart_config["columns"] = columns
+    #
+    #     return self
+    #
+    # def set_correlation_chart_layout(self, columns: list[str]=None, precision: int=2):
+    #     if not isinstance(precision, int) or precision < 1:
+    #         raise ValueError("precision must be a positive integer")
+    #
+    #     self.correlation_chart_config["columns"] = columns
+    #     self.correlation_chart_config["precision"] = precision
+    #
+    #     return self
+    #
+    # def set_categorical_columns(self, columns: list[str] = None) -> Self:
+    #     self.categorical_columns["columns"] = columns
+    #
+    #     return self
  
     # =========================
     # TEXT SECTIONS
@@ -167,9 +173,9 @@ class SummaryBuilder:
         return self
 
     def add_vif_calculator(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
-        target_column = target_column or self.vif_config["target_column"]
-        features = features or self.vif_config["features"]
-        precision = self.vif_config["precision"]
+        target_column = target_column or self.config.vif_config["target_column"]
+        features = features or self.config.vif_config["features"]
+        precision = self.config.vif_config["precision"]
 
         vif_calculator = VIFCalculator(
             df=self.df,
@@ -182,11 +188,11 @@ class SummaryBuilder:
         return self
 
     def add_kpi_vs_feature(self, target_column: str = None, features: list[str] = None) -> Self:
-        target_column = target_column or self.kpi_vs_feature_config["target_column"]
-        date_format = self.kpi_vs_feature_config["date_format"]
-        date_column = self.kpi_vs_feature_config["date_column"]
-        agg_func = self.kpi_vs_feature_config["agg_func"]
-        columns = self.kpi_vs_feature_config["columns"]
+        target_column = target_column or self.config.kpi_vs_feature_config["target_column"]
+        date_format = self.config.kpi_vs_feature_config["date_format"]
+        date_column = self.config.kpi_vs_feature_config["date_column"]
+        agg_func = self.config.kpi_vs_feature_config["agg_func"]
+        columns = self.config.kpi_vs_feature_config["columns"]
 
         kpi_vs_feature_generator = DualAxisLineChartDataGenerator(
             df=self.df,
@@ -202,7 +208,7 @@ class SummaryBuilder:
 
         return self
 
-    def add_causality_test(self, target_column: str = None, columns: list[str] = None, max_lag: int = 5, error_threshold: float = 0.30) -> Self:
+    def add_causality_test(self, target_column: str = None, columns: list[str] = None, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD) -> Self:
         target_column = target_column or self.target
 
         causality_test = CausalityTest(
@@ -217,7 +223,7 @@ class SummaryBuilder:
         return self
 
     def add_correlation_matrix(self, columns: list[str] = None) -> Self:
-        columns = columns or self.correlation_config["columns"]
+        columns = columns or self.config.correlation_config["columns"]
         corr = Correlation(df=self.df, columns=columns)
         self.sections.append({"correlation_matrix": corr.compute_correlation_matrix()})
         self.sections.append(
@@ -232,11 +238,11 @@ class SummaryBuilder:
         return self
 
     def add_time_comparison(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum") -> Self:
-        date_column = date_column or self.time_comparison_config["date_column"]
-        value_columns = value_columns or self.time_comparison_config["value_columns"]
-        comparison_type = comparison_type or self.time_comparison_config["comparison_type"]
-        agg_func = agg_func or self.time_comparison_config["agg_func"]
-        precision = self.time_comparison_config["precision"]
+        date_column = date_column or self.config.time_comparison_config["date_column"]
+        value_columns = value_columns or self.config.time_comparison_config["value_columns"]
+        comparison_type = comparison_type or self.config.time_comparison_config["comparison_type"]
+        agg_func = agg_func or self.config.time_comparison_config["agg_func"]
+        precision = self.config.time_comparison_config["precision"]
 
         report = TimeComparisonReport(
             df=self.df,
@@ -267,7 +273,7 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution(self, columns: list[str] = None) -> Self:
-        columns = columns or self.categorical_columns["columns"]
+        columns = columns or self.config.categorical_columns["columns"]
         generator = CategoricalDistributionGenerator(
             df=self.df,
             columns=columns
@@ -280,8 +286,8 @@ class SummaryBuilder:
         return self
 
     def add_acf_pacf_calculator(self, columns: list[str]=None, n_lags: int = None) -> Self:
-        columns = columns or self.acf_pacf_config["columns"]
-        n_lags = n_lags or self.acf_pacf_config["n_lags"]
+        columns = columns or self.config.acf_pacf_config["columns"]
+        n_lags = n_lags or self.config.acf_pacf_config["n_lags"]
         generator = ACFPACFCalculator(
             df=self.df,
             columns=columns,
@@ -298,10 +304,10 @@ class SummaryBuilder:
     # CHART SECTIONS
     # =========================
 
-    def add_vif_chart(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
-        target_column = target_column or self.vif_config["target_column"]
-        features = features or self.vif_config["features"]
-        precision = self.vif_config["precision"]
+    def add_vif_chart(self, target_column: str = None, features: list[str] = None, precision: int = None) -> Self:
+        target_column = target_column or self.config.vif_config["target_column"]
+        features = features or self.config.vif_config["features"]
+        precision = precision or self.config.vif_config["precision"]
 
         description = (
             "The Variance Inflation Factor (VIF) chart visualizes the degree of multicollinearity "
@@ -397,7 +403,7 @@ class SummaryBuilder:
             "statistical assumptions (e.g., normality) are appropriate for subsequent modeling."
         )
 
-        columns = columns or self.correlation_config["columns"]
+        columns = columns or self.config.correlation_config["columns"]
 
         chart = DistributionChart(
             df=self.df,
@@ -425,7 +431,7 @@ class SummaryBuilder:
             "highlights concentration, imbalance, or sparsity within the data, helping uncover dominant "
             "segments and potential data skew that may influence downstream analysis or modeling decisions."
         )
-        if not self.categorical_columns["columns"]:
+        if not self.config.categorical_columns["columns"]:
             return self
 
         chart = CategoricalDistributionChart(
@@ -444,12 +450,12 @@ class SummaryBuilder:
         )
         return self
 
-    def add_correlation_chart(self, columns: list[str]=None, precision: int=None):
+    def add_correlation_chart(self, columns: list[str] = None, precision: int = None):
         if columns is None:
-            columns = self.correlation_chart_config["columns"]
+            columns = self.config.correlation_chart_config["columns"]
 
         if precision is None:
-            precision = self.correlation_chart_config["precision"]
+            precision = self.config.correlation_chart_config["precision"]
 
         description = (
             "The correlation heatmap visualizes pairwise relationships between variables using color "
@@ -503,13 +509,13 @@ class SummaryBuilder:
  
     def add_outliers_chart(self, columns=None, max_cols_per_chart: int=None, single_image: bool=None):
         if max_cols_per_chart is None:
-            max_cols_per_chart = self.outlier_chart_config["max_cols_per_chart"]
+            max_cols_per_chart = self.config.outlier_chart_config["max_cols_per_chart"]
 
         if single_image is None:
-            single_image = self.outlier_chart_config["single_image"]
+            single_image = self.config.outlier_chart_config["single_image"]
 
         if columns is None:
-            columns = self.outlier_chart_config["columns"]
+            columns = self.config.outlier_chart_config["columns"]
 
         chart = OutlierChart(
             df=self.df,
@@ -537,7 +543,7 @@ class SummaryBuilder:
         return self
 
     def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="yoy") -> Self:
-        date_column = date_column or self.date_column
+        date_column = date_column or self.config.date_column
         # value_columns = value_columns or [self.target]
 
         description = (

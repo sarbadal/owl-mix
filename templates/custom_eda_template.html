@@ -325,7 +325,12 @@
                 {% if causality_test %}
                 <section>
                     <h2>🧠 Granger Causality Test</h2>
-                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance. Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.</p>
+                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between
+                        variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship
+                        (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance.
+                        Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.
+                    </p>
+                    <p style="color: darkgray"><b>Error Threshold (MAPE) Used: {{ "%.2f"|format(causality_test.error_threshold) }} %</b></p>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -335,7 +340,8 @@
                                     <th>Coefficient Sign</th>
                                     <th>Best Lag</th>
                                     <th>P-value</th>
-{#                                    <th>Min P-value</th>#}
+                                    <th>Causality Score</th>
+                                    <th>MAPE (%)</th>
                                     <th>Number of Lags Tested</th>
                                 </tr>
                             </thead>
@@ -358,8 +364,9 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ result.best_lag }}</td>
-                                    <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
-{#                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>#}
+                                    <td>{% if result.p_value is number %}{{ "%.5f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
+                                    <td>{% if result.score is number %}{{ "%.2f"|format(result.score) }}{% else %}{{ result.score }}{% endif %}</td>
+                                    <th>{% if result.mape_score is number %}{{ "%.2f"|format(result.mape_score) }}{% else %}{{ result.mape_score }}{% endif %}</th>
                                     <td>{{ result.number_of_lags_tested }}</td>
                                 </tr>
                                 {% endfor %}

@@ -15,6 +15,9 @@ from .utils import ColumnMixin
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
+ERROR_THRESHOLD = 0.15
+
+
 class CausalityTest(ColumnMixin):
     def __init__(self, df: pd.DataFrame, target_column: str, columns: list[str] = None):
         self.df = df.copy()
@@ -28,7 +31,20 @@ class CausalityTest(ColumnMixin):
         if len(self.df) < 10:
             return False
 
-    def granger_causality(self, column: str, max_lag: int = 5, error_threshold: float = 0.30):
+    def calculate_mape(self, column: str) -> float:
+        df = self.df.copy()
+        X = df[[column]]
+        y = df[self.target_column]
+
+        model = LinearRegression()
+        model.fit(X, y)
+        prediction = model.predict(X)
+
+        mape_score = mean_absolute_percentage_error(y, prediction)
+
+        return mape_score
+
+    def granger_causality(self, column: str, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD):
         """Perform Granger causality test on the dataset."""
         self._drop_na()
         if self._row_count_check() is False:
@@ -76,22 +92,34 @@ class CausalityTest(ColumnMixin):
         min_p_value = min(p_values)
         best_lag = (p_values.index(min_p_value) + 1)
 
+        # SCORE
+        mape_score = self.calculate_mape(column)
+        p_score = (1 - min_p_value) * 60
+        e_score = (1 - min(mape_score, 1)) * 40
+        score = round(p_score + e_score, 2)
+
         # Get the coefficient sign for the best lag
         best_coefficients = coefficients[best_lag - 1]
         avg_coefficient = np.mean(best_coefficients[:best_lag])  # average of lag coefficients
         coefficient_sign = "positive" if avg_coefficient > 0 else "negative"
+        causality = True if (min_p_value < 0.05) and (mape_score < error_threshold) else False
+
+        # print(f"P Value: {min_p_value}, MAPE: {mape_score}, Threshold: {error_threshold}")
+        # print(f"Causality: {causality}")
 
         return {
             "variable": column,
             "best_lag": best_lag,
-            "p_value": round(min_p_value, 4),
+            "p_value": round(min_p_value, 5),
             "min_p_value": min_p_value,
+            "score": score,
+            "mape_score": round(mape_score * 100, 2),
             "number_of_lags_tested": len(p_values),
-            "causal": bool(min_p_value < 0.05),
-            "coefficient_sign": coefficient_sign
+            "causal": causality,
+            "coefficient_sign": coefficient_sign,
         }
 
-    def run(self, max_lag: int = 5, error_threshold: float = 0.30) -> dict[dict[str, Any]]:
+    def run(self, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD) -> dict[dict[str, Any]]:
         if self.columns is None:
             self.columns = [col for col in self.df.columns if col != self.target_column]
 
@@ -101,5 +129,6 @@ class CausalityTest(ColumnMixin):
             results.append(result)
 
         return {
-            "causality_test_results": results
+            "causality_test_results": results,
+            "error_threshold": error_threshold * 100
         }

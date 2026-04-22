@@ -31,7 +31,10 @@ class ACFPACFPlotter:
             print("No data provided")
             return None
 
-        cols = 3
+        fontsize = 14 if n == 1 else None
+        labelsize = 12 if n == 1 else None
+
+        cols = min(n, 3)
         rows = math.ceil(n / cols)
 
         fig, axes = plt.subplots(rows, cols, figsize=(18, 5 * rows))
@@ -53,8 +56,8 @@ class ACFPACFPlotter:
             # ax.bar(x + width / 2, pacf_vals, width=width, label="PACF")
 
             # Bars
-            ax.bar(x - width / 2, acf_vals, width=width, label="ACF", alpha=0.6)
-            ax.bar(x + width / 2, pacf_vals, width=width, label="PACF", alpha=0.6)
+            ax.bar(x - width / 2, acf_vals, width=width, label="ACF", alpha=0.8)
+            ax.bar(x + width / 2, pacf_vals, width=width, label="PACF", alpha=0.8)
 
             x_smooth = np.linspace(x.min(), x.max(), 300)
 
@@ -76,7 +79,7 @@ class ACFPACFPlotter:
                 acf_smooth if 'acf_smooth' in locals() else acf_vals,
                 linewidth=5,
                 linestyle='solid',
-                alpha=0.8,
+                alpha=0.2,
                 label='ACF (smooth)',
                 zorder=2
             )
@@ -87,16 +90,30 @@ class ACFPACFPlotter:
                 pacf_smooth if 'pacf_smooth' in locals() else pacf_vals,
                 linewidth=2,
                 linestyle='dotted',
-                alpha=1.0,
+                alpha=0.2,
                 label='PACF (dotted)',
                 zorder=3
             )
             # end of bar
 
+            # Increase axis tick label size
+            ax.tick_params(axis='both', labelsize=labelsize)
+
+            # Increase title size
+            ax.set_title(f"{item['column']}", fontsize=fontsize)
+
+            # Increase axis label sizes (if you have them)
+            ax.set_xlabel("Lags", fontsize=fontsize)
+            ax.set_ylabel("Value", fontsize=fontsize)
+
+            # Increase legend font size
+            ax.legend(fontsize=fontsize)
+
             # Formatting
-            ax.set_title(f"{item['column']}")
+            ax.set_title(f"{item['column']}", fontsize=fontsize)
             ax.set_xticks(x)
             ax.set_xticklabels(lags)
+            ax.tick_params(axis='both', labelsize=labelsize)
             ax.axhline(0)  # baseline
 
             threshold = 1.96 / np.sqrt(len(lags))
