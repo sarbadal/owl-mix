@@ -170,7 +170,7 @@ def main():
         target="sales",
         date_column="time",
         # template_name="bootstrap_eda_template.html",
-        template_name="custom_eda_template.html",
+        # template_name="custom_eda_template.html",
         # template_name="custom_eda_template_dark.html",
     )
 
