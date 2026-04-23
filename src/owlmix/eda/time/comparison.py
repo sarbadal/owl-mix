@@ -80,7 +80,7 @@ class TimeComparisonReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
 
 
 class TimeAggregatorReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
-    def __init__(self, df, date_column: str, value_columns: list[str]=None, freq: str="Y", agg_func: str | Callable="sum", precision: int = 2):
+    def __init__(self, df, date_column: str, value_columns: list[str]=None, freq: str="YE", agg_func: str | Callable="sum", precision: int = 2):
         self.df = df.copy()
         self.date_column = date_column
         self.value_columns = self._get_columns(value_columns)
@@ -112,4 +112,4 @@ class TimeAggregatorReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
             .reset_index()
         )
 
-        return self._to_serializable(dt_format="%Y")
+        return self._to_serializable(dt_format="%Y-%m")

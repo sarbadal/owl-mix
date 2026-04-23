@@ -1,6 +1,8 @@
 # src/owlmix/eda/utils.py
 
 import json
+import os
+
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -133,3 +135,4 @@ def to_json(data: dict, indent=2, nan_replacement=None) -> str:
     """Convert data to JSON string using the custom encoder."""
     normalized = normalize_json_value(data, nan_replacement=nan_replacement)
     return json.dumps(normalized, cls=NumpyPandasEncoder, indent=indent, allow_nan=False)
+

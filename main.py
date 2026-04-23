@@ -161,7 +161,7 @@ def create_sample_data(n=100):
 
 
 def main():
-    df = create_sample_data(n=963)
+    df = create_sample_data(n=1231)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -174,7 +174,12 @@ def main():
         # template_name="custom_eda_template_dark.html",
     )
 
-    report.set_categorical_columns(
+    report.config.set_time_aggregator_config(
+        freq="ME",
+        precision=4
+    )
+
+    report.config.set_categorical_columns_config(
         columns=[
             "color",
             "smartphone",
@@ -183,36 +188,40 @@ def main():
         ]
     )
 
-    report.set_kpi_vs_feature_config(
-        columns=[
-            # "tv_spend",
-            # "digital_spend",
-            # "radio_spend",
-            # "tv_grp",
-            # "radio_grp",
-            # "digital_imp",
-
-        ],
+    report.config.set_kpi_vs_feature_config(
+        columns=["tv_spend", "digital_spend", "radio_spend"],
         date_format="%Y-%m",
     )
 
-    # report.set_vif_config(
-    #     features=["tv_spend", "digital_spend", "radio_spend"],
-    #     precision=5,
-    # )
+    report.config.set_vif_config(
+        features=[
+            "tv_spend",
+            "digital_spend",
+            "radio_spend",
+            "tv_grp",
+            "radio_grp",
+            "digital_imp",
+            # "sales",
+        ],
+        precision=2,
+    )
 
-    report.set_acf_pacf_config(
+    report.config.set_acf_pacf_config(
         columns=[
         #     "tv_spend",
         #     "digital_spend",
         #     "radio_spend",
         #     "tv_grp",
         #     "radio_grp",
-        #     "digital_imp",
-        #     "sales",
+            "digital_imp",
+            "sales",
         ],
-        # columns=None,
-        n_lags=15
+        n_lags=20
+    )
+
+    report.config.set_causality_test_config(
+        max_lag=5,
+        error_threshold=0.15
     )
 
     # report.set_time_comparison_config(
@@ -235,8 +244,8 @@ def main():
     #     precision=1
     # )
     report.run(
-        json_file_name="report_custom2.json",
-        html_file_name="report_custom2.html",
+        json_file_name="report_custom3.json",
+        html_file_name="report_custom3.html",
     )
 
 

@@ -34,11 +34,19 @@ from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
 
 from owlmix.eda.summary_builder_config import SummaryBuilderConfig
 
-from owlmix.eda.causality import ERROR_THRESHOLD
+from .config_model import ChartsTitleConfig, build_charts_config
  
  
 class SummaryBuilder:
-    def __init__(self, df: pd.DataFrame, target: str | None, date_column: str, output_dir: str = "eda_output", config: SummaryBuilderConfig = None):
+    def __init__(
+            self,
+            df: pd.DataFrame,
+            target: str,
+            date_column: str,
+            output_dir: str = "eda_output",
+            config: SummaryBuilderConfig = None,
+            user_title_config_path: str = None
+    ):
         self.df = df
         self.target = target
         self.date_column = date_column
@@ -46,122 +54,11 @@ class SummaryBuilder:
  
         self.sections = []
         self.chart_paths = []
-
         self.config = config
-
-        # self.outlier_chart_config = {
-        #     "columns": None,
-        #     "max_cols_per_chart": 4,
-        #     "single_image": True
-        # }
-        #
-        # self.correlation_chart_config = {
-        #     "columns": None,
-        #     "precision": 2
-        # }
-        #
-        # self.correlation_config = {
-        #     "columns": None
-        # }
-        #
-        # self.time_comparison_config = {
-        #     "value_columns": None,
-        #     "comparison_type": "yoy",
-        #     "agg_func": "sum",
-        #     "precision": 2
-        # }
-        #
-        # self.vif_config = {
-        #     "target_column": self.target,
-        #     "features": None,
-        #     "precision": 3
-        # }
-        #
-        # self.acf_pacf_config = {
-        #     "columns": [self.target],
-        #     "n_lags": 15
-        # }
-        #
-        # self.categorical_columns = {
-        #     "columns": None
-        # }
-        #
-        # self.kpi_vs_feature_config = {
-        #     "target_column": self.target,
-        #     "columns": None,
-        #     "date_format": "%Y-%m-%d",
-        #     "date_column": self.date_column,
-        #     "agg_func": "sum",
-        # }
+        self.title_config = build_charts_config(user_title_config_path)
  
         os.makedirs(self.output_dir, exist_ok=True)
 
-    # def set_vif_config(self, target_column: str = None, features: list[str] = None, precision: int = 3) -> Self:
-    #     if not isinstance(precision, int) or precision < 1:
-    #         raise ValueError("precision must be a positive integer")
-    #
-    #     self.vif_config["target_column"] = target_column
-    #     self.vif_config["features"] = features
-    #     self.vif_config["precision"] = precision
-    #
-    #     return self
-    #
-    # def set_kpi_vs_feature_config(self, target_column: str = None, columns: list[str] = None, date_column: str = None, date_format: str = "%Y-%m-%d", agg_func: str = "sum") -> Self:
-    #     self.kpi_vs_feature_config["target_column"] = target_column or self.target
-    #     self.kpi_vs_feature_config["date_format"] = date_format
-    #     self.kpi_vs_feature_config["date_column"] = date_column or self.date_column
-    #     self.kpi_vs_feature_config["agg_func"] = agg_func
-    #     self.kpi_vs_feature_config["columns"] = columns
-    #
-    #     return self
-    #
-    # def set_acf_pacf_config(self, columns: list[str] = None, n_lags: int = 15) -> Self:
-    #     self.acf_pacf_config["columns"] = columns or [self.target]
-    #     self.acf_pacf_config["n_lags"] = n_lags
-    #
-    #     return self
-    #
-    # def set_correlation_config(self, columns: list[str] = None) -> Self:
-    #     self.correlation_config["columns"] = columns
-    #
-    #     return self
-    #
-    # def set_time_comparison_config(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum", precision: int = 2) -> Self:
-    #     if not isinstance(precision, int) or precision < 1:
-    #         raise ValueError("precision must be a positive integer")
-    #
-    #     self.time_comparison_config["date_column"] = date_column if date_column else self.date_column
-    #     self.time_comparison_config["value_columns"] = value_columns
-    #     self.time_comparison_config["comparison_type"] = comparison_type
-    #     self.time_comparison_config["agg_func"] = agg_func
-    #     self.time_comparison_config["precision"] = precision
-    #
-    #     return self
-    #
-    # def set_outlier_chart_layout(self, columns: list[str]=None, max_cols_per_chart: int=4, single_image: bool=True) -> Self:
-    #     if not isinstance(max_cols_per_chart, int) or max_cols_per_chart < 1:
-    #         raise ValueError("max_cols_per_chart must be a positive integer")
-    #
-    #     self.outlier_chart_config["max_cols_per_chart"] = max_cols_per_chart
-    #     self.outlier_chart_config["single_image"] = single_image
-    #     self.outlier_chart_config["columns"] = columns
-    #
-    #     return self
-    #
-    # def set_correlation_chart_layout(self, columns: list[str]=None, precision: int=2):
-    #     if not isinstance(precision, int) or precision < 1:
-    #         raise ValueError("precision must be a positive integer")
-    #
-    #     self.correlation_chart_config["columns"] = columns
-    #     self.correlation_chart_config["precision"] = precision
-    #
-    #     return self
-    #
-    # def set_categorical_columns(self, columns: list[str] = None) -> Self:
-    #     self.categorical_columns["columns"] = columns
-    #
-    #     return self
- 
     # =========================
     # TEXT SECTIONS
     # =========================
@@ -208,8 +105,11 @@ class SummaryBuilder:
 
         return self
 
-    def add_causality_test(self, target_column: str = None, columns: list[str] = None, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD) -> Self:
-        target_column = target_column or self.target
+    def add_causality_test(self) -> Self:
+        target_column = self.config.causality_test_config["target_column"]
+        columns = self.config.causality_test_config["columns"]
+        max_lag = self.config.causality_test_config["max_lag"]
+        error_threshold = self.config.causality_test_config["error_threshold"]
 
         causality_test = CausalityTest(
             df=self.df,
@@ -222,26 +122,30 @@ class SummaryBuilder:
 
         return self
 
-    def add_correlation_matrix(self, columns: list[str] = None) -> Self:
-        columns = columns or self.config.correlation_config["columns"]
-        corr = Correlation(df=self.df, columns=columns)
+    def add_correlation_matrix(self) -> Self:
+        columns = self.config.correlation_config["columns"]
+        corr = Correlation(
+            df=self.df,
+            columns=columns
+        )
+
         self.sections.append({"correlation_matrix": corr.compute_correlation_matrix()})
         self.sections.append(
             {
                 "lag_correlation": corr.compute_lag_correlation(
                     self.target, 
                     self.target, 
-                    lags=[1, 2, 3]
+                    lags=[1, 2, 3, 4, 5]
                 )
             }
         )
         return self
 
-    def add_time_comparison(self, date_column: str = None, value_columns: list[str] = None, comparison_type: str = "yoy", agg_func: str = "sum") -> Self:
-        date_column = date_column or self.config.time_comparison_config["date_column"]
-        value_columns = value_columns or self.config.time_comparison_config["value_columns"]
-        comparison_type = comparison_type or self.config.time_comparison_config["comparison_type"]
-        agg_func = agg_func or self.config.time_comparison_config["agg_func"]
+    def add_time_comparison(self) -> Self:
+        date_column = self.config.time_comparison_config["date_column"]
+        value_columns = self.config.time_comparison_config["value_columns"]
+        comparison_type = self.config.time_comparison_config["comparison_type"]
+        agg_func = self.config.time_comparison_config["agg_func"]
         precision = self.config.time_comparison_config["precision"]
 
         report = TimeComparisonReport(
@@ -258,14 +162,21 @@ class SummaryBuilder:
 
         return self
 
-    def add_time_aggregator(self, date_column: str=None, value_columns: list[str]=None, freq: str="YE", agg_func: str="sum") -> Self:
-        date_column = date_column or self.date_column
+    def add_time_aggregator(self) -> Self:
+        date_column = self.config.time_aggregator_config["date_column"]
+        value_columns = self.config.time_aggregator_config["value_columns"]
+        freq = self.config.time_aggregator_config["freq"]
+        agg_func = self.config.time_aggregator_config["agg_func"]
+        precision = self.config.time_aggregator_config["precision"]
+
+
         report = TimeAggregatorReport(
             df=self.df,
             date_column=date_column,
             value_columns=value_columns,
             freq=freq,
-            agg_func=agg_func
+            agg_func=agg_func,
+            precision=precision
         )
         result = report.aggregate()
         self.sections.append({"time_aggregator": result})
@@ -273,7 +184,7 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution(self, columns: list[str] = None) -> Self:
-        columns = columns or self.config.categorical_columns["columns"]
+        columns = columns or self.config.categorical_columns_config["columns"]
         generator = CategoricalDistributionGenerator(
             df=self.df,
             columns=columns
@@ -304,19 +215,26 @@ class SummaryBuilder:
     # CHART SECTIONS
     # =========================
 
-    def add_vif_chart(self, target_column: str = None, features: list[str] = None, precision: int = None) -> Self:
-        target_column = target_column or self.config.vif_config["target_column"]
-        features = features or self.config.vif_config["features"]
-        precision = precision or self.config.vif_config["precision"]
+    def _append_chart(self, chart_id: str, path: str) -> None:
+        """Helper method to append a chart to a chart path."""
+        title = self.title_config.charts[chart_id].title
+        description = self.title_config.charts[chart_id].description
+        alt_text = self.title_config.charts[chart_id].alt_text
 
-        description = (
-            "The Variance Inflation Factor (VIF) chart visualizes the degree of multicollinearity "
-            "among the feature variables by displaying their respective VIF values. Higher VIF values "
-            "indicate stronger linear relationships with other predictors, which may lead to instability "
-            "in model coefficients and reduced interpretability. This chart enables quick identification "
-            "of problematic variables by highlighting those exceeding commonly accepted thresholds, "
-            "helping guide feature selection and dimensionality reduction decisions."
+        self.chart_paths.append(
+            {
+                "title": title,
+                "description": description,
+                chart_id: path,
+                "image_data": self._image_to_base64(path),
+                "alt_text": alt_text
+            }
         )
+
+    def add_vif_chart(self) -> Self:
+        target_column = self.config.vif_config["target_column"]
+        features = self.config.vif_config["features"]
+        precision = self.config.vif_config["precision"]
 
         chart = VIFChart(
             df=self.df,
@@ -326,45 +244,23 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        self.chart_paths.append(
-            {
-                "title": "VIF Chart",
-                "description": description,
-                "vif_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "VIF Chart"
-            }
-        )
+
+        self._append_chart(chart_id="vif_chart", path=path)
+
         return self
 
     def add_acf_pacf_chart(self) -> Self:
-        description = (
-            "The ACF (Autocorrelation Function) and PACF (Partial Autocorrelation Function) plots "
-            "illustrate the correlation of each variable with its past values across different lag intervals. "
-            "These charts help identify temporal dependencies, seasonality, and potential lag effects within "
-            "the data. The inclusion of a smoothed trend line provides a clearer view of how correlations "
-            "decay or persist as the lag increases, aiding in the detection of significant lag structures. "
-            "This visualization is particularly useful for determining appropriate lag selections and "
-            "understanding the underlying time-series behavior of the variables."
-        )
-
         chart = ACFPACFPlotter(
             data=self._acf_pacf_chart_data,
             output_dir=self.output_dir
         )
         path = chart.generate()
+
         if path is None:
             return self
 
-        self.chart_paths.append(
-            {
-                "title": "ACF PACF Chart",
-                "description": description,
-                "acf_pacf_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "ACF PACF Chart"
-            }
-        )
+        self._append_chart(chart_id="acf_pacf_chart",path=path)
+
         return self
 
     def add_kpi_vs_feature_chart(self) -> Self:
@@ -376,34 +272,12 @@ class SummaryBuilder:
         if path is None:
             return self
 
-        description = (
-            "This chart compares the target (KPI) variable with an individual feature variable over time using dual axes. "
-            "By plotting both series together, it helps visually assess co-movement, trends, and potential "
-            "relationships between the KPI and each feature across different periods."
-        )
+        self._append_chart(chart_id="kpi_vs_feature_chart", path=path)
 
-        self.chart_paths.append(
-            {
-                "title": "KPI VS Feature Chart",
-                "description": description,
-                "kpi_vs_feature_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "KPI VS Feature Chart"
-            }
-        )
         return self
 
-    def add_distribution_chart(self, columns: list[str] = None) -> Self:
-        description = (
-            "The distribution chart illustrates the frequency distribution of the selected "
-            "numerical variable across defined bins, providing a clear view of its spread and concentration. "
-            "The overlaid normal distribution curve serves as a reference to assess how closely the data follows "
-            "a Gaussian pattern, helping identify skewness, kurtosis, or deviations from normality. "
-            "This visualization is useful for detecting outliers, understanding variability, and evaluating whether "
-            "statistical assumptions (e.g., normality) are appropriate for subsequent modeling."
-        )
-
-        columns = columns or self.config.correlation_config["columns"]
+    def add_distribution_chart(self) -> Self:
+        columns = self.config.correlation_config["columns"]
 
         chart = DistributionChart(
             df=self.df,
@@ -411,27 +285,13 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        self.chart_paths.append(
-            {
-                "title": "Distribution Chart",
-                "description": description,
-                "distribution_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Distribution Chart"
-            }
-        )
+
+        self._append_chart(chart_id="distribution_chart", path=path)
+
         return self
 
     def add_categorical_distribution_chart(self) -> Self:
-        description = (
-            "The categorical distribution chart presents the frequency of each category, allowing "
-            "for a clear comparison of how observations are distributed across different groups. "
-            "The categories are ordered by their counts to form a bell-shaped pattern, making "
-            "it easier to visually identify the most and least dominant categories. This arrangement "
-            "highlights concentration, imbalance, or sparsity within the data, helping uncover dominant "
-            "segments and potential data skew that may influence downstream analysis or modeling decisions."
-        )
-        if not self.config.categorical_columns["columns"]:
+        if not self.config.categorical_columns_config["columns"]:
             return self
 
         chart = CategoricalDistributionChart(
@@ -439,29 +299,14 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        self.chart_paths.append(
-            {
-                "title": "Categorical Distribution Chart",
-                "description": description,
-                "categorical_distribution_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Categorical Distribution Chart"
-            }
-        )
+
+        self._append_chart(chart_id="categorical_distribution_chart", path=path)
+
         return self
 
-    def add_correlation_chart(self, columns: list[str] = None, precision: int = None):
-        if columns is None:
-            columns = self.config.correlation_chart_config["columns"]
-
-        if precision is None:
-            precision = self.config.correlation_chart_config["precision"]
-
-        description = (
-            "The correlation heatmap visualizes pairwise relationships between variables using color "
-            "intensity to represent the strength and direction of correlations. This chart enables quick "
-            "identification of highly correlated variable pairs, patterns, and potential multicollinearity within the dataset."
-        )
+    def add_correlation_chart(self):
+        columns = self.config.correlation_chart_layout_config["columns"]
+        precision = self.config.correlation_chart_layout_config["precision"]
 
         chart = CorrelationChart(
             df=self.df,
@@ -470,24 +315,14 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        self.chart_paths.append(
-            {
-                "title": "Correlation Chart",
-                "description": description,
-                "correlation_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Correlation Chart"
-            }
-        )
+
+        self._append_chart(chart_id="correlation_chart", path=path)
+
         return self
  
     def add_time_series_chart(self, columns=None):
-        description = (
-            "This chart presents the target (KPI) variable over time, along with its decomposition "
-            "into trend, seasonality, and residual components. The observed series reflects the actual values, "
-            "while the decomposed plots isolate underlying patterns, helping to understand long-term movement, "
-            "recurring seasonal effects, and unexplained variations in the data."
-        )
+        columns = self.config.time_series_config["columns"]
+
         chart = TimeSeriesChart(
             self.df, 
             columns=columns, 
@@ -496,26 +331,15 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        self.chart_paths.append(
-            {
-                "title": "Time Series Chart",
-                "description": description,
-                "time_series_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Time Series Chart"
-            }
-        )
+
+        self._append_chart(chart_id="time_series_chart", path=path)
+
         return self
  
-    def add_outliers_chart(self, columns=None, max_cols_per_chart: int=None, single_image: bool=None):
-        if max_cols_per_chart is None:
-            max_cols_per_chart = self.config.outlier_chart_config["max_cols_per_chart"]
-
-        if single_image is None:
-            single_image = self.config.outlier_chart_config["single_image"]
-
-        if columns is None:
-            columns = self.config.outlier_chart_config["columns"]
+    def add_outliers_chart(self):
+        max_cols_per_chart = self.config.outlier_chart_layout_config["max_cols_per_chart"]
+        single_image = self.config.outlier_chart_layout_config["single_image"]
+        columns = self.config.outlier_chart_layout_config["columns"]
 
         chart = OutlierChart(
             df=self.df,
@@ -525,34 +349,17 @@ class SummaryBuilder:
             output_dir=self.output_dir
         )
         path = chart.generate()
-        description = (
-            "The box plot visualizes the distribution of the target and feature variables, highlighting "
-            "their median, spread, and potential outliers. It enables quick identification of extreme values "
-            "and variability across variables, supporting data quality assessment and informed preprocessing decisions."
-        )
 
-        self.chart_paths.append(
-            {
-                "title": "Outliers Chart",
-                "description": description,
-                "outliers_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Outliers Chart"
-            }
-        )
+        self._append_chart(chart_id="outliers_chart", path=path)
+
         return self
 
-    def add_comparison_chart(self, date_column: str=None, value_columns: list[str]=None, freq="ME", comparison="yoy") -> Self:
-        date_column = date_column or self.config.date_column
-        # value_columns = value_columns or [self.target]
-
-        description = (
-            "The Year-over-Year (YoY) line chart visualizes the annual percentage change in key variables, "
-            "enabling a clear comparison of growth or decline trends over time. Each line represents a "
-            "distinct variable, highlighting how its performance evolves relative to the previous year. "
-            "This chart helps identify consistent trends, seasonal patterns, and periods of significant "
-            "change across multiple variables."
-        )
+    def add_comparison_chart(self) -> Self:
+        date_column = self.config.time_comparison_config["date_column"]
+        value_columns = self.config.time_comparison_config["value_columns"]
+        freq = self.config.time_comparison_config["freq"]
+        comparison = self.config.time_comparison_config["comparison"]
+        agg_func = self.config.time_comparison_config["agg_func"]
 
         chart = ComparisonChart(
             df=self.df,
@@ -565,41 +372,20 @@ class SummaryBuilder:
 
         path = chart.generate()
 
-        self.chart_paths.append(
-            {
-                "title": f"Comparison Chart - {comparison.upper()}",
-                "description": description,
-                "comparison_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": f"Comparison Chart - {comparison.upper()}"
-            }
-        )
+        self._append_chart(chart_id="comparison_chart", path=path)
 
         return self
  
-    def add_lag_correlation(self, lag=1):
+    def add_lag_correlation_chart(self, lag=1):
         chart = LagCorrelationChart(
             df=self.df, 
             column=self.target, 
             output_dir=self.output_dir, 
             lag=lag)
         path = chart.generate()
-        description = (
-            "This scatter plot illustrates the relationship between the target (KPI) variable and "
-            "its lagged value (lag 1), comparing current values (T) against the previous period (T−1). "
-            "It helps visualize the strength and direction of short-term temporal dependency, indicating "
-            "how strongly the current value is influenced by its immediate past."
-        )
 
-        self.chart_paths.append(
-            {
-                "title": "Lag Correlation Chart",
-                "description": description,
-                "lag_correlation_chart": path,
-                "image_data": self._image_to_base64(path),
-                "alt_text": "Lag Correlation Chart"
-            }
-        )
+        self._append_chart(chart_id="lag_correlation_chart", path=path)
+
         return self
 
     def add_report_title(self, title: str = "OwlMix EDA Report"):
@@ -653,7 +439,7 @@ class SummaryBuilder:
             .add_time_series_chart()
             .add_kpi_vs_feature_chart()
             .add_outliers_chart()
-            .add_lag_correlation()
+            .add_lag_correlation_chart()
             .add_comparison_chart()
             .add_vif_chart()
             .add_acf_pacf_chart()

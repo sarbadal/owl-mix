@@ -1,0 +1,109 @@
+{
+    "vif_chart": {
+        "title": "VIF Chart",
+        "alt_text": "VIF Chart",
+        "description": [
+            "The Variance Inflation Factor (VIF) chart visualizes the degree of multicollinearity ",
+            "among the feature variables by displaying their respective VIF values. Higher VIF values ",
+            "indicate stronger linear relationships with other predictors, which may lead to instability ",
+            "in model coefficients and reduced interpretability. This chart enables quick identification ",
+            "of problematic variables by highlighting those exceeding commonly accepted thresholds, ",
+            "helping guide feature selection and dimensionality reduction decisions."
+        ]
+    },
+    "acf_pacf_chart": {
+        "title": "ACF PACF Chart",
+        "alt_text": "ACF PACF Chart",
+        "description": [
+            "The ACF (Autocorrelation Function) and PACF (Partial Autocorrelation Function) plots ",
+            "illustrate the correlation of each variable with its past values across different lag intervals. ",
+            "These charts help identify temporal dependencies, seasonality, and potential lag effects within ",
+            "the data. The inclusion of a smoothed trend line provides a clearer view of how correlations ",
+            "decay or persist as the lag increases, aiding in the detection of significant lag structures. ",
+            "This visualization is particularly useful for determining appropriate lag selections and ",
+            "understanding the underlying time-series behavior of the variables."
+        ]
+    },
+    "kpi_vs_feature_chart": {
+        "title": "KPI VS Feature Chart",
+        "alt_text": "KPI VS Feature Chart",
+        "description": [
+            "This chart compares the target (KPI) variable with an individual feature variable over time using dual axes. ",
+            "By plotting both series together, it helps visually assess co-movement, trends, and potential ",
+            "relationships between the KPI and each feature across different periods."
+        ]
+    },
+    "distribution_chart": {
+        "title": "Distribution Chart",
+        "alt_text": "Distribution Chart",
+        "description": [
+            "The distribution chart illustrates the frequency distribution of the selected ",
+            "numerical variable across defined bins, providing a clear view of its spread and concentration. ",
+            "The overlaid normal distribution curve serves as a reference to assess how closely the data follows ",
+            "a Gaussian pattern, helping identify skewness, kurtosis, or deviations from normality. ",
+            "This visualization is useful for detecting outliers, understanding variability, and evaluating whether ",
+            "statistical assumptions (e.g., normality) are appropriate for subsequent modeling."
+        ]
+    },
+    "categorical_distribution_chart": {
+        "title": "Categorical Distribution Chart",
+        "alt_text": "Categorical Distribution Chart",
+        "description": [
+            "The categorical distribution chart presents the frequency of each category, allowing ",
+            "for a clear comparison of how observations are distributed across different groups. ",
+            "The categories are ordered by their counts to form a bell-shaped pattern, making ",
+            "it easier to visually identify the most and least dominant categories. This arrangement ",
+            "highlights concentration, imbalance, or sparsity within the data, helping uncover dominant ",
+            "segments and potential data skew that may influence downstream analysis or modeling decisions."
+        ]
+    },
+    "correlation_chart": {
+        "title": "Correlation Chart",
+        "alt_text": "Correlation Chart",
+        "description": [
+            "The correlation heatmap visualizes pairwise relationships between variables using color ",
+            "intensity to represent the strength and direction of correlations. This chart enables quick ",
+            "identification of highly correlated variable pairs, patterns, and potential multicollinearity within the dataset."
+        ]
+    },
+    "lag_correlation_chart": {
+        "title": "Lag Correlation Chart",
+        "alt_text": "Lag Correlation Chart",
+        "description": [
+            "This scatter plot illustrates the relationship between the target (KPI) variable and ",
+            "its lagged value (lag 1), comparing current values (T) against the previous period (T−1). ",
+            "It helps visualize the strength and direction of short-term temporal dependency, indicating ",
+            "how strongly the current value is influenced by its immediate past."
+        ]
+    },
+    "time_series_chart": {
+        "title": "Time Series Chart",
+        "alt_text": "Time Series Chart",
+        "description": [
+            "This chart presents the target (KPI) variable over time, along with its decomposition ",
+            "into trend, seasonality, and residual components. The observed series reflects the actual values, ",
+            "while the decomposed plots isolate underlying patterns, helping to understand long-term movement, ",
+            "recurring seasonal effects, and unexplained variations in the data."
+        ]
+    },
+    "outliers_chart": {
+        "title": "Outliers Chart",
+        "alt_text": "Outliers Chart",
+        "description": [
+            "The box plot visualizes the distribution of the target and feature variables, highlighting ",
+            "their median, spread, and potential outliers. It enables quick identification of extreme values ",
+            "and variability across variables, supporting data quality assessment and informed preprocessing decisions."
+        ]
+    },
+    "comparison_chart": {
+        "title": "Comparison Chart - YoY",
+        "alt_text": "Comparison Chart - YoY",
+        "description": [
+            "The Year-over-Year (YoY) line chart visualizes the annual percentage change in key variables, ",
+            "enabling a clear comparison of growth or decline trends over time. Each line represents a ",
+            "distinct variable, highlighting how its performance evolves relative to the previous year. ",
+            "This chart helps identify consistent trends, seasonal patterns, and periods of significant ",
+            "change across multiple variables."
+        ]
+    }
+}
