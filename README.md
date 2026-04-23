@@ -1,32 +1,62 @@
 # 🦉 OwlMix
 
-**OwlMix** is a Python package for generating comprehensive Exploratory Data Analysis (EDA) reports tailored for Marketing Mix Modeling (MMM) workflows.
-
-It helps data scientists and analysts quickly generate HTML and JSON reports with dataset summaries, correlations, charts, and more.
+**OwlMix** is a comprehensive Python package for Exploratory Data Analysis (EDA) and data transformation tailored for **Marketing Mix Modeling (MMM)** workflows. It provides automated report generation, statistical analysis, and data transformation utilities to accelerate MMM projects.
 
 ---
 
 ## 🚀 Key Features
 
-- **Automated EDA Reports**: Generate detailed HTML reports with charts and statistics
-- **Correlation Analysis**: Matrix and lag correlations for time series data
-- **VIF Calculation**: Variance Inflation Factor for multicollinearity detection
-- **Time Series Comparisons**: Year-over-year and other time-based comparisons
-- **Visual Charts**: Distribution, outliers, time series, and correlation plots
-- **Flexible Configuration**: Customize which analyses and charts to include
-- **Export Options**: Both HTML and JSON outputs
+### 📊 **Data Analysis & Reporting**
+- **Automated EDA Reports**: Generate professional HTML and JSON reports with comprehensive statistics and visualizations
+- **Correlation Analysis**: Matrix correlations, lag correlations, and ACF/PACF analysis for time series
+- **VIF Calculation**: Variance Inflation Factor detection for multicollinearity assessment
+- **Causality Testing**: Granger causality tests to identify causal relationships
+- **Categorical Analysis**: Distribution analysis for categorical variables
+- **KPI vs Features**: Analyze relationships between KPIs and marketing features by time period
+- **Time Series Decomposition**: Seasonal decomposition and trend analysis
+- **Outlier Detection**: Visual identification and analysis of outliers
+
+### 🔧 **Data Transformation**
+- **Adstock Effect**: Apply advertising carryover effects to media spend data
+- **Lag Generation**: Create lagged features for time series modeling
+- **Saturation Transformation**: Apply saturation curves (Hill, Logistic, Logit) to media variables
+- **Data Cleanup**: Automated data quality checks and handling (missing values, duplicates, etc.)
+- **Transformation Pipeline**: Chainable pipeline for complex data workflows
+
+### 🎨 **Visual & Export Options**
+- **Multiple HTML Templates**: Light and dark theme templates for reports
+- **Interactive Charts**: Distribution plots, time series, correlation heatmaps, outlier charts
+- **JSON Export**: Raw report data for programmatic access
+- **Chart Storage**: Automatic chart generation and storage in `outputs/charts/`
+
+### ⚙️ **Flexible Configuration**
+- Fine-grained control over analyses to include/exclude
+- Customizable precision, date formats, and aggregation frequencies
+- Column-specific configurations for targeted analysis
+- Template customization support
 
 ---
 
 ## 📦 Installation
 
 ```bash
-pip install owlmix
+pip install owl-mix
 ```
+
+**Requirements:**
+- Python >= 3.12
+- pandas >= 1.5
+- matplotlib >= 3.7
+- seaborn >= 0.12
+- statsmodels >= 0.14.6
+- scipy >= 1.10
+- Jinja2 >= 3.1
 
 ---
 
 ## ⚡ Quick Start
+
+### Basic EDA Report Generation
 
 ```python
 import pandas as pd
@@ -35,69 +65,232 @@ from owlmix.report import OwlMixReport
 # Load your data
 df = pd.read_csv("your_data.csv")
 
-# Create and run the report
+# Create and generate report
 report = OwlMixReport(
     df=df,
-    target="sales",  # Your target variable
-    date_column="date",  # Date column name
-    template_name="custom_eda_template.html"  # Optional: use dark theme with "custom_eda_template_dark.html"
+    target="sales",              # Target variable for analysis
+    date_column="date",          # Date column for time series analysis
+    template_name="custom_eda_template.html"  # Optional: use "custom_eda_template_dark.html" for dark theme
 )
 
-# Generate both JSON and HTML reports
+# Generate HTML and JSON reports
 report.run(
     json_file_name="eda_report.json",
     html_file_name="eda_report.html"
 )
 ```
 
-This will create:
-- `eda_report.json`: Raw data in JSON format
-- `eda_report.html`: Beautiful HTML report with charts
-- `outputs/charts/`: Generated chart images
+**Output:**
+- `eda_report.json`: Structured analysis data in JSON format
+- `eda_report.html`: Interactive HTML report with charts and statistics
+- `outputs/charts/`: Generated visualization files
 
 ---
 
-## 🛠️ Customization
+## 🛠️ Advanced Configuration
 
-Configure what to include in your report:
+### Customize Analyses
 
 ```python
-report = OwlMixReport(df, target="sales", date_column="date")
+import pandas as pd
+from owlmix.report import OwlMixReport
 
-# Customize VIF analysis
-report.set_vif_config(
-    features=["tv_spend", "digital_spend", "radio_spend"],
-    precision=3
+df = pd.read_csv("your_data.csv")
+
+report = OwlMixReport(
+    df=df,
+    target="sales",
+    date_column="date"
 )
 
-# Customize time comparisons
-report.set_time_comparison_config(
-    value_columns=["sales", "tv_spend"],
-    comparison_type="yoy",
+# Configure time aggregation
+report.config.set_time_aggregator_config(
+    freq="ME",      # Month-end aggregation
+    precision=4     # Decimal precision
+)
+
+# Configure categorical columns
+report.config.set_categorical_columns_config(
+    columns=["product_type", "region", "channel"]
+)
+
+# Configure KPI vs Feature analysis
+report.config.set_kpi_vs_feature_config(
+    columns=["tv_spend", "digital_spend", "radio_spend"],
+    date_format="%Y-%m"
+)
+
+# Configure VIF (Variance Inflation Factor) analysis
+report.config.set_vif_config(
+    features=["tv_spend", "digital_spend", "radio_spend"],
     precision=2
 )
 
-# Customize charts
-report.set_outlier_chart_layout(
-    columns=["sales", "tv_spend"],
-    max_cols_per_chart=4
+# Configure ACF/PACF analysis
+report.config.set_acf_pacf_config(
+    columns=["sales", "digital_spend"],
+    n_lags=20
 )
 
-report.run()
+# Configure causality testing
+report.config.set_causality_test_config(
+    max_lag=5,
+    error_threshold=0.15
+)
+
+report.run(
+    json_file_name="report.json",
+    html_file_name="report.html"
+)
+```
+
+### Data Transformation Pipeline
+
+```python
+from owlmix.transform import MMMTransformPipeline
+
+# Create transformation pipeline
+pipeline = MMMTransformPipeline(df, date_column="date")
+
+# Apply transformations
+pipeline.adstock(
+    columns=["tv_spend", "digital_spend"],
+    decay_rate=0.5,
+    window=4
+)
+
+pipeline.create_lags(
+    columns=["sales"],
+    lags=[1, 2, 4, 13]
+)
+
+pipeline.saturation(
+    columns=["tv_spend", "digital_spend"],
+    method="hill",
+    k_values=[100, 200]
+)
+
+pipeline.cleanup(
+    handle_missing="mean",
+    remove_duplicates=True
+)
+
+# Get transformed data
+transformed_df = pipeline.get_data()
 ```
 
 ---
 
 ## 📊 Report Sections
 
-The generated HTML report includes:
+The generated HTML report includes comprehensive sections:
 
-- **Dataset Overview**: Basic info, data types, missing values
-- **Summary Statistics**: Descriptive stats for all variables
-- **Correlation Matrix**: Pairwise correlations
-- **VIF Analysis**: Multicollinearity detection
-- **Time Comparisons**: Period-over-period changes
-- **Visualizations**: Charts for distributions, outliers, time series, etc.
+| Section | Description |
+|---------|-------------|
+| **Dataset Overview** | Basic information, data types, missing values, memory usage |
+| **Summary Statistics** | Descriptive statistics (mean, std, min, max, quantiles) |
+| **Data Quality** | Missing value patterns, duplicate analysis |
+| **Distributions** | Histograms and density plots for all numeric variables |
+| **Outlier Analysis** | Box plots and outlier identification |
+| **Correlation Matrix** | Pairwise correlations with heatmap visualization |
+| **Lag Correlations** | Time-lagged correlation analysis for time series |
+| **VIF Analysis** | Multicollinearity detection using Variance Inflation Factor |
+| **ACF/PACF** | Autocorrelation and partial autocorrelation for seasonality detection |
+| **Causality Tests** | Granger causality tests for causal relationships |
+| **Time Comparisons** | Period-over-period comparisons (YoY, MoM) |
+| **KPI vs Features** | Relationship between target and marketing features over time |
+| **Categorical Distributions** | Distribution analysis for categorical variables |
+
+---
+
+## 🔧 Core Modules
+
+### `owlmix.eda`
+Exploratory Data Analysis module with:
+- `EDAAnalyzer`: Core statistical analysis engine
+- `SummaryBuilder`: Comprehensive summary generation
+- `OwlMixEDA`: Main EDA orchestrator
+
+**Features:**
+- Correlation analysis (matrix, lag, causality)
+- VIF calculation for multicollinearity
+- ACF/PACF analysis for seasonality
+- Categorical and distribution analysis
+- Outlier detection and visualization
+
+### `owlmix.transform`
+Data transformation module for MMM preprocessing:
+- `adstock()`: Apply advertising carryover effects
+- `create_lags()`: Generate lagged features
+- `saturation()`: Apply saturation curves (Hill, Logistic, Logit)
+- `cleanup_data()`: Data quality utilities
+- `MMMTransformPipeline`: Chainable pipeline for complex workflows
+
+### `owlmix.report`
+Report generation module:
+- `OwlMixReport`: Main report generator
+- HTML template rendering with customizable themes
+- JSON data export
+- Chart generation and storage
+
+---
+
+## 📈 Example Use Cases
+
+### Marketing Mix Modeling Workflow
+```python
+import pandas as pd
+from owlmix.report import OwlMixReport
+from owlmix.transform import MMMTransformPipeline
+
+# Load raw data
+df = pd.read_csv("mmm_data.csv")
+
+# Step 1: Transform data
+pipeline = MMMTransformPipeline(df, date_column="date")
+pipeline.adstock(columns=["tv", "digital", "radio"], decay_rate=0.5)
+pipeline.create_lags(columns=["sales"], lags=[1, 4, 13])
+df_transformed = pipeline.get_data()
+
+# Step 2: Analyze with EDA
+report = OwlMixReport(
+    df=df_transformed,
+    target="sales",
+    date_column="date"
+)
+report.config.set_vif_config(
+    features=["tv", "digital", "radio"],
+    precision=3
+)
+report.run(
+    json_file_name="mmm_eda.json",
+    html_file_name="mmm_eda.html"
+)
+```
+
+---
+
+## 📚 Documentation
+
+- [EDA Documentation](src/owlmix/docs/eda.md)
+- [Transform Documentation](src/owlmix/docs/transform.md)
+- [Saturation Curves](src/owlmix/docs/saturation.md)
+
+---
+
+## 💡 Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues on [GitHub](https://github.com/sarbadal/owl-mix).
+
+---
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+**Author:** Sarbadal Pal (sarbadal@gmail.com)
+
+**Repository:** [github.com/sarbadal/owl-mix](https://github.com/sarbadal/owl-mix)
 
 ---
 
