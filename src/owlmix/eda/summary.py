@@ -91,9 +91,9 @@ class SummaryBuilder:
             "alt_text": alt_text
         })
 
-    # =========================
+    # ==========================================
     # TEXT SECTIONS - Basic Info & Correlations
-    # =========================
+    # ==========================================
 
     def add_basic_info(self):
         basic = BasicInfo(self.df)
