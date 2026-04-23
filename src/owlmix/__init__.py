@@ -13,7 +13,7 @@ __all__ = [
     "examples"
 ]
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 MIN_PYTHON = (3, 14)
 VERSION_THRESHOLD = "1.0.0"

@@ -35,7 +35,11 @@ class OwlMixReport:
         self.df = df
         self.target = target
         self.date_column = date_column
-        self.user_title_config_path: Path = Path(kwargs.get("user_title_config_path", None)).resolve()
+
+        if kwargs.get("user_title_config_path", None) is not None:
+            self.user_title_config_path: Path = Path(kwargs.get("user_title_config_path", None)).resolve()
+        else:
+            self.user_title_config_path = None
 
         # Use provided settings or create from kwargs
         self.report_settings = report_settings or self._create_settings_from_kwargs(**kwargs)

@@ -24,7 +24,7 @@ def main():
         target="sales",
         date_column="time",
         # template_name="bootstrap_eda_template.html",
-        # template_name="custom_eda_template.html",
+        template_name="custom_eda_template.html",
         # template_name="custom_eda_template_dark.html",
         # user_title_config_path="/Users/sarbadal.pal/Library/CloudStorage/OneDrive-OneWorkplace/PythonProjects/Canadian_Tire/owlmix/usr_config/title.json"
         user_title_config_path="usr_config/title.json"
