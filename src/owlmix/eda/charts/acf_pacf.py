@@ -1,9 +1,17 @@
 # owlmix/eda/charts/acf_pacf.py
 import os
 import math
-import matplotlib.pyplot as plt
-from scipy.interpolate import make_interp_spline
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+from scipy.interpolate import make_interp_spline
+
+
+def get_colors(values) -> list:
+    norm = mcolors.Normalize(vmin=-1, vmax=1)  # ACF/PACF range
+    cmap = cm.get_cmap("coolwarm")  # blue ↔ red
+    return [cmap(norm(v)) for v in values]
 
 
 class ACFPACFPlotter:
@@ -13,7 +21,7 @@ class ACFPACFPlotter:
             "data": [
                 {
                     "column": str,
-                    "lag": list[int],
+                    "lags": list[int],
                     "acf": list[float],
                     "pacf": list[float]
                 }
@@ -27,111 +35,95 @@ class ACFPACFPlotter:
 
     def generate(self) -> str:
         n = len(self.data)
-        if n == 0:
-            print("No data provided")
-            return None
 
-        fontsize = 14 if n == 1 else None
-        labelsize = 12 if n == 1 else None
+        # Create grid: one row per column, 2 charts (ACF, PACF)
+        fig, axes = plt.subplots(nrows=n, ncols=2, figsize=(14, 4 * n))
 
-        cols = min(n, 3)
-        rows = math.ceil(n / cols)
-
-        fig, axes = plt.subplots(rows, cols, figsize=(18, 5 * rows))
-        axes = np.array(axes).reshape(rows, cols)
+        # Handle single row case
+        if n == 1:
+            axes = np.array([axes])
 
         for i, item in enumerate(self.data):
-            r, c = divmod(i, cols)
-            ax = axes[r][c]
-
+            col_name = item["column"]
             lags = item["lags"]
             acf_vals = item["acf"]
             pacf_vals = item["pacf"]
+            n_obs = item["n_obs"]
 
-            x = np.arange(len(lags))
-            width = 0.4
+            conf = 1.96 / np.sqrt(n_obs)
 
-            # Bars
-            # ax.bar(x - width / 2, acf_vals, width=width, label="ACF")
-            # ax.bar(x + width / 2, pacf_vals, width=width, label="PACF")
+            # -------------------
+            # ACF Plot
+            # -------------------
+            ax_acf = axes[i, 0]
+            markerline, stemlines, baseline = ax_acf.stem(lags, acf_vals, basefmt=" ")
+            markerline.set_markersize(6)
+            markerline.set_color("red")
+            stemlines.set_linewidth(2.5)
+            stemlines.set_color("red")
 
-            # Bars
-            ax.bar(x - width / 2, acf_vals, width=width, label="ACF", alpha=0.8)
-            ax.bar(x + width / 2, pacf_vals, width=width, label="PACF", alpha=0.8)
+            # Confidence band
+            ax_acf.axhspan(-conf, conf, alpha=0.15, color="blue")
 
-            x_smooth = np.linspace(x.min(), x.max(), 300)
+            # Integer ticks
+            ax_acf.set_xticks(lags)
+            ax_acf.set_xlim(min(lags) - 0.5, max(lags) + 0.5)
 
-            # ACF smooth
-            acf_spline = make_interp_spline(x, acf_vals, k=3)
-            acf_smooth = acf_spline(x_smooth)
-
-            # PACF smooth
-            pacf_spline = make_interp_spline(x, pacf_vals, k=3)
-            pacf_smooth = pacf_spline(x_smooth)
-
-            # Plot smooth lines
-            # ax.plot(x_smooth, acf_smooth, linewidth=2)
-            # ax.plot(x_smooth, pacf_smooth, linewidth=2)
-
-            # ACF → Thick smooth line (background)
-            ax.plot(
-                x_smooth if 'x_smooth' in locals() else x,
-                acf_smooth if 'acf_smooth' in locals() else acf_vals,
-                linewidth=5,
-                linestyle='solid',
-                alpha=0.2,
-                label='ACF (smooth)',
-                zorder=2
+            ax_acf.set_title(
+                f"ACF - {col_name} (N={n_obs})",
+                fontsize=14,
+                fontweight="bold",
             )
+            ax_acf.set_xlabel("Lags", fontsize=14)
+            ax_acf.set_ylabel("ACF", fontsize=14)
 
-            # PACF → Thin dotted line (foreground)
-            ax.plot(
-                x_smooth if 'x_smooth' in locals() else x,
-                pacf_smooth if 'pacf_smooth' in locals() else pacf_vals,
+            ax_acf.hlines(
+                y=acf_vals,
+                xmin=[lag - 0.5 for lag in lags],
+                xmax=[lag + 0.5 for lag in lags],
+                colors='gray',
+                linestyles='solid',
                 linewidth=2,
-                linestyle='dotted',
-                alpha=0.2,
-                label='PACF (dotted)',
-                zorder=3
+                alpha=0
             )
-            # end of bar
 
-            # Increase axis tick label size
-            ax.tick_params(axis='both', labelsize=labelsize)
+            # -------------------
+            # PACF Plot
+            # -------------------
+            ax_pacf = axes[i, 1]
+            markerline, stemlines, baseline = ax_pacf.stem(lags, pacf_vals, basefmt=" ")
+            markerline.set_markersize(6)
+            stemlines.set_linewidth(2.5)
 
-            # Increase title size
-            ax.set_title(f"{item['column']}", fontsize=fontsize)
+            # Confidence band
+            ax_pacf.axhspan(-conf, conf, alpha=0.15, color="gray")
 
-            # Increase axis label sizes (if you have them)
-            ax.set_xlabel("Lags", fontsize=fontsize)
-            ax.set_ylabel("Value", fontsize=fontsize)
+            # Integer ticks
+            ax_pacf.set_xticks(lags)
+            ax_pacf.set_xlim(min(lags) - 0.5, max(lags) + 0.5)
 
-            # Increase legend font size
-            ax.legend(fontsize=fontsize)
+            ax_pacf.set_title(
+                f"PACF - {col_name} (N={n_obs})",
+                fontsize=14,
+                fontweight="bold",
+            )
+            ax_pacf.set_xlabel("Lags", fontsize=14)
+            ax_pacf.set_ylabel("PACF", fontsize=14)
 
-            # Formatting
-            ax.set_title(f"{item['column']}", fontsize=fontsize)
-            ax.set_xticks(x)
-            ax.set_xticklabels(lags)
-            ax.tick_params(axis='both', labelsize=labelsize)
-            ax.axhline(0)  # baseline
-
-            threshold = 1.96 / np.sqrt(len(lags))
-            ax.axhline(threshold, linestyle="--", linewidth=1)
-            ax.axhline(-threshold, linestyle="--", linewidth=1)
-
-            ax.legend()
-
-        # Hide empty plots
-        total_plots = rows * cols
-        for j in range(n, total_plots):
-            r, c = divmod(j, cols)
-            axes[r][c].axis("off")
+            ax_pacf.hlines(
+                y=acf_vals,
+                xmin=[lag - 0.5 for lag in lags],
+                xmax=[lag + 0.5 for lag in lags],
+                colors='gray',
+                linestyles='solid',
+                linewidth=2,
+                alpha=0
+            )
 
         plt.tight_layout()
 
         file_path = os.path.join(self.output_dir, "acf_pacf.png")
-        plt.savefig(file_path, dpi=150)
+        plt.savefig(file_path, dpi=300, bbox_inches='tight')
         plt.close()
 
         return file_path

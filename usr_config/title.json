@@ -1,0 +1,29 @@
+{
+    "vif_chart": {
+        "title": "VIF Chart",
+        "alt_text": "VIF Chart",
+        "description": [
+            "The <strong>Variance Inflation Factor (VIF)</strong> chart visualizes the degree of multicollinearity ",
+            "among the feature variables by displaying their respective VIF values. Higher VIF values ",
+            "indicate stronger linear relationships with other predictors, which may lead to instability ",
+            "in model coefficients and reduced interpretability. This chart enables quick identification ",
+            "of problematic variables by highlighting those exceeding commonly accepted thresholds, ",
+            "helping guide feature selection and dimensionality reduction decisions. ",
+            "<div style=\"font-family: sans-serif;\">\n  <h3 style=\"margin-left: 0; padding-left: 0;\">VIF Methodology</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n    <li>\n      <strong>Run Auxiliary Regression:</strong> \n      Regress the predictor X<sub>i</sub> against all other independent variables.\n    </li>\n    <li>\n      <strong>Calculate R-Squared:</strong> \n      Obtain the R<sub>i</sub>&sup2; value from that regression.\n    </li>\n    <li>\n      <strong>Apply VIF Formula:</strong><br>\n      VIF<sub>i</sub> = 1 / (1 &minus; R<sub>i</sub>&sup2;)\n    </li>\n  </ol>\n</div>"
+        ]
+    },
+    "acf_pacf_chart": {
+        "title": "ACF & PACF Chart",
+        "alt_text": "ACF-PACF Chart",
+        "description": [
+            "The <strong>ACF (Autocorrelation Function)</strong> and <strong>PACF (Partial Autocorrelation Function)</strong> plots ",
+            "illustrate the correlation of each variable with its past values across different lag intervals. ",
+            "These charts help identify temporal dependencies, seasonality, and potential lag effects within ",
+            "the data. The inclusion of a smoothed trend line provides a clearer view of how correlations ",
+            "decay or persist as the lag increases, aiding in the detection of significant lag structures. ",
+            "This visualization is particularly useful for determining appropriate lag selections and ",
+            "understanding the underlying time-series behavior of the variables.",
+            "<div style=\"font-family: sans-serif; line-height: 1.6; max-width: 900px;\">\n  <!-- Section: ACF Methodology -->\n  <h3 style=\"margin-bottom: 5px;\">ACF Methodology (Moving Average)</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-top: 0;\">\n    <li>\n      <strong>Identify Total Correlation:</strong> \n      Calculate the correlation between Y<sub>t</sub> and its lagged version Y<sub>t&minus;k</sub>.\n    </li>\n    <li>\n      <strong>Observe Decay:</strong> \n      Check if the plot \"tails off\" (geometric decay) or \"cuts off\" abruptly.\n    </li>\n    <li>\n      <strong>Determine MA(q) Order:</strong> \n      The lag <em>q</em> where the ACF first drops into the [95% confidence interval]) defines the order.\n    </li>\n  </ol>\n\n  <!-- Section: PACF Methodology -->\n  <h3 style=\"margin-bottom: 5px; margin-top: 20px;\">PACF Methodology (Autoregressive)</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-top: 0;\">\n    <li>\n      <strong>Isolate Direct Effect:</strong> \n      Calculate the correlation between Y<sub>t</sub> and Y<sub>t&minus;k</sub> while removing the influence of intermediate lags.\n    </li>\n    <li>\n      <strong>Run Recursive Regressions:</strong> \n      Solve the Yule-Walker equations or use OLS to find the partial coefficients &phi;<sub>k,k</sub>.\n    </li>\n    <li>\n      <strong>Determine AR(p) Order:</strong> \n      The lag <em>p</em> after which the PACF identifies the autoregressive order.\n    </li>\n  </ol>\n</div>"
+        ]
+    }
+}

@@ -1,6 +1,7 @@
 # src/owlmix/eda/charts/correlation.py
  
 import os
+from matplotlib.colors import Normalize
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -27,12 +28,23 @@ class CorrelationChart(ColumnMixin):
         num_cols = len(corr.columns)
 
         # Dynamic figure sizing based on number of columns
-        fig_size = max(6, num_cols * 0.8)
+        fig_size = max(6, num_cols * 0.6)  # 0.5 inch per column, minimum 5 inches
 
         plt.figure(figsize=(fig_size, fig_size))
 
         # Heatmap using matplotlib (no seaborn)
-        im = plt.imshow(corr, interpolation='nearest')
+        im = plt.imshow(
+            corr, 
+            interpolation='nearest', 
+            cmap='RdYlBu_r', 
+            # norm=Normalize(vmin=-1, vmax=1)
+        )
+        # Other light colormap options:
+            # 'Pastel1' - soft pastel colors
+            # 'RdYlBu_r' - red-yellow-blue with lighter tones
+            # 'coolwarm' - light cool to warm gradient
+            # 'gray' - grayscale (lightest)
+            # 'Greys' - another grayscale option
 
         plt.colorbar(im)
 

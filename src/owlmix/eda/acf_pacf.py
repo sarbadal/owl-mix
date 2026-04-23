@@ -16,6 +16,7 @@ class ACFPACFCalculator(ColumnMixin):
 
         for col in self.columns:
             series = self.df[col].dropna()
+            n_obs = len(series)
 
             # Compute ACF & PACF
             acf_vals = acf(series, nlags=self.n_lags)
@@ -25,6 +26,7 @@ class ACFPACFCalculator(ColumnMixin):
 
             results.append({
                 "column": col,
+                "n_obs": n_obs,
                 "lags": lags,
                 "acf": acf_vals.tolist(),
                 "pacf": pacf_vals.tolist(),

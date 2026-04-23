@@ -1,6 +1,7 @@
 # src/owlmix/report/generator.py
 import os
-from typing import TypedDict, NotRequired
+from pathlib import Path
+# from typing import TypedDict, NotRequired
 from dataclasses import dataclass
 
 from owlmix.eda.summary import SummaryBuilder
@@ -34,6 +35,7 @@ class OwlMixReport:
         self.df = df
         self.target = target
         self.date_column = date_column
+        self.user_title_config_path: Path = Path(kwargs.get("user_title_config_path", None)).resolve()
 
         # Use provided settings or create from kwargs
         self.report_settings = report_settings or self._create_settings_from_kwargs(**kwargs)
@@ -90,7 +92,8 @@ class OwlMixReport:
             target=self.target,
             date_column=self.date_column,
             output_dir=self.chart_dir,
-            config=self.config
+            config=self.config,
+            user_title_config_path=self.user_title_config_path
         )
 
         self._apply_builder_configs(builder)
