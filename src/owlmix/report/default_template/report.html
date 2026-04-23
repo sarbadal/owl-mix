@@ -108,6 +108,9 @@
                         <strong style="display: block; margin-bottom: 8px; color: #1e293b;">Column Names:</strong>
                         <div class="columns-display">
                             {{ basic_info.column_names | join(", ") }}
+                            <p>
+                                <b>KPI (target column): ...</b>
+                            </p>
                         </div>
                     </div>
                     {% endif %}
@@ -173,7 +176,7 @@
                         This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
                         as a foundational step for exploratory analysis and data quality assessment.
                     </p>
-
+                    
                     <div class="table-container">
                         <table>
                             <thead>
@@ -191,7 +194,7 @@
                                     {% for stat_name in stat_names.keys() %}
                                     <tr>
                                         <td><strong>{{ stat_name }}</strong></td>
-
+                            
                                         {% for col_name in basic_info.column_names %}
                                             <td>
                                             {% if col_name in basic_info.summary_stats and stat_name in basic_info.summary_stats[col_name] %}
@@ -206,7 +209,7 @@
                                             {% endif %}
                                             </td>
                                         {% endfor %}
-
+                            
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -249,15 +252,15 @@
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col"
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10
-                                                        else '#DAA520' if vif.vif_value[row] > 5
+                                    <td class="date-col" 
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
+                                                        else '#DAA520' if vif.vif_value[row] > 5 
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.feature[row] }}
                                     </td>
-                                    <td class="date-col"
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10
-                                                        else '#DAA520' if vif.vif_value[row] > 5
+                                    <td class="date-col" 
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
+                                                        else '#DAA520' if vif.vif_value[row] > 5 
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.vif_value[row] }}
                                     </td>
@@ -325,7 +328,12 @@
                 {% if causality_test %}
                 <section>
                     <h2>🧠 Granger Causality Test</h2>
-                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance. Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.</p>
+                    <p class="section-desc">The Granger Causality Test table summarizes the presence and characteristics of causal relationships between
+                        variables based on statistical testing. It indicates whether a significant causal effect exists, the direction of the relationship
+                        (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance.
+                        Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.
+                    </p>
+                    <p style="color: darkgray"><b>Error Threshold (MAPE) Used: {{ "%.2f"|format(causality_test.error_threshold) }} %</b></p>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -335,7 +343,8 @@
                                     <th>Coefficient Sign</th>
                                     <th>Best Lag</th>
                                     <th>P-value</th>
-{#                                    <th>Min P-value</th>#}
+                                    <th>Causality Score</th>
+                                    <th>MAPE (%)</th>
                                     <th>Number of Lags Tested</th>
                                 </tr>
                             </thead>
@@ -358,8 +367,9 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ result.best_lag }}</td>
-                                    <td>{% if result.p_value is number %}{{ "%.4f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
-{#                                    <td>{% if result.min_p_value is number %}{{ "%.4f"|format(result.min_p_value) }}{% else %}{{ result.min_p_value }}{% endif %}</td>#}
+                                    <td>{% if result.p_value is number %}{{ "%.5f"|format(result.p_value) }}{% else %}{{ result.p_value }}{% endif %}</td>
+                                    <td>{% if result.score is number %}{{ "%.2f"|format(result.score) }}{% else %}{{ result.score }}{% endif %}</td>
+                                    <th>{% if result.mape_score is number %}{{ "%.2f"|format(result.mape_score) }}{% else %}{{ result.mape_score }}{% endif %}</th>
                                     <td>{{ result.number_of_lags_tested }}</td>
                                 </tr>
                                 {% endfor %}
@@ -380,14 +390,14 @@
                         for precise comparison of annual performance and growth rates, supporting detailed analysis of
                         trends and facilitating data-driven decision-making.
                     </p>
-
+                    
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-
+                        
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
                                         <th>{{ col }}</th>
@@ -400,7 +410,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
-
+                        
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
@@ -422,14 +432,14 @@
                 <section>
                     <h2>📈 Yearly Aggregator</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
-
+                    
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-
+                        
                                     <!-- Dynamic columns -->
                                     {% for col in time_aggregator.columns %}
                                         <th>{{ col }}</th>
@@ -441,7 +451,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col">{{ row.date }}</td>
-
+                        
                                     <!-- Values + % change -->
                                     {% for col in time_aggregator.columns %}
                                         <td>{{ row[col] }}</td>
@@ -465,7 +475,7 @@
                         enables quick identification of highly correlated variable pairs, patterns, and potential
                         multicollinearity within the dataset.
                     </p>
-
+                    
                     <div class="table-container">
                         <table>
                             <thead>
