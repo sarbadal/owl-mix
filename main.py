@@ -24,7 +24,7 @@ def main():
         target="sales",
         date_column="time",
         # template_name="bootstrap_eda_template.html",
-        template_name="custom_eda_template.html",
+        # template_name="custom_eda_template.html",
         # template_name="custom_eda_template_dark.html",
         # user_title_config_path="/Users/sarbadal.pal/Library/CloudStorage/OneDrive-OneWorkplace/PythonProjects/Canadian_Tire/owlmix/usr_config/title.json"
         user_title_config_path="usr_config/title.json"
@@ -100,8 +100,8 @@ def main():
     #     precision=1
     # )
     report.run(
-        json_file_name="report_custom3.json",
-        html_file_name="report_custom3.html",
+        json_file_name="report_custom_23_apr_26.json",
+        html_file_name="report_custom_23_apr_26.html",
     )
 
 

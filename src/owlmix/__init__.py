@@ -13,14 +13,18 @@ __all__ = [
     "examples"
 ]
 
-MIN_PYTHON = (3, 14)
+__version__ = "0.1.5"
 
-warnings.warn(
-    "This version of owlmix is in development stage and may be unstable. "
-    "Consider using version >= 1.0.0 for a stable release.",
-    category=UserWarning,
-    stacklevel=2,
-)
+MIN_PYTHON = (3, 14)
+VERSION_THRESHOLD = "1.0.0"
+
+if __version__ < VERSION_THRESHOLD:
+    warnings.warn(
+        f"This version of owlmix ({__version__}) is in development stage and may be unstable. "
+        f"Consider using version >= {VERSION_THRESHOLD} for a stable release.",
+        category=UserWarning,
+        stacklevel=2,
+    )
 
 if sys.version_info < MIN_PYTHON:
     major, minor = MIN_PYTHON

@@ -6,69 +6,72 @@
     <title>{{ title or "OwlMix EDA Report" }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         html, body { min-height: 100%; background: #f4f7fb; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #24303f; }
-        
+
         .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
         .report-shell { background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-        
+
         header { padding: 48px; background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); color: #ffffff; text-align: center; }
         .report-tag { display: inline-block; margin-bottom: 16px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,0.15); font-size: 0.9rem; }
         header h1 { font-size: 3rem; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; }
         header p { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; }
-        
+
         .meta-info { margin-top: 20px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .meta-info span { background: rgba(255,255,255,0.1); padding: 8px 14px; border-radius: 6px; font-size: 0.95rem; }
-        
+
         main { padding: 48px; }
-        
+
         section { margin-bottom: 50px; }
         section:last-child { margin-bottom: 0; }
-        
+
         h2 { font-size: 1.8rem; color: #1e293b; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 3px solid #4b6cb7; }
         .section-desc { color: #55687d; margin: 12px 0 24px; line-height: 1.7; }
-        
+
         .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
         .card { background: #f8fbff; border: 1px solid #e0e8f5; border-radius: 12px; padding: 20px; }
         .card strong { color: #3f5a8c; font-size: 0.9rem; display: block; margin-bottom: 6px; }
         .card .value { color: #182848; font-size: 1.6rem; font-weight: 700; }
-        
+
         .table-container { overflow-x: auto; margin-top: 20px; border-radius: 12px; border: 1px solid #e0e8f5; }
-        table { 
-            width: 100%; 
-            table-layout: auto; 
-            border-collapse: collapse; 
+        table {
+            width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+        }
+        .acf-pacf-table td, .acf-pacf-table th {
+            padding: 4px 8px;
         }
         thead { background: #eef4ff; }
         th { padding: 14px 16px; text-align: left; font-weight: 700; color: #1f2a38; font-size: 0.95rem; border-bottom: 2px solid #d9e4f7; }
         td { padding: 12px 16px; border-bottom: 1px solid #e8edf3; color: #4d5f73; }
         tbody tr:nth-child(even) { background: #fcfdff; }
         tbody tr:hover { background: #f5f8ff; }
-        .date-col { 
-            width: 120px; 
+        .date-col {
+            width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .columns-display { display: inline-block; background: #f0f4ff; padding: 8px 12px; border-radius: 6px; color: #3f5a8c; font-size: 0.95rem; }
-        
+
         .badge-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
         .badge { padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-align: center; }
         .badge.ok { color: #185e3b; background: #d1f3e0; border: 1px solid #a8e6c5; }
         .badge.missing { color: #832020; background: #fdd9d9; border: 1px solid #fbacac; }
-        
+
         .chart-grid { display: grid; gap: 32px; margin-top: 24px; }
         .chart-card { background: #f8fbff; border: 1px solid #e0e8f5; border-radius: 12px; padding: 24px; }
         .chart-card h3 { font-size: 1.15rem; color: #212c3b; margin-bottom: 8px; }
         .chart-card p { color: #5c6f84; margin-bottom: 16px; line-height: 1.6; }
         .chart-card img { width: 100%; height: auto; border-radius: 10px; display: block; }
-        
+
         footer { padding: 24px 48px; background: #f8fbff; border-top: 1px solid #e0e8f5; text-align: center; color: #5c6f84; font-size: 0.9rem; }
-        
+
         .divider { height: 2px; background: linear-gradient(to right, transparent, #e0e8f5, transparent); margin: 40px 0; }
-        
+
         .no-data { background: #fff9e6; border: 1px solid #ffe680; border-radius: 8px; padding: 16px; color: #996600; }
     </style>
 </head>
@@ -91,7 +94,7 @@
                 <section>
                     <h2>📊 Dataset Overview</h2>
                     <p class="section-desc">High-level summary of the dataset structure and composition.</p>
-                    
+
                     <div class="info-cards">
                         <div class="card">
                             <strong>Total Records</strong>
@@ -108,7 +111,6 @@
                         <strong style="display: block; margin-bottom: 8px; color: #1e293b;">Column Names:</strong>
                         <div class="columns-display">
                             {{ basic_info.column_names | join(", ") }}
-{#                            <p><b>KPI (target column): ...</b></p>#}
                         </div>
                     </div>
                     {% endif %}
@@ -174,7 +176,7 @@
                         This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
                         as a foundational step for exploratory analysis and data quality assessment.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -192,7 +194,7 @@
                                     {% for stat_name in stat_names.keys() %}
                                     <tr>
                                         <td><strong>{{ stat_name }}</strong></td>
-                            
+
                                         {% for col_name in basic_info.column_names %}
                                             <td>
                                             {% if col_name in basic_info.summary_stats and stat_name in basic_info.summary_stats[col_name] %}
@@ -207,7 +209,7 @@
                                             {% endif %}
                                             </td>
                                         {% endfor %}
-                            
+
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -250,15 +252,15 @@
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.feature[row] }}
                                     </td>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.vif_value[row] }}
                                     </td>
@@ -283,7 +285,7 @@
                         <h3 style="font-size: 1.3rem; color: #1e293b; margin-bottom: 12px;">{{ item.column }}</h3>
 
                         <div class="table-container">
-                            <table>
+                            <table class="acf-pacf-table" style="font-size: 0.85rem;">
                                 <thead>
                                     <tr>
                                         <th>Lag</th>
@@ -388,14 +390,14 @@
                         for precise comparison of annual performance and growth rates, supporting detailed analysis of
                         trends and facilitating data-driven decision-making.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
                                         <th>{{ col }}</th>
@@ -408,7 +410,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
-                        
+
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
@@ -430,14 +432,14 @@
                 <section>
                     <h2>📈 Yearly Aggregator</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_aggregator.columns %}
                                         <th>{{ col }}</th>
@@ -449,7 +451,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col">{{ row.date }}</td>
-                        
+
                                     <!-- Values + % change -->
                                     {% for col in time_aggregator.columns %}
                                         <td>{{ row[col] }}</td>
@@ -473,7 +475,7 @@
                         enables quick identification of highly correlated variable pairs, patterns, and potential
                         multicollinearity within the dataset.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -519,7 +521,7 @@
                         It helps identify temporal dependencies and persistence in the series,
                         supporting informed lag selection for time-series modeling.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -554,7 +556,7 @@
                 <section>
                     <h2>📊 Visualizations</h2>
                     <p class="section-desc">Embedded charts and plots for visual data exploration.</p>
-                    
+
                     <div class="chart-grid">
                         {% for chart in charts %}
                         <div class="chart-card">
