@@ -3,22 +3,6 @@ import json
 import pandas as pd
 
 from .utils import to_json, ColumnMixin
- 
- 
-def get_correlation_matrix(df: pd.DataFrame) -> dict:
-    corr = df.corr(numeric_only=True)
-    return json.dumps(corr.to_dict(), indent=2)
- 
- 
-def get_lag_correlation(df: pd.DataFrame, column: str, target: str, lags: list[int]) -> dict[int, float]:
-    results = {}
- 
-    for lag in lags:
-        lagged = df[column].shift(lag)
-        corr = lagged.corr(df[target])
-        results[lag] = corr
- 
-    return json.dumps(results, indent=2)
 
 
 class Correlation(ColumnMixin):
