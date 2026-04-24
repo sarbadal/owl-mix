@@ -5,10 +5,11 @@ from .utils import ColumnMixin
 
 
 class ACFPACFCalculator(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, columns: list[str], n_lags: int = 15) -> None:
+    def __init__(self, df: pd.DataFrame, columns: list[str], n_lags: int = 15, precision: int = 3) -> None:
         self.df = df.copy()
         self.columns = self._get_columns(columns)
         self.n_lags = n_lags
+        self.precision = precision
 
     def generate(self) -> dict[str, list[dict]]:
         """Calculate ACF and PACF for each column."""
@@ -28,8 +29,8 @@ class ACFPACFCalculator(ColumnMixin):
                 "column": col,
                 "n_obs": n_obs,
                 "lags": lags,
-                "acf": acf_vals.tolist(),
-                "pacf": pacf_vals.tolist(),
+                "acf": [round(v, self.precision)  for v in acf_vals.tolist()],
+                "pacf": [round(v, self.precision)  for v in pacf_vals.tolist()]
             })
 
         return {

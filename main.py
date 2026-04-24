@@ -100,8 +100,8 @@ def main():
     #     precision=1
     # )
     report.run(
-        json_file_name="report_custom_23_apr_26.json",
-        html_file_name="report_custom_23_apr_26.html",
+        json_file_name="report_custom.json",
+        html_file_name="report_custom.html",
     )
 
 

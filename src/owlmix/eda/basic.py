@@ -4,24 +4,6 @@ import pandas as pd
 
 from .utils import to_json
 
-def get_basic_info(df: pd.DataFrame):
-    """Get basic info about the DataFrame."""
-    shape = df.shape
-    columns = df.columns.tolist()
-    dtypes = df.dtypes.to_dict()
-    missing = df.isnull().sum().to_dict()
-    summary = df.describe().to_dict()
-
-    info = {}
-    info["num_rows"] = shape[0]
-    info["num_columns"] = shape[1]
-    info["column_names"] = columns
-    info["data_types"] = dtypes
-    info["missing_values"] = missing
-    info["summary_stats"] = summary
-    json_content = result_df.to_json()
-    return json_content
-
 
 class BasicInfo:
     def __init__(self, df: pd.DataFrame):

@@ -6,9 +6,9 @@ from typing import Self
 import pandas as pd
 import json
 
-from owlmix.eda import kpi_vs_feature
-from owlmix.eda.basic import get_basic_info
-from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
+# from owlmix.eda import kpi_vs_feature
+# from owlmix.eda.basic import get_basic_info
+# from owlmix.eda.correlation import get_correlation_matrix, get_lag_correlation
 
 from owlmix.eda.basic import BasicInfo
 from owlmix.eda.stats import BasicStats
@@ -20,16 +20,29 @@ from owlmix.eda.causality import CausalityTest
 from owlmix.eda.categorical_distribution_generator import CategoricalDistributionGenerator
 from owlmix.eda.kpi_vs_feature import DualAxisLineChartDataGenerator
 
-from owlmix.eda.charts.time.comparison import ComparisonChart
-from owlmix.eda.charts.correlation import CorrelationChart
-from owlmix.eda.charts.time_series import TimeSeriesChart
-from owlmix.eda.charts.outliers import OutlierChart
-from owlmix.eda.charts.lag import LagCorrelationChart
-from owlmix.eda.charts.distribution import DistributionChart
-from owlmix.eda.charts.categorical_distribution import CategoricalDistributionChart
-from owlmix.eda.charts.vif import VIFChart
-from owlmix.eda.charts.dualaxis_line_plot import DualAxisLinePlotter
-from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
+# from owlmix.eda.charts.time.comparison import ComparisonChart
+# from owlmix.eda.charts.correlation import CorrelationChart
+# from owlmix.eda.charts.time_series import TimeSeriesChart
+# from owlmix.eda.charts.outliers import OutlierChart
+# from owlmix.eda.charts.lag import LagCorrelationChart
+# from owlmix.eda.charts.distribution import DistributionChart
+# from owlmix.eda.charts.categorical_distribution import CategoricalDistributionChart
+# from owlmix.eda.charts.vif import VIFChart
+# from owlmix.eda.charts.dualaxis_line_plot import DualAxisLinePlotter
+# from owlmix.eda.charts.acf_pacf import ACFPACFPlotter
+
+from owlmix.eda.charts import (
+    ComparisonChart,
+    CorrelationChart,
+    TimeSeriesChart,
+    OutlierChart,
+    LagCorrelationChart,
+    DistributionChart,
+    CategoricalDistributionChart,
+    VIFChart,
+    DualAxisLinePlotter,
+    ACFPACFPlotter,
+)
 
 from owlmix.eda.summary_builder_config import SummaryBuilderConfig
 

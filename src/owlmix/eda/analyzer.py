@@ -14,7 +14,7 @@ from .charts import (
 from .summary import SummaryBuilder
  
  
-class EDAAnalyzer:
+class EDAAnalyzer_:
     def __init__(self, df: pd.DataFrame, target: str | None = None):
         self.df = df.copy()
         self.target = target

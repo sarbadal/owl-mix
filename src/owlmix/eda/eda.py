@@ -4,7 +4,7 @@ import pandas as pd
 
 from .summary import SummaryBuilder
 
-class OwlMixEDA:
+class OwlMixEDA_:
     """
     Main entry point for OwlMix EDA.
  
