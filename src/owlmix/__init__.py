@@ -11,7 +11,7 @@ __all__ = [
     "report",
 ]
 
-__version__ = "0.1.7"
+__version__ = "0.1.9"
 
 MIN_PYTHON = (3, 14)
 VERSION_THRESHOLD = "1.0.0"
