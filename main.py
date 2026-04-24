@@ -15,7 +15,7 @@ from owlmix.utils.sample_data_generator import create_sample_data
 
 
 def main():
-    df = create_sample_data(n=1231)
+    df = create_sample_data(n=2053)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -27,7 +27,7 @@ def main():
         template_name="custom_eda_template.html",
         # template_name="custom_eda_template_dark.html",
         # user_title_config_path="/Users/sarbadal.pal/Library/CloudStorage/OneDrive-OneWorkplace/PythonProjects/Canadian_Tire/owlmix/usr_config/title.json"
-        user_title_config_path="usr_config/title.json"
+        # user_title_config_path="usr_config/title.json"
     )
 
     report.config.set_time_aggregator_config(
@@ -99,12 +99,12 @@ def main():
     #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
     #     precision=1
     # )
-    # report.run(
-    #     json_file_name="report_custom.json",
-    #     html_file_name="report_custom.html",
-    # )
+    report.run(
+        json_file_name="report_custom.json",
+        html_file_name="report_custom.html",
+    )
 
-    report.run()
+    # report.run()
 
 if __name__ == "__main__":
     main()

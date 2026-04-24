@@ -176,7 +176,7 @@
                         This table helps in understanding the central tendency, dispersion, and overall distribution of the data, serving
                         as a foundational step for exploratory analysis and data quality assessment.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -194,7 +194,7 @@
                                     {% for stat_name in stat_names.keys() %}
                                     <tr>
                                         <td><strong>{{ stat_name }}</strong></td>
-                            
+
                                         {% for col_name in basic_info.column_names %}
                                             <td>
                                             {% if col_name in basic_info.summary_stats and stat_name in basic_info.summary_stats[col_name] %}
@@ -209,7 +209,7 @@
                                             {% endif %}
                                             </td>
                                         {% endfor %}
-                            
+
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -241,6 +241,34 @@
                         regularization to improve model robustness and reliability.
                     </p>
 
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;">
+                        <div style="width: 100%; max-width: 1000px;">
+                            <h3 style="margin-left: 0;">Methodology: Variance Inflation Factor (VIF) Analysis</h3>
+                            <ol style="list-style-position: inside; padding-left: 0; margin-left: 0; font-size: 15px">
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Iterative Regression:</strong>
+                                    Regress each feature variable against all other independent variables in the dataset.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>R-Squared Calculation:</strong>
+                                    Determine the coefficient of determination (R²) for each specific regression model.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>VIF Computation:</strong>
+                                    Apply the formula <code>VIF = 1 / (1 - R²)</code> to quantify the inflation of variance for each feature.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Multicollinearity Identification:</strong>
+                                    Evaluate the resulting values to detect high correlation (typically values > 5 or 10).
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Feature Refinement:</strong>
+                                    Utilize the scores to decide on variable elimination, transformation, or the use of regularization techniques.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -252,15 +280,15 @@
                             <tbody>
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.feature[row] }}
                                     </td>
-                                    <td class="date-col" 
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10 
-                                                        else '#DAA520' if vif.vif_value[row] > 5 
+                                    <td class="date-col"
+                                        style="color: {{ 'red' if vif.vif_value[row] > 10
+                                                        else '#DAA520' if vif.vif_value[row] > 5
                                                         else 'green' }}; font-weight: bold;">
                                         {{ vif.vif_value[row] }}
                                     </td>
@@ -278,7 +306,41 @@
                 {% if acf_pacf %}
                 <section>
                     <h2>📊 ACF & PACF Analysis</h2>
-                    <p class="section-desc">The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation coefficients for each variable across specified lags. These tabulated values enable precise identification of statistically significant lags and the strength of relationships over time. By complementing the visual insights from the plots, the tables support more detailed analysis and help validate lag selection decisions for modeling and forecasting purposes.</p>
+                    <p class="section-desc">
+                        The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation
+                        coefficients for each variable across specified lags. These tabulated values enable precise identification
+                        of statistically significant lags and the strength of relationships over time. By complementing the visual
+                        insights from the plots, the tables support more detailed analysis and help validate lag selection
+                        decisions for modeling and forecasting purposes.
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;">
+                        <div style="width: 100%; max-width: 1000px;">
+                            <h3 style="margin-left: 0;">Methodology: ACF & PACF Lag Analysis</h3>
+                            <ol style="list-style-position: inside; padding-left: 0; margin-left: 0; font-size: 15px">
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Lag Correlation Calculation:</strong>
+                                    Compute the Pearson correlation between the time series and its own lagged versions (ACF).
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Partial Influence Extraction:</strong>
+                                    Calculate the PACF to isolate the direct relationship between observations at different lags by removing intermediate effects.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Coefficient Tabulation:</strong>
+                                    Organize the resulting values into a table to provide precise numerical depth beyond the visual plots.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Significance Testing:</strong>
+                                    Compare coefficients against standard error bounds to identify which lags are statistically meaningful.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Model Order Selection:</strong>
+                                    Use the significant lag values to inform the parameters (p, q) for ARIMA or other forecasting models.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
 
                     {% for item in acf_pacf.data %}
                     <div style="margin-bottom: 32px;">
@@ -299,14 +361,14 @@
                                         <td><strong>{{ item.lags[idx] }}</strong></td>
                                         <td>
                                             {% if item.acf[idx] is number %}
-                                                {{ "%.6f" | format(item.acf[idx]) }}
+                                                {{ "%.3f" | format(item.acf[idx]) }}
                                             {% else %}
                                                 {{ item.acf[idx] }}
                                             {% endif %}
                                         </td>
                                         <td>
                                             {% if item.pacf[idx] is number %}
-                                                {{ "%.6f" | format(item.pacf[idx]) }}
+                                                {{ "%.3f" | format(item.pacf[idx]) }}
                                             {% else %}
                                                 {{ item.pacf[idx] }}
                                             {% endif %}
@@ -333,6 +395,35 @@
                         (positive or negative), the optimal lag at which the effect is strongest, and the corresponding p-value for significance.
                         Additionally, it reports the number of lags evaluated, providing context for the robustness of the test results.
                     </p>
+
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;">
+                        <div style="width: 100%; max-width: 1000px;">
+                            <h3 style="margin-left: 0;">Methodology: Granger Causality Testing</h3>
+                            <ol style="list-style-position: inside; padding-left: 0; margin-left: 0; font-size: 15px">
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Stationarity Verification:</strong>
+                                    Ensure all time-series variables are stationary to prevent spurious regression results.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Lag Optimization:</strong>
+                                    Test multiple time lags to determine the point where the past values of one variable most significantly predict another.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Statistical Hypothesis Testing:</strong>
+                                    Perform F-tests to calculate p-values, determining if the predictive power of a feature is statistically significant.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Directional Analysis:</strong>
+                                    Assess the sign (positive or negative) of the relationship to understand how the feature influences the KPI.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Robustness Validation:</strong>
+                                    Report the total lags evaluated and significance levels to confirm the reliability of the causal inference.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
                     <p style="color: darkgray"><b>Error Threshold (MAPE) Used: {{ "%.2f"|format(causality_test.error_threshold) }} %</b></p>
                     <div class="table-container">
                         <table>
@@ -390,14 +481,14 @@
                         for precise comparison of annual performance and growth rates, supporting detailed analysis of
                         trends and facilitating data-driven decision-making.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}
                                         <th>{{ col }}</th>
@@ -410,7 +501,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
-                        
+
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
@@ -432,14 +523,14 @@
                 <section>
                     <h2>📈 Yearly Aggregator</h2>
                     <p class="section-desc">Simple info to show change over last period.</p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <!-- Date column -->
                                     <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
+
                                     <!-- Dynamic columns -->
                                     {% for col in time_aggregator.columns %}
                                         <th>{{ col }}</th>
@@ -451,7 +542,7 @@
                                 <tr>
                                     <!-- Date -->
                                     <td class="date-col">{{ row.date }}</td>
-                        
+
                                     <!-- Values + % change -->
                                     {% for col in time_aggregator.columns %}
                                         <td>{{ row[col] }}</td>
@@ -475,7 +566,7 @@
                         enables quick identification of highly correlated variable pairs, patterns, and potential
                         multicollinearity within the dataset.
                     </p>
-                    
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -517,10 +608,38 @@
                 <section>
                     <h2>⏱️ Lag Correlation</h2>
                     <p class="section-desc">The Lag Correlation table presents the correlation of the target (KPI)
-                        variable with its past values across different lag periods (e.g., T vs. T−1, T−2, T−3).
+                        variable with its past values across different lag periods (e.g., T vs. T−1, T−2, T−3, ...).
                         It helps identify temporal dependencies and persistence in the series,
                         supporting informed lag selection for time-series modeling.
                     </p>
+
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;">
+                        <div style="width: 100%; max-width: 1000px;">
+                            <h3 style="margin-left: 0;">Methodology: KPI Lag Correlation Analysis</h3>
+                            <ol style="list-style-position: inside; padding-left: 0; margin-left: 0; font-size: 15px">
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Lag Generation:</strong>
+                                    Create multiple shifted versions of the target KPI variable for defined intervals (e.g., T−1, T−2, T−3, ...).
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Pairwise Calculation:</strong>
+                                    Compute the correlation coefficient between the current KPI value (T) and each of its historical lags.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Persistence Measurement:</strong>
+                                    Evaluate the decay rate of correlation values to determine how long past values continue to influence the present.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Statistical Tabulation:</strong>
+                                    Organize the coefficients into a structured table to allow for precise comparison across different time offsets.
+                                </li>
+                                <li style="margin-bottom: 8px;">
+                                    <strong>Feature Engineering:</strong>
+                                    Select the most highly correlated lags to be used as predictive inputs in time-series forecasting models.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
 
                     <div class="table-container">
                         <table>
