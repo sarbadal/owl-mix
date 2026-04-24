@@ -45,8 +45,8 @@ def main():
     )
 
     report.config.set_kpi_vs_feature_config(
-        columns=["tv_spend", "digital_spend", "radio_spend"],
-        date_format="%Y-%m",
+        # columns=["tv_spend", "digital_spend", "radio_spend"],
+        period="monthly",  # daily, weekly, monthly, yearly
     )
 
     report.config.set_vif_config(
@@ -62,22 +62,22 @@ def main():
         precision=2,
     )
 
-    report.config.set_acf_pacf_config(
-        columns=[
-        #     "tv_spend",
-        #     "digital_spend",
-        #     "radio_spend",
-        #     "tv_grp",
-        #     "radio_grp",
-        #     "digital_imp",
-            "sales",
-        ],
-        n_lags=9
-    )
+    # report.config.set_acf_pacf_config(
+    #     columns=[
+    #         "tv_spend",
+    #     #     "digital_spend",
+    #     #     "radio_spend",
+    #     #     "tv_grp",
+    #     #     "radio_grp",
+    #     #     "digital_imp",
+    #         "sales",
+    #     ],
+    #     n_lags=9
+    # )
 
     report.config.set_causality_test_config(
-        max_lag=5,
-        error_threshold=0.15
+        max_lag=10,
+        error_threshold=0.25
     )
 
     # report.set_time_comparison_config(
@@ -99,11 +99,12 @@ def main():
     #     columns=["sales", "tv_spend", "radio_spend", "digital_spend"],
     #     precision=1
     # )
-    report.run(
-        json_file_name="report_custom.json",
-        html_file_name="report_custom.html",
-    )
+    # report.run(
+    #     json_file_name="report_custom.json",
+    #     html_file_name="report_custom.html",
+    # )
 
+    report.run()
 
 if __name__ == "__main__":
     main()

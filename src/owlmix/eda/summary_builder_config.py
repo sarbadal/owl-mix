@@ -108,7 +108,7 @@ class SummaryBuilderConfig:
         self.kpi_vs_feature_config = {
             "target_column": self.target,
             "columns": None,
-            "date_format": "%Y-%m-%d",
+            "period": "weekly",
             "date_column": self.date_column,
             "agg_func": "sum"
         }
@@ -212,7 +212,7 @@ class SummaryBuilderConfig:
         updates = {
             "target_column": kwargs.get("target_column") or self.target,
             "columns": kwargs.get("columns"),
-            "date_format": kwargs.get("date_format") or "%Y-%m-%d",
+            "period": kwargs.get("period") or "weekly",
             "date_column": kwargs.get("date_column") or self.date_column,
             "agg_func": kwargs.get("agg_func") or "sum"
         }

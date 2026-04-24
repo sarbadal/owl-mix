@@ -135,7 +135,7 @@ class SummaryBuilder:
             df=self.df,
             target_column=config["target_column"],
             columns=config["columns"],
-            date_format=config["date_format"],
+            period=config["period"],
             date_column=config["date_column"],
             agg_func=config["agg_func"],
         )

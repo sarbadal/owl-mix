@@ -1,4 +1,5 @@
 # owlmix/eda/acf_pacf.py
+import pandas as pd
 from statsmodels.tsa.stattools import acf, pacf
 
 from .utils import ColumnMixin
