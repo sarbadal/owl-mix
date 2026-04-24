@@ -2,8 +2,6 @@
 import pandas as pd
 from typing import Self, TypedDict, NotRequired
 
-from scipy.constants import precision
-
 
 class SetCausalityTestConfigArgs(TypedDict):
     target_column: NotRequired[str]

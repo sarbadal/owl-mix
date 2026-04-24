@@ -72,7 +72,7 @@ def main():
         #     "digital_imp",
             "sales",
         ],
-        n_lags=20
+        n_lags=9
     )
 
     report.config.set_causality_test_config(

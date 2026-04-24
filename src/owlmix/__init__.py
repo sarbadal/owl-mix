@@ -4,13 +4,11 @@ import warnings
 from . import transform
 from . import eda
 from . import report
-from . import examples
 
 __all__ = [
     "transform",
     "eda",
     "report",
-    "examples"
 ]
 
 __version__ = "0.1.7"
