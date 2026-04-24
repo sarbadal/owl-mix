@@ -1,7 +1,6 @@
 # src/owlmix/report/generator.py
 import os
 from pathlib import Path
-# from typing import TypedDict, NotRequired
 from dataclasses import dataclass
 
 from owlmix.eda.summary import SummaryBuilder
@@ -35,11 +34,7 @@ class OwlMixReport:
         self.df = df
         self.target = target
         self.date_column = date_column
-
-        if kwargs.get("user_title_config_path", None) is not None:
-            self.user_title_config_path: Path = Path(kwargs.get("user_title_config_path", None)).resolve()
-        else:
-            self.user_title_config_path = None
+        self.user_title_config_path = self._get_user_title_config_path(kwargs)
 
         # Use provided settings or create from kwargs
         self.report_settings = report_settings or self._create_settings_from_kwargs(**kwargs)
@@ -51,6 +46,12 @@ class OwlMixReport:
             target=self.target,
             date_column=self.date_column
         )
+
+    def _get_user_title_config_path(self, kwargs) -> Path | None:
+        kwarg_name: str = "user_title_config_path"
+        if kwargs.get(kwarg_name, None) is not None:
+            return Path(kwargs.get(kwarg_name, None)).resolve()
+        return None
 
     def _create_settings_from_kwargs(self, **kwargs) -> ReportSettings:
         """Create ReportSettings from kwargs with sensible defaults."""

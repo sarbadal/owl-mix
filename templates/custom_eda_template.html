@@ -299,14 +299,14 @@
                                         <td><strong>{{ item.lags[idx] }}</strong></td>
                                         <td>
                                             {% if item.acf[idx] is number %}
-                                                {{ "%.6f" | format(item.acf[idx]) }}
+                                                {{ "%.3f" | format(item.acf[idx]) }}
                                             {% else %}
                                                 {{ item.acf[idx] }}
                                             {% endif %}
                                         </td>
                                         <td>
                                             {% if item.pacf[idx] is number %}
-                                                {{ "%.6f" | format(item.pacf[idx]) }}
+                                                {{ "%.3f" | format(item.pacf[idx]) }}
                                             {% else %}
                                                 {{ item.pacf[idx] }}
                                             {% endif %}

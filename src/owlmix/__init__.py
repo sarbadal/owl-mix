@@ -4,16 +4,14 @@ import warnings
 from . import transform
 from . import eda
 from . import report
-from . import examples
 
 __all__ = [
     "transform",
     "eda",
     "report",
-    "examples"
 ]
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 MIN_PYTHON = (3, 14)
 VERSION_THRESHOLD = "1.0.0"
