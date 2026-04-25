@@ -4,11 +4,13 @@ import warnings
 from . import transform
 from . import eda
 from . import report
+from . import file_resolver
 
 __all__ = [
     "transform",
     "eda",
     "report",
+    "file_resolver",
 ]
 
 __version__ = "0.1.9"

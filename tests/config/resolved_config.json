@@ -1,0 +1,7 @@
+{
+  "vif_chart": {
+    "title": "Chart title",
+    "alt_text": "alt text",
+    "description": "<div class=\"vif-container\">\n    <h3 style=\"margin-top:0\">VIF Multicollinearity Check</h3>\n\n    <!-- Predictor 1: High VIF -->\n    <div class=\"vif-row\">\n        <div class=\"label-group\"><span>Interest_Rate</span><span>8.4</span></div>\n        <div class=\"bar-bg\"><div class=\"bar-fill status-high\" style=\"width: 84%;\"></div></div>\n    </div>\n\n    <!-- Predictor 2: Moderate VIF -->\n    <div class=\"vif-row\">\n        <div class=\"label-group\"><span>Inflation</span><span>4.1</span></div>\n        <div class=\"bar-bg\"><div class=\"bar-fill status-mid\" style=\"width: 41%;\"></div></div>\n    </div>\n\n    <!-- Predictor 3: Low VIF -->\n    <div class=\"vif-row\">\n        <div class=\"label-group\"><span>GDP_Growth</span><span>1.5</span></div>\n        <div class=\"bar-bg\"><div class=\"bar-fill status-low\" style=\"width: 15%;\"></div></div>\n    </div>\n\n    <div class=\"legend\">\n        <span style=\"color:#e74c3c\">●</span> High (>5)\n        <span style=\"color:#f1c40f; margin-left:10px\">●</span> Moderate (2-5)\n        <span style=\"color:#2ecc71; margin-left:10px\">●</span> Low (<2)\n    </div>\n</div>"
+  }
+}

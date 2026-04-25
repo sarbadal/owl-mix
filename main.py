@@ -80,11 +80,11 @@ def main():
         error_threshold=0.25
     )
 
-    # report.set_time_comparison_config(
-    #     date_column="date",
-    #     value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
-    #     precision=3,
-    # )
+    report.config.set_time_comparison_config(
+        date_column="date",
+        value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
+        precision=3,
+    )
 
     # report.set_correlation_config(
     #     columns=["tv_spend", "radio_spend", "digital_spend"]

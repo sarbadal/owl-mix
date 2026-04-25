@@ -1,6 +1,6 @@
 # owlmix/eda/summary_builder_config.py
 import pandas as pd
-from typing import Self, TypedDict, NotRequired, Callable, Any
+from typing import Self, TypedDict, Unpack, NotRequired, Literal, Callable, Any
 
 
 class SetCausalityTestConfigArgs(TypedDict):
@@ -15,12 +15,13 @@ class SetVIFConfigArgs(TypedDict):
     features: NotRequired[list[str]]
     precision: NotRequired[int]
 
+Period = Literal["daily", "weekly", "monthly", "yearly"]
 
 class SetKPIVsFeatureConfigArgs(TypedDict):
     target_column: NotRequired[str]
     columns: NotRequired[list[str]]
+    period: NotRequired[Period]
     date_column: NotRequired[str]
-    date_format: NotRequired[str]
     agg_func: NotRequired[str]
 
 
@@ -33,10 +34,12 @@ class SetCorrelationConfigArgs(TypedDict):
     columns: NotRequired[list[str]]
 
 
+ComparisonType = Literal["yoy", "mom", "wow"]
+
 class SetTimeComparisonConfigArgs(TypedDict):
     date_column: NotRequired[str]
     value_columns: NotRequired[list[str]]
-    comparison_type: NotRequired[str]
+    comparison_type: NotRequired[ComparisonType]
     agg_func: NotRequired[str]
     precision: NotRequired[int]
     freq: NotRequired[str]
@@ -156,7 +159,7 @@ class SummaryBuilderConfig:
             elif key in defaults and config[key] is None:
                 config[key] = defaults[key]
 
-    def set_causality_test_config(self, **kwargs: SetCausalityTestConfigArgs) -> Self:
+    def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
         """
         Set Causality Test configuration.
 
@@ -178,7 +181,7 @@ class SummaryBuilderConfig:
         self._update_config(self.causality_test_config, updates)
         return self
 
-    def set_vif_config(self, **kwargs: SetVIFConfigArgs) -> Self:
+    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
         """
         Set VIF configuration.
 
@@ -198,15 +201,15 @@ class SummaryBuilderConfig:
         self._update_config(self.vif_config, updates)
         return self
 
-    def set_kpi_vs_feature_config(self, **kwargs: SetKPIVsFeatureConfigArgs) -> Self:
+    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
         """
         Set KPI vs Feature configuration.
 
         Args:
             target_column: str - target column name
             columns: list[str] - feature columns
+            period: str - it could be any of "daily", "weekly", "monthly", "yearly"
             date_column: str - date column name
-            date_format: str - format of date column
             agg_func: str - aggregation function (sum, mean, etc.)
         """
         updates = {
@@ -219,7 +222,7 @@ class SummaryBuilderConfig:
         self._update_config(self.kpi_vs_feature_config, updates)
         return self
 
-    def set_acf_pacf_config(self, **kwargs: SetAcfPacfConfigArgs) -> Self:
+    def set_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
         """
         Set ACF/PACF configuration.
 
@@ -234,7 +237,7 @@ class SummaryBuilderConfig:
         self._update_config(self.acf_pacf_config, updates)
         return self
 
-    def set_correlation_config(self, **kwargs: SetCorrelationConfigArgs) -> Self:
+    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
         """
         Set Correlation configuration.
 
@@ -256,7 +259,7 @@ class SummaryBuilderConfig:
         self._update_config(self.time_series_config, updates)
         return self
 
-    def set_time_comparison_config(self, **kwargs: SetTimeComparisonConfigArgs) -> Self:
+    def set_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
         """
         Set Time Comparison configuration.
 
@@ -281,7 +284,7 @@ class SummaryBuilderConfig:
         self._update_config(self.time_comparison_config, updates)
         return self
 
-    def set_time_aggregator_config(self, **kwargs: SetTimeAggregatorConfigArgs) -> Self:
+    def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
         """
         Set Time Aggregator configuration.
 
@@ -305,7 +308,7 @@ class SummaryBuilderConfig:
         self._update_config(self.time_aggregator_config, updates)
         return self
 
-    def set_outlier_chart_layout_config(self, **kwargs: SetOutlierConfigArgs) -> Self:
+    def set_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
         """
         Set Outlier Chart Layout configuration.
 
@@ -325,7 +328,7 @@ class SummaryBuilderConfig:
         self._update_config(self.outlier_chart_layout_config, updates)
         return self
 
-    def set_correlation_chart_layout_config(self, **kwargs: SetCorrChartLayoutConfigArgs) -> Self:
+    def set_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
         """
         Set Correlation Chart Layout configuration.
 
@@ -343,7 +346,7 @@ class SummaryBuilderConfig:
         self._update_config(self.correlation_chart_layout_config, updates)
         return self
 
-    def set_categorical_columns_config(self, **kwargs: SetCategoricalColumnsConfigArgs) -> Self:
+    def set_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
         """
         Set Categorical Columns configuration.
 
