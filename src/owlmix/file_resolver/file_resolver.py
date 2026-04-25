@@ -95,19 +95,17 @@ class ConfigFileResolver:
                 items.append(f'{space}    "{k}": {formatted_value}')
             return "{\n" + ",\n".join(items) + f"\n{space}}}"
 
-        elif isinstance(obj, list):
+        if isinstance(obj, list):
             items = [self._format_python(v, indent + 4) for v in obj]
             return "[\n" + ",\n".join(f"{space}    {item}" for item in items) + f"\n{space}]"
 
-        elif isinstance(obj, str):
+        if isinstance(obj, str):
             if "\n" in obj:
                 # multiline → triple quotes
                 return f'"""\n{obj}\n{space}"""'
-            else:
-                return f'"{obj}"'
+            return f'"{obj}"'
 
-        else:
-            return repr(obj)
+        return repr(obj)
 
     # Recursive resolver
     def _resolve_recursive(self, obj: Any) -> Any:
@@ -144,7 +142,6 @@ class ConfigFileResolver:
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {path}")
 
-        # content = file_path.read_text(encoding="utf-8")
         with open(file_path, mode="r", encoding="utf-8") as f:
             content = f.read()
 
@@ -155,9 +152,6 @@ class ConfigFileResolver:
     def save(self, output_path: Union[str, Path]) -> None:
         if self.resolved_config is None:
             raise ValueError("Call resolve() before saving.")
-
-        # with Path(output_path).open("w", encoding="utf-8") as f:
-        #     json.dump(self.resolved_config, f, indent=2, ensure_ascii=False)
 
         output_path = Path(output_path).resolve()
         with open(output_path, mode="w", encoding="utf-8") as f:

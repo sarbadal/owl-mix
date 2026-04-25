@@ -69,7 +69,6 @@ class HTMLRenderer:
             "title": section_data["title"],
             "header_title": section_data["header_title"],
             "header_subtitle": section_data["header_subtitle"],
-            "kpi": "",
             "generator": section_data["generator"],
             "report_date": section_data["report_date"],
             "basic_info": section_data["basic_info"],

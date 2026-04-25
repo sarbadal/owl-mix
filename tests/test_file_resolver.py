@@ -25,9 +25,9 @@ def main():
 
     # resolver.print()
     f = resolver.to_python_string()
-    # print(f)
+    print(f)
 
-    resolver.save(resolved_config_file_path)
+    # resolver.save(resolved_config_file_path)
     
 
 

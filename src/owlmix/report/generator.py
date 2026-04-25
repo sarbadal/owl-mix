@@ -1,7 +1,9 @@
 # src/owlmix/report/generator.py
 import os
+import pandas as pd
 from pathlib import Path
 from dataclasses import dataclass
+from typing import Self, TypedDict, Unpack, NotRequired
 
 from owlmix.eda.summary import SummaryBuilder
 from owlmix.report.renderer import HTMLRenderer
@@ -18,9 +20,13 @@ class ReportSettings:  # Renamed from ReportConfig to avoid conflict
     html_file_name: str = "report.html"
 
 
+class UserTitleConfig(TypedDict):
+    user_title_config_path: NotRequired[str]
+
+
 class OwlMixReport:
 
-    def __init__(self, df: "pd.DataFrame", target: str, date_column: str, report_settings: ReportSettings | None = None, **kwargs):
+    def __init__(self, df: pd.DataFrame, target: str, date_column: str, report_settings: ReportSettings | None = None, **kwargs: Unpack[UserTitleConfig]):
         """
         Initialize OwlMixReport class.
 
@@ -148,3 +154,12 @@ class OwlMixReport:
             self.report_settings.html_file_name = html_file_name
 
         self.generate_html(out_file_name=html_file_name)
+
+
+if "__main__" == __name__:
+    OwlMixReport(
+        df=pd.read_csv(),
+        target="target",
+        date_column="date",
+        user_title_config_path="user_title_config_path",
+    )
