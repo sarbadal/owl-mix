@@ -1,6 +1,9 @@
 # tests/test_file_resolver.py
 import os, sys
+import warnings
 from pathlib import Path
+
+warnings.simplefilter('ignore', category=UserWarning)
 
 # Add src to the path
 CURRENT_DIR = Path(__file__).parent.parent
