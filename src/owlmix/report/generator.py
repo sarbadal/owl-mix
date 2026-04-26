@@ -1,4 +1,26 @@
 # src/owlmix/report/generator.py
+"""
+Report Generation Orchestrator Module
+
+This module serves as the primary high-level interface for the OwlMix EDA
+reporting system. It coordinates the data analysis process and the final
+rendering of results.
+
+The `OwlMixReport` class manages the end-to-end workflow:
+1.  **Initialization**: Configures data schemas and output directories.
+2.  **Analysis**: Leverages `SummaryBuilder` to perform statistical calculations
+    (VIF, ACF/PACF, correlations) and generate visualization assets.
+3.  **JSON Export**: Serializes the raw analysis results for data persistence.
+4.  **HTML Rendering**: Hands off the processed data and chart paths to
+    `HTMLRenderer` to produce a finalized, interactive browser report.
+
+This module is designed to be the main entry point for users looking to
+generate comprehensive Exploratory Data Analysis reports for MMM projects.
+"""
+
+__author__ = "Sarbadal Pal"
+__email__ = "sarbadal@gmail.com"
+
 import os
 import pandas as pd
 from pathlib import Path

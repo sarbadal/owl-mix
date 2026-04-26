@@ -15,7 +15,7 @@ class ComparisonChart(ColumnMixin):
         self.output_dir = output_dir
 
     def _prepare(self):
-        self.df[self.date_column] = pd.to_datetime(self.df[self.date_column])
+        self.df[self.date_column] = pd.to_datetime(self.df[self.date_column], errors="coerce")
         self.df = self.df.set_index(self.date_column)
 
     def _aggregate(self):

@@ -1,6 +1,29 @@
 # owlmix/eda/summary_builder_config.py
+"""
+Summary Builder Configuration Module
+
+This module defines the configuration schema and management logic for the
+OwlMix EDA process. It provides a centralized way to manage parameters for
+various statistical tests and visualization layouts.
+
+The `SummaryBuilderConfig` class uses a fluent interface (method chaining)
+and type-safe `TypedDict` structures to configure:
+- **Statistical Tests**: VIF (Multicollinearity), Granger Causality, and ACF/PACF.
+- **Time Analysis**: KPI vs. Feature comparisons and time-series aggregations.
+- **Visualizations**: Correlation heatmaps and outlier chart layouts.
+- **Data Schemas**: Target column, date column, and categorical variable mapping.
+
+By decoupling configuration from the execution logic, this module ensures
+consistency across the JSON and HTML reporting workflows.
+"""
+
+__author__ = "Sarbadal Pal"
+__email__ = "sarbadal@gmail"
+
 import pandas as pd
 from typing import Self, TypedDict, Unpack, NotRequired, Literal, Callable, Any
+
+from owlmix.typing.types import PeriodType, ComparisonType
 
 
 class SetCausalityTestConfigArgs(TypedDict):
@@ -15,12 +38,12 @@ class SetVIFConfigArgs(TypedDict):
     features: NotRequired[list[str]]
     precision: NotRequired[int]
 
-Period = Literal["daily", "weekly", "monthly", "yearly"]
+# Period = Literal["daily", "weekly", "monthly", "yearly"]
 
 class SetKPIVsFeatureConfigArgs(TypedDict):
     target_column: NotRequired[str]
     columns: NotRequired[list[str]]
-    period: NotRequired[Period]
+    period: NotRequired[PeriodType]
     date_column: NotRequired[str]
     agg_func: NotRequired[str]
 
@@ -34,7 +57,7 @@ class SetCorrelationConfigArgs(TypedDict):
     columns: NotRequired[list[str]]
 
 
-ComparisonType = Literal["yoy", "mom", "wow"]
+# ComparisonType = Literal["yoy", "mom", "wow"]
 
 class SetTimeComparisonConfigArgs(TypedDict):
     date_column: NotRequired[str]

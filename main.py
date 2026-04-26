@@ -11,6 +11,8 @@ sys.path.insert(0, SRC_PATH)
 
 # from owlmix.report.generator import OwlMixReport
 from owlmix.report import OwlMixReport
+from owlmix.typing.enums import Period, ComparisonType
+
 from owlmix.utils.sample_data_generator import create_sample_data
 
 
@@ -47,6 +49,7 @@ def main():
     report.config.set_kpi_vs_feature_config(
         # columns=["tv_spend", "digital_spend", "radio_spend"],
         period="monthly",  # daily, weekly, monthly, yearly
+        # period=Period.MONTHLY
     )
 
     report.config.set_vif_config(
@@ -81,9 +84,14 @@ def main():
     )
 
     report.config.set_time_comparison_config(
-        date_column="date",
-        value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
-        precision=3,
+        value_columns=[
+            "tv_spend",
+            "digital_spend",
+            "radio_spend",
+            # "sales"
+        ],
+        # comparison_type=ComparisonType.QoQ,  # "yoy",
+        precision=2,
     )
 
     # report.set_correlation_config(
@@ -104,7 +112,6 @@ def main():
         html_file_name="report_custom.html",
     )
 
-    # report.run()
 
 if __name__ == "__main__":
     main()

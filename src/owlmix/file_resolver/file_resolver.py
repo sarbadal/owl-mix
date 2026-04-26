@@ -1,4 +1,28 @@
 # owlmix/file_resolver/file_resolver.py
+"""
+Configuration Resolver Module
+
+This module provides the `ConfigFileResolver` class, designed to automate the
+injection of external file content into a JSON-based configuration.
+
+It recursively scans a dictionary or JSON file for keys ending in `_file`.
+When found, it replaces the key with a version sans the suffix and populates
+it with the raw text content of the referenced file.
+
+Example:
+    Input:  {"description_file": "docs/readme.txt"}
+    Output: {"description": "This is the content of the file."}
+
+Features:
+    - Recursive resolution (handles nested dicts and lists).
+    - Content caching to prevent redundant disk I/O.
+    - Formatting utilities for terminal printing and Python code generation.
+    - Export functionality to save the resolved config back to JSON.
+"""
+
+__author__ = "Sarbadal Pal"
+__email__ = "sarbadal@gmail.com"
+
 from pathlib import Path
 from typing import Any, Union
 import json
