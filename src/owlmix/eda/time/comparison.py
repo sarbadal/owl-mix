@@ -119,6 +119,7 @@ class TimeComparisonReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
         return self._to_serializable()
 
 
+# NOT IN USE
 class TimeAggregatorReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
     def __init__(self, df, date_column: str, value_columns: list[str]=None, freq: str="YE", agg_func: str | Callable="sum", precision: int = 2):
         self.df = df.copy()

@@ -521,46 +521,6 @@
                 <div class="divider"></div>
                 {% endif %}
 
-
-                <!-- TIME AGGREGATOR -->
-                {% if time_aggregator %}
-                <section>
-                    <h2>📈 Yearly Aggregator</h2>
-                    <p class="section-desc">Simple info to show change over last period.</p>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <!-- Date column -->
-                                    <th class="date-col" style="background: #e8ecff;">Year</th>
-                        
-                                    <!-- Dynamic columns -->
-                                    {% for col in time_aggregator.columns %}
-                                        <th>{{ col }}</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in time_aggregator.data %}
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">{{ row.date }}</td>
-                        
-                                    <!-- Values + % change -->
-                                    {% for col in time_aggregator.columns %}
-                                        <td>{{ row[col] }}</td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <div class="divider"></div>
-                {% endif %}
-
                 <!-- CORRELATION MATRIX -->
                 {% if corr_matrix %}
                 <section>

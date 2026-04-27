@@ -446,6 +446,8 @@
                                     <td style="font-weight: 700; color: {% if result.causal %}#16a34a{% else %}#dc2626{% endif %};">
                                         {% if result.causal %}
                                             Yes &#x1F44D;
+                                        {% elif result.causal == None %}
+                                            None
                                         {% else %}
                                             No &#x1F44E;
                                         {% endif %}
@@ -453,6 +455,8 @@
                                     <td style="font-weight: 700; color: {% if result.coefficient_sign == 'positive' %}#16a34a{% else %}#dc2626{% endif %};">
                                         {% if result.coefficient_sign == 'positive' %}
                                             Positive &uarr;
+                                        {% elif result.coefficient_sign == None %}
+                                            None
                                         {% else %}
                                             Negative &darr;
                                         {% endif %}
@@ -500,52 +504,12 @@
                                 {% for row in time_comparison.data %}
                                 <tr>
                                     <!-- Date -->
-                                    <td class="date-col" style="font-weight: bold;">{{ row.date }}</td>
+                                    <td class="date-col" style="font-weight: bold;">{{ row.year }}</td>
 
                                     <!-- Values + % change -->
                                     {% for col in time_comparison.columns %}
                                         <td>{{ row[col] }}</td>
                                         <td>{{ row[col + '_pct_change'] }}</td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <div class="divider"></div>
-                {% endif %}
-
-
-                <!-- TIME AGGREGATOR -->
-                {% if time_aggregator %}
-                <section>
-                    <h2>📈 Yearly Aggregator</h2>
-                    <p class="section-desc">Simple info to show change over last period.</p>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <!-- Date column -->
-                                    <th class="date-col" style="background: #e8ecff;">Year</th>
-
-                                    <!-- Dynamic columns -->
-                                    {% for col in time_aggregator.columns %}
-                                        <th>{{ col }}</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in time_aggregator.data %}
-                                <tr>
-                                    <!-- Date -->
-                                    <td class="date-col">{{ row.date }}</td>
-
-                                    <!-- Values + % change -->
-                                    {% for col in time_aggregator.columns %}
-                                        <td>{{ row[col] }}</td>
                                     {% endfor %}
                                 </tr>
                                 {% endfor %}

@@ -12,7 +12,7 @@ from . import (
     VIFCalculator,
     ACFPACFCalculator,
     TimeComparisonReport,
-    TimeAggregatorReport,
+    # TimeAggregatorReport,
     CausalityTest,
     CategoricalDistributionGenerator,
     DualAxisLineChartDataGenerator,
@@ -160,18 +160,18 @@ class SummaryBuilder:
         self._add_section("time_comparison", report.generate())
         return self
 
-    def add_time_aggregator(self) -> Self:
-        config = self.config.time_aggregator_config
-        report = TimeAggregatorReport(
-            df=self.df,
-            date_column=config["date_column"],
-            value_columns=config["value_columns"],
-            freq=config["freq"],
-            agg_func=config["agg_func"],
-            precision=config["precision"]
-        )
-        self._add_section("time_aggregator", report.aggregate())
-        return self
+    # def add_time_aggregator(self) -> Self:
+    #     config = self.config.time_aggregator_config
+    #     report = TimeAggregatorReport(
+    #         df=self.df,
+    #         date_column=config["date_column"],
+    #         value_columns=config["value_columns"],
+    #         freq=config["freq"],
+    #         agg_func=config["agg_func"],
+    #         precision=config["precision"]
+    #     )
+    #     self._add_section("time_aggregator", report.aggregate())
+    #     return self
 
     # =================================
     # TEXT SECTIONS - Advanced Analysis
@@ -398,7 +398,7 @@ class SummaryBuilder:
             .add_acf_pacf_calculator()
             .add_causality_test()
             .add_categorical_distribution()
-            .add_time_aggregator()
+            # .add_time_aggregator()
             .add_time_comparison()
             .add_time_series_chart()
             .add_kpi_vs_feature_chart()
