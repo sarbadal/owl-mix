@@ -1,6 +1,6 @@
 # owlmix/typing/normalize.py
-from .constrants import PERIOD_VALUES, COMPARISON_TYPE_VALUES
-from .enums import Period, ComparisonType
+from .constrants import PERIOD_VALUES, COMPARISON_TYPE_VALUES, MODE_VALUES
+from .enums import Period, ComparisonType, PlotMode
 
 VALID_PERIODS = set(PERIOD_VALUES)
 
@@ -26,3 +26,16 @@ def normalize_comparison_type(comparison_type: ComparisonType | str) -> str:
         )
 
     return comparison_type
+
+
+def normalize_plot_mode(plot_mode: PlotMode) -> str:
+    if isinstance(plot_mode, PlotMode):
+        plot_mode = plot_mode.value
+
+    if plot_mode not in MODE_VALUES:
+        raise ValueError(
+            f"Invalid plot_mode '{plot_mode}'. "
+            f"Must be one of {MODE_VALUES}"
+        )
+
+    return plot_mode

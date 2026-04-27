@@ -280,15 +280,21 @@ class SummaryBuilder:
         self._append_chart("vif_chart", chart.generate())
         return self
 
-    def add_comparison_chart(self) -> Self:
-        config = self.config.time_comparison_config
-        chart = ComparisonChart(
+    def add_time_comparison_chart(self) -> Self:
+        config = self.config.time_comparison_chart_config
+        report = TimeComparisonReport(
             df=self.df,
             date_column=config["date_column"],
             value_columns=config["value_columns"],
-            freq=config.get("freq", "D"),
-            comparison=config.get("comparison", "yoy"),
-            output_dir=self.output_dir,
+            comparison_type=config["comparison_type"],
+            agg_func=config["agg_func"]
+        )
+
+        chart = ComparisonChart(
+            data=report.generate(),
+            comparison_type=config["comparison_type"],
+            mode=config["mode"],
+            output_dir=self.output_dir
         )
         self._append_chart("comparison_chart", chart.generate())
         return self
@@ -399,7 +405,7 @@ class SummaryBuilder:
             .add_kpi_vs_feature_chart()
             .add_outliers_chart()
             .add_lag_correlation_chart()
-            .add_comparison_chart()
+            .add_time_comparison_chart()
             .add_vif_chart()
             .add_acf_pacf_chart()
             .add_distribution_chart()

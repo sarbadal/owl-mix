@@ -23,7 +23,7 @@ __email__ = "sarbadal@gmail"
 import pandas as pd
 from typing import Self, TypedDict, Unpack, NotRequired, Literal, Callable, Any
 
-from owlmix.typing.types import PeriodType, ComparisonType
+from owlmix.typing.types import PeriodType, ComparisonType, PlotModeType
 
 
 class SetCausalityTestConfigArgs(TypedDict):
@@ -66,6 +66,14 @@ class SetTimeComparisonConfigArgs(TypedDict):
     agg_func: NotRequired[str]
     precision: NotRequired[int]
     freq: NotRequired[str]
+
+
+class SetTimeComparisonChartConfigArgs(TypedDict):
+    date_column: NotRequired[str]
+    value_columns: NotRequired[list[str]]
+    comparison_type: NotRequired[ComparisonType]
+    agg_func: NotRequired[str]
+    mode: NotRequired[PlotModeType]
 
 
 class SetTimeAggregatorConfigArgs(TypedDict):
@@ -149,10 +157,18 @@ class SummaryBuilderConfig:
         self.time_comparison_config = {
             "date_column": self.date_column,
             "value_columns": None,
-            "comparison": "yoy",
+            "comparison_type": "yoy",
             "agg_func": "sum",
             "precision": 2,
             "freq": "ME"
+        }
+
+        self.time_comparison_chart_config = {
+            "date_column": self.date_column,
+            "value_columns": None,
+            "comparison_type": "yoy",
+            "agg_func": "sum",
+            "mode": "pct_change"
         }
 
         self.time_aggregator_config = {
@@ -305,6 +321,30 @@ class SummaryBuilderConfig:
             "precision": precision
         }
         self._update_config(self.time_comparison_config, updates)
+        return self
+
+    def set_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
+        """
+        Set Time Comparison chart configuration.
+
+        Args:
+            date_column: str - date column name
+            value_columns: list[str] - columns to compare
+            comparison_type: str - type of comparison (yoy, mom, etc.)
+            agg_func: str - aggregation function
+            mode: str - absolute, pct_change, dual
+        """
+        precision = kwargs.get("precision", 2)
+        self._validate_positive_int(precision, "precision")
+
+        updates = {
+            "date_column": kwargs.get("date_column") or self.date_column,
+            "value_columns": kwargs.get("value_columns"),
+            "comparison_type": kwargs.get("comparison_type", "yoy"),
+            "agg_func": kwargs.get("agg_func", "sum"),
+            "mode": kwargs.get("mode", "absolute")
+        }
+        self._update_config(self.time_comparison_chart_config, updates)
         return self
 
     def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:

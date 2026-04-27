@@ -24,3 +24,9 @@ class ComparisonType(str, Enum):
     YoY_MONTH = "yoy_month"
     YoY_QUARTER = "yoy_quarter"
     YoY_WEEK = "yoy_week"
+
+
+class PlotMode(str, Enum):
+    ABSOLUTE = "absolute"
+    PCT_CHANGE = "pct_change"
+    DUAL = "dual"

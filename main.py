@@ -11,13 +11,13 @@ sys.path.insert(0, SRC_PATH)
 
 # from owlmix.report.generator import OwlMixReport
 from owlmix.report import OwlMixReport
-from owlmix.typing.enums import Period, ComparisonType
+from owlmix.typing.enums import Period, ComparisonType, PlotMode
 
 from owlmix.utils.sample_data_generator import create_sample_data
 
 
 def main():
-    df = create_sample_data(n=2053)
+    df = create_sample_data(n=500)
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -90,8 +90,19 @@ def main():
             "radio_spend",
             # "sales"
         ],
-        # comparison_type=ComparisonType.QoQ,  # "yoy",
+        comparison_type=ComparisonType.YoY,  # "yoy",
         precision=2,
+    )
+
+    report.config.set_time_comparison_chart_config(
+        value_columns=[
+            # "tv_spend",
+            "digital_spend",
+            "radio_spend",
+            # "sales"
+        ],
+        comparison_type=ComparisonType.WoW,
+        mode=PlotMode.DUAL,
     )
 
     # report.set_correlation_config(
