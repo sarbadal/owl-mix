@@ -32,7 +32,6 @@ from .charts import (
 )
 
 from .summary_builder_config import SummaryBuilderConfig
-
 from .config_model import ChartsTitleConfig, build_charts_config
 
 

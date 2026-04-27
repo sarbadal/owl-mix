@@ -18,6 +18,8 @@ from owlmix.utils.sample_data_generator import create_sample_data
 
 def main():
     df = create_sample_data(n=500)
+    # df["const"] = 21
+    # df["const2"] = 34
     # df = pd.read_csv("tests/data/national_all_channels.csv")
     report = OwlMixReport(
         df,
@@ -80,7 +82,7 @@ def main():
 
     report.config.set_causality_test_config(
         max_lag=10,
-        error_threshold=0.25
+        # error_threshold=0.25
     )
 
     report.config.set_time_comparison_config(
