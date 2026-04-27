@@ -87,4 +87,4 @@ htmlcov/
 
 pyproject.toml
 main.py
-output/
+outputs/
