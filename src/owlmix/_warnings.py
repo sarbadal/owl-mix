@@ -1,9 +1,10 @@
 import sys
 import warnings
 
-from ._version import __version__, VERSION_THRESHOLD
+from ._version import __version__
 
-MIN_TESTED_PYTHON = (3, 14)
+MIN_TESTED_PYTHON = (3, 12)
+VERSION_THRESHOLD = "1.0.0"
 
 
 def check_python_version():
@@ -17,10 +18,11 @@ def check_python_version():
             stacklevel=2,
         )
 
-    warnings.warn(
-        f"\nYou are using Python {sys.version_info.major}.{sys.version_info.minor} "
-        f"This package is tested on Python {major}.{minor} "
-        "Some features may not work as expected.",
-        category=UserWarning,
-        stacklevel=2,
-    )
+    if sys.version_info < MIN_TESTED_PYTHON:
+        warnings.warn(
+            f"\nYou are using Python {sys.version_info.major}.{sys.version_info.minor} "
+            f"This package is tested on Python {major}.{minor} "
+            "Some features may not work as expected.",
+            category=UserWarning,
+            stacklevel=2,
+        )
