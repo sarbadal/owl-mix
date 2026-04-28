@@ -1,6 +1,6 @@
 # owlmix/typing/normalize.py
-from .constrants import PERIOD_VALUES, COMPARISON_TYPE_VALUES, MODE_VALUES
-from .enums import Period, ComparisonType, PlotMode
+from .constrants import PERIOD_VALUES, COMPARISON_TYPE_VALUES, MODE_VALUES, CHART_IDS
+from .enums import Period, ComparisonType, PlotMode, ChartID
 
 VALID_PERIODS = set(PERIOD_VALUES)
 
@@ -39,3 +39,16 @@ def normalize_plot_mode(plot_mode: PlotMode) -> str:
         )
 
     return plot_mode
+
+
+def normalize_chart_id(id: ChartID) -> str:
+    if isinstance(id, ChartID):
+        id = id.value
+
+    if id not in CHART_IDS:
+        raise ValueError(
+            f"Invalid chart id '{id}'. "
+            f"Must be one of {CHART_IDS}"
+        )
+
+    return id

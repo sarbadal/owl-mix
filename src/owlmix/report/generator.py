@@ -69,7 +69,21 @@ class OwlMixReport:
         self.chart_dir = os.path.join(self.report_settings.output_dir, "charts")
 
         self._initialize_directories()
-        self.config = SummaryBuilderConfig(
+        self.config = self._get_summary_builder_config()
+        self.summary_builder = self._get_summary_builder()
+
+    def _get_summary_builder(self) -> SummaryBuilder:
+        return SummaryBuilder(
+            self.df,
+            target=self.target,
+            date_column=self.date_column,
+            output_dir=self.chart_dir,
+            config=self.config,
+            user_title_config_path=self.user_title_config_path
+        )
+
+    def _get_summary_builder_config(self) -> SummaryBuilderConfig:
+        return SummaryBuilderConfig(
             df=self.df,
             target=self.target,
             date_column=self.date_column
@@ -120,18 +134,9 @@ class OwlMixReport:
         """
         out_file_name = out_file_name or self.report_settings.json_file_name
 
-        builder = SummaryBuilder(
-            self.df,
-            target=self.target,
-            date_column=self.date_column,
-            output_dir=self.chart_dir,
-            config=self.config,
-            user_title_config_path=self.user_title_config_path
-        )
+        self._apply_builder_configs(self.summary_builder)
 
-        self._apply_builder_configs(builder)
-
-        builder = builder.add_all()
+        builder = self.summary_builder.add_all()
         report_dict = builder.build()
 
         json_path = os.path.join(self.report_settings.output_dir, out_file_name)
