@@ -1,4 +1,3 @@
-import sys
 import warnings
 
 from . import transform
