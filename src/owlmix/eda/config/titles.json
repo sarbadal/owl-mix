@@ -3,25 +3,27 @@
         "title": "VIF Chart",
         "alt_text": "VIF Chart",
         "description": [
-            "The Variance Inflation Factor (VIF) chart visualizes the degree of multicollinearity ",
+            "The <strong>Variance Inflation Factor (VIF)</strong> chart visualizes the degree of multicollinearity ",
             "among the feature variables by displaying their respective VIF values. Higher VIF values ",
             "indicate stronger linear relationships with other predictors, which may lead to instability ",
             "in model coefficients and reduced interpretability. This chart enables quick identification ",
             "of problematic variables by highlighting those exceeding commonly accepted thresholds, ",
-            "helping guide feature selection and dimensionality reduction decisions."
+            "helping guide feature selection and dimensionality reduction decisions. ",
+            "<div style=\"font-family: sans-serif;\">\n  <h3 style=\"margin-left: 0; padding-left: 0;\">VIF Methodology</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n    <li>\n      <strong>Run Auxiliary Regression:</strong> \n      Regress the predictor X<sub>i</sub> against all other independent variables.\n    </li>\n    <li>\n      <strong>Calculate R-Squared:</strong> \n      Obtain the R<sub>i</sub>&sup2; value from that regression.\n    </li>\n    <li>\n      <strong>Apply VIF Formula:</strong><br>\n      VIF<sub>i</sub> = 1 / (1 &minus; R<sub>i</sub>&sup2;)\n    </li>\n  </ol>\n</div>"
         ]
     },
     "acf_pacf_chart": {
-        "title": "ACF PACF Chart",
-        "alt_text": "ACF PACF Chart",
+        "title": "ACF & PACF Chart",
+        "alt_text": "ACF-PACF Chart",
         "description": [
-            "The ACF (Autocorrelation Function) and PACF (Partial Autocorrelation Function) plots ",
+            "The <strong>ACF (Autocorrelation Function)</strong> and <strong>PACF (Partial Autocorrelation Function)</strong> plots ",
             "illustrate the correlation of each variable with its past values across different lag intervals. ",
             "These charts help identify temporal dependencies, seasonality, and potential lag effects within ",
             "the data. The inclusion of a smoothed trend line provides a clearer view of how correlations ",
             "decay or persist as the lag increases, aiding in the detection of significant lag structures. ",
             "This visualization is particularly useful for determining appropriate lag selections and ",
-            "understanding the underlying time-series behavior of the variables."
+            "understanding the underlying time-series behavior of the variables.",
+            "<div style=\"font-family: sans-serif; line-height: 1.6; max-width: 900px;\">\n  <!-- Section: ACF Methodology -->\n  <h3 style=\"margin-bottom: 5px;\">ACF Methodology (Moving Average)</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-top: 0;\">\n    <li>\n      <strong>Identify Total Correlation:</strong> \n      Calculate the correlation between Y<sub>t</sub> and its lagged version Y<sub>t&minus;k</sub>.\n    </li>\n    <li>\n      <strong>Observe Decay:</strong> \n      Check if the plot \"tails off\" (geometric decay) or \"cuts off\" abruptly.\n    </li>\n    <li>\n      <strong>Determine MA(q) Order:</strong> \n      The lag <em>q</em> where the ACF first drops into the [95% confidence interval]) defines the order.\n    </li>\n  </ol>\n\n  <!-- Section: PACF Methodology -->\n  <h3 style=\"margin-bottom: 5px; margin-top: 20px;\">PACF Methodology (Autoregressive)</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-top: 0;\">\n    <li>\n      <strong>Isolate Direct Effect:</strong> \n      Calculate the correlation between Y<sub>t</sub> and Y<sub>t&minus;k</sub> while removing the influence of intermediate lags.\n    </li>\n    <li>\n      <strong>Run Recursive Regressions:</strong> \n      Solve the Yule-Walker equations or use OLS to find the partial coefficients &phi;<sub>k,k</sub>.\n    </li>\n    <li>\n      <strong>Determine AR(p) Order:</strong> \n      The lag <em>p</em> after which the PACF identifies the autoregressive order.\n    </li>\n  </ol>\n</div>"
         ]
     },
     "kpi_vs_feature_chart": {
@@ -30,7 +32,8 @@
         "description": [
             "This chart compares the target (KPI) variable with an individual feature variable over time using dual axes. ",
             "By plotting both series together, it helps visually assess co-movement, trends, and potential ",
-            "relationships between the KPI and each feature across different periods."
+            "relationships between the KPI and each feature across different periods.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 1000px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: KPI vs. Feature Dual-Axis Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Variable Pairing:</strong> \n                Select the target KPI and a specific feature variable to be analyzed over the same temporal range.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Dual-Axis Configuration:</strong> \n                Assign the KPI to the primary Y-axis and the feature to the secondary Y-axis to account for differing units or scales.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Time-Series Synchronization:</strong> \n                Align both variables along a common X-axis representing consistent time intervals (e.g., daily, monthly).\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Co-movement Visualization:</strong> \n                Plot both series as line charts to observe simultaneous peaks, troughs, or lagging behaviors.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Relationship Assessment:</strong> \n                Analyze the visual correlation to determine if the feature acts as a leading or coincident indicator for the KPI.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "distribution_chart": {
@@ -42,7 +45,8 @@
             "The overlaid normal distribution curve serves as a reference to assess how closely the data follows ",
             "a Gaussian pattern, helping identify skewness, kurtosis, or deviations from normality. ",
             "This visualization is useful for detecting outliers, understanding variability, and evaluating whether ",
-            "statistical assumptions (e.g., normality) are appropriate for subsequent modeling."
+            "statistical assumptions (e.g., normality) are appropriate for subsequent modeling.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 1100px;\">\n        <h3 style=\"margin-left: 0; margin-right: 0;\">Methodology: Distribution & Normality Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Data Binning:</strong> \n                Divide the numerical variable into discrete intervals (bins) to calculate frequency counts.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Histogram Construction:</strong> \n                Plot the frequencies as bars to visualize the data's spread and central concentration.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Parameter Estimation:</strong> \n                Calculate the mean and standard deviation of the dataset to define the reference curve.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Normal Curve Overlay:</strong> \n                Superimpose a Gaussian distribution line based on the calculated parameters for direct comparison.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Deviation Analysis:</strong> \n                Evaluate skewness, kurtosis, and outliers to determine if the data meets normality assumptions.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "categorical_distribution_chart": {
@@ -54,7 +58,8 @@
             "The categories are ordered by their counts to form a bell-shaped pattern, making ",
             "it easier to visually identify the most and least dominant categories. This arrangement ",
             "highlights concentration, imbalance, or sparsity within the data, helping uncover dominant ",
-            "segments and potential data skew that may influence downstream analysis or modeling decisions."
+            "segments and potential data skew that may influence downstream analysis or modeling decisions.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 1000px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: Categorical Distribution Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Category Frequency Count:</strong> \n                Aggregate the raw data to determine the total number of observations for each unique category.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Bell-Shaped Sorting:</strong> \n                Arrange categories by frequency in a specific sequence (typically highest in the center) to visualize the distribution curve.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Imbalance Detection:</strong> \n                Compare the relative heights of the categories to identify dominant segments versus sparse or rare groups.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Concentration Assessment:</strong> \n                Evaluate how heavily the data is skewed toward specific categories to identify potential bias.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Data Quality Review:</strong> \n                Analyze the distribution to decide if grouping \"Other\" categories or rebalancing is necessary for modeling.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "correlation_chart": {
@@ -63,7 +68,8 @@
         "description": [
             "The correlation heatmap visualizes pairwise relationships between variables using color ",
             "intensity to represent the strength and direction of correlations. This chart enables quick ",
-            "identification of highly correlated variable pairs, patterns, and potential multicollinearity within the dataset."
+            "identification of highly correlated variable pairs, patterns, and potential multicollinearity within the dataset.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 1000px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: Correlation Heatmap Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Coefficient Calculation:</strong> \n                Compute Pearson or Spearman correlation coefficients for all possible pairs of numerical variables.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Matrix Construction:</strong> \n                Organize these coefficients into a square grid where both rows and columns represent the dataset variables.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Color Mapping:</strong> \n                Apply a divergent color scale (e.g., -1 to +1) to represent negative and positive relationships through intensity.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Multicollinearity Check:</strong> \n                Identify highly correlated pairs (typically &gt; 0.7 or 0.8) that may provide redundant information.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Feature Selection:</strong> \n                Use the visual clusters to determine which variables have the strongest relationship with the target KPI.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "lag_correlation_chart": {
@@ -73,7 +79,8 @@
             "This scatter plot illustrates the relationship between the target (KPI) variable and ",
             "its lagged value (lag 1), comparing current values (T) against the previous period (T−1). ",
             "It helps visualize the strength and direction of short-term temporal dependency, indicating ",
-            "how strongly the current value is influenced by its immediate past."
+            "how strongly the current value is influenced by its immediate past.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 900px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: Lagged Scatter Plot Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Variable Selection:</strong> \n                Identify the primary KPI to be analyzed for temporal dependency.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Data Lagging:</strong> \n                Create a secondary dataset by shifting the KPI values by one time period (T−1).\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Pairwise Mapping:</strong> \n                Align each current value (T) with its corresponding immediate past value (T−1).\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Coordinate Plotting:</strong> \n                Plot points on a scatter chart with (T−1) on the X-axis and (T) on the Y-axis.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Correlation Assessment:</strong> \n                Observe the grouping to determine the strength and direction of the short-term influence.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "time_series_chart": {
@@ -83,7 +90,8 @@
             "This chart presents the target (KPI) variable over time, along with its decomposition ",
             "into trend, seasonality, and residual components. The observed series reflects the actual values, ",
             "while the decomposed plots isolate underlying patterns, helping to understand long-term movement, ",
-            "recurring seasonal effects, and unexplained variations in the data."
+            "recurring seasonal effects, and unexplained variations in the data.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 1000px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: Time Series Decomposition Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Observed Series Mapping:</strong> \n                Plot the raw KPI values over time to establish the baseline performance and overall volatility.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Trend Extraction:</strong> \n                Apply a moving average or smoothing filter to isolate the long-term upward or downward direction.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Seasonal Isolation:</strong> \n                Identify and separate recurring patterns that repeat at fixed intervals (e.g., weekly or monthly cycles).\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Residual Calculation:</strong> \n                Subtract the trend and seasonal components from the observed data to reveal the remaining \"noise\" or unexplained variations.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Component Integration:</strong> \n                Evaluate all sub-plots simultaneously to distinguish between systematic movements and random fluctuations.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "outliers_chart": {
@@ -92,7 +100,8 @@
         "description": [
             "The box plot visualizes the distribution of the target and feature variables, highlighting ",
             "their median, spread, and potential outliers. It enables quick identification of extreme values ",
-            "and variability across variables, supporting data quality assessment and informed preprocessing decisions."
+            "and variability across variables, supporting data quality assessment and informed preprocessing decisions.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-content: 900px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: Box Plot & Outlier Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Quartile Calculation:</strong> \n                Determine the Median (Q2), and the 25th (Q1) and 75th (Q3) percentiles of the dataset.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Interquartile Range (IQR):</strong> \n                Calculate the spread using <code>IQR = Q3 - Q1</code> to define the box dimensions.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Whisker Mapping:</strong> \n                Extend whiskers to the furthest data points within 1.5 times the IQR from the quartiles.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Outlier Detection:</strong> \n                Identify and plot any individual data points falling beyond the whisker boundaries as extreme values.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Comparative Assessment:</strong> \n                Evaluate the symmetry and whiskers across different variables to inform preprocessing and scaling.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     },
     "comparison_chart": {
@@ -103,7 +112,8 @@
             "enabling a clear comparison of growth or decline trends over time. Each line represents a ",
             "distinct variable, highlighting how its performance evolves relative to the previous year. ",
             "This chart helps identify consistent trends, seasonal patterns, and periods of significant ",
-            "change across multiple variables."
+            "change across multiple variables.",
+            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 600px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: YoY Comparison Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Data Collection:</strong> \n                Gather time-series data for consistent intervals.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>YoY Calculation:</strong> \n                Use: <code>((Current - Last Year) / Last Year) * 100</code>.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Normalization:</strong> \n                Convert results into percentages to standardize scales.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Visualization:</strong> \n                Plot changes on a line chart over a time-based X-axis.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Trend Identification:</strong> \n                Analyze slopes to detect growth or cyclical patterns.\n            </li>\n        </ol>\n    </div>\n</section>"
         ]
     }
 }

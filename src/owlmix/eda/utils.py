@@ -39,7 +39,7 @@ class ColumnMixin:
         return self.df.select_dtypes(include=["number"]).columns.tolist()
 
 
-class SerializableMixin:
+class SerializableMixinOld:
     def _to_serializable(self, dt_format: str="%Y-%m-%d"):
         result = {
             "frequency": self.freq,
@@ -73,6 +73,35 @@ class SerializableMixin:
             return rounded
 
         return str(val)
+
+
+class SerializableMixin:
+    def _to_serializable(self):
+        result = {
+            # "frequency": self.freq,
+            "columns": self.value_columns,
+            "data": [
+                {
+                    # "date": str(idx),
+                    **{k: self._safe(v) for k, v in row.items()}
+                }
+                for idx, row in self.df.iterrows()
+            ]
+        }
+
+        return result
+
+    def _safe(self, val):
+        import pandas as pd
+
+        if pd.isna(val):
+            return None
+
+        if isinstance(val, (int, float)):
+            rounded = round(float(val), self.precision)
+            return int(rounded) if rounded.is_integer() else rounded
+
+        return str(val).split(" ")[0]
  
  
 class NumpyPandasEncoder(json.JSONEncoder):

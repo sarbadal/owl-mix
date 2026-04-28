@@ -94,6 +94,7 @@ report.run(
 ```python
 import pandas as pd
 from owlmix.report import OwlMixReport
+from owlmix.typing.enums import Period, ComparisonType, PlotMode
 
 df = pd.read_csv("your_data.csv")
 
@@ -114,10 +115,18 @@ report.config.set_categorical_columns_config(
     columns=["product_type", "region", "channel"]
 )
 
+# 
+report.config.set_time_comparison_config(
+    value_columns=["tv_spend", "digital_spend", "radio_spend", "sales"],
+    comparison_type=ComparisonType.YoY,  # "yoy" "mom, etc strings are also valid
+    precision=2,
+)
+
 # Configure KPI vs Feature analysis
 report.config.set_kpi_vs_feature_config(
     columns=["tv_spend", "digital_spend", "radio_spend"],
-    date_format="%Y-%m"
+    date_format="%Y-%m",
+    period=Period.MONTHLY
 )
 
 # Configure VIF (Variance Inflation Factor) analysis
@@ -144,6 +153,46 @@ report.run(
 )
 ```
 
+## Time based comparison table and chart
+
+### ⚠️ Important Notes
+ 
+- **YOY (week-level) can be tricky**
+  - Some years have **53 weeks**, others have 52
+  - ISO week numbering does not perfectly align with calendar dates
+  - The same week number across years may represent slightly different date ranges
+  - This can lead to **minor inconsistencies in YoY week comparisons**
+
+### 📊 Supported Comparison Types
+ 
+- **yoy_year**
+  - Granularity: Year
+  - Comparison: Current year vs previous year
+ 
+- **mom**
+  - Granularity: Month (`YYYY-MM`)
+  - Comparison: Current month vs previous month
+ 
+- **wow**
+  - Granularity: Week (week start date)
+  - Comparison: Current week vs previous week
+ 
+- **qoq**
+  - Granularity: Quarter (`YYYYQX`)
+  - Comparison: Current quarter vs previous quarter
+ 
+- **yoy_month**
+  - Granularity: Month
+  - Comparison: Same month across years (e.g., Jan 2024 vs Jan 2023)
+ 
+- **yoy_quarter**
+  - Granularity: Quarter
+  - Comparison: Same quarter across years (e.g., Q1 2024 vs Q1 2023)
+ 
+- **yoy_week**
+  - Granularity: ISO Week
+  - Comparison: Same week number across years
+
 ### Data Transformation Pipeline
 
 ```python
@@ -152,32 +201,52 @@ from owlmix.transform import MMMTransformPipeline
 # Create transformation pipeline
 pipeline = MMMTransformPipeline(df, date_column="date")
 
-# Apply transformations
-pipeline.adstock(
-    columns=["tv_spend", "digital_spend"],
-    decay_rate=0.5,
-    window=4
-)
-
-pipeline.create_lags(
-    columns=["sales"],
-    lags=[1, 2, 4, 13]
-)
-
-pipeline.saturation(
-    columns=["tv_spend", "digital_spend"],
-    method="hill",
-    k_values=[100, 200]
-)
-
-pipeline.cleanup(
-    handle_missing="mean",
-    remove_duplicates=True
-)
-
-# Get transformed data
-transformed_df = pipeline.get_data()
+# This feature is being developed.
 ```
+
+### Configuration Management with File Resolver
+
+The `ConfigFileResolver` utility simplifies managing configuration files by automatically resolving file references in JSON configs. This is useful for keeping configuration data organized across multiple files.
+
+```python
+from owlmix.file_resolver import ConfigFileResolver
+
+# Create a resolver with a JSON config file
+resolver = ConfigFileResolver(config="config.json")
+
+# Resolve *_file keys to their actual content
+resolved_config = resolver.resolve()
+
+# Save the resolved config
+resolver.save("resolved_config.json")
+
+# Get as Python dictionary string
+python_dict_string = resolver.to_python_string()
+print(python_dict_string)
+
+# Print formatted output
+resolver.print()
+```
+
+**How it works:**
+- Any JSON key ending with `_file` is automatically resolved to the file's content
+- Supports any file type (HTML, TXT, MD, JSON, etc.)
+- Works recursively through nested dictionaries and lists
+- Includes built-in caching for efficiency
+
+**Example Configuration:**
+
+```json
+{
+    "report_template": {
+        "description_file": "templates/report_description.html",
+        "title": "Analysis Report",
+        "metadata_file": "config/metadata.json"
+    }
+}
+```
+
+After resolution, `description_file` key becomes `description` with the HTML file's content, and `metadata_file` becomes `metadata` with the JSON content.
 
 ---
 
@@ -207,7 +276,6 @@ The generated HTML report includes comprehensive sections:
 
 ### `owlmix.eda`
 Exploratory Data Analysis module with:
-- `EDAAnalyzer`: Core statistical analysis engine
 - `SummaryBuilder`: Comprehensive summary generation
 - `OwlMixEDA`: Main EDA orchestrator
 
@@ -342,7 +410,6 @@ Planned enhancements:
 - HTML report generation
 - Automated MMM diagnostics
 - CLI support
- 
 ---
  
 ## 🤝 Contributing
@@ -353,13 +420,11 @@ Feel free to:
 - Open issues
 - Suggest features
 - Submit pull requests
- 
 ---
  
 ## 📄 License
  
 This project is licensed under the MIT License.
- 
 ---
  
 ## ⭐ Support

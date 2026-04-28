@@ -1,4 +1,24 @@
 # src/owlmix/report/renderer.py
+"""
+HTML Report Renderer Module
+
+This module provides the `HTMLRenderer` class, which transforms raw analysis data
+into formatted HTML reports using Jinja2 templates.
+
+It handles the heavy lifting of report generation, including:
+- Dynamic template resolution (User-defined vs. Package defaults).
+- Automated image conversion to Base64 data URIs for portable, single-file reports.
+- Data mapping between analysis outputs and template variables.
+- Default header management for marketing mix modeling (MMM) context.
+
+The renderer is specifically designed to support Exploratory Data Analysis (EDA)
+visualizations such as correlation matrices, time-series charts, and VIF tables.
+"""
+
+__author__ = "Sarbadal Pal"
+__email__ = "sarbadal@gmail.com"
+
+
 import os
 import base64
 from jinja2 import Template
@@ -69,7 +89,6 @@ class HTMLRenderer:
             "title": section_data["title"],
             "header_title": section_data["header_title"],
             "header_subtitle": section_data["header_subtitle"],
-            "kpi": "",
             "generator": section_data["generator"],
             "report_date": section_data["report_date"],
             "basic_info": section_data["basic_info"],

@@ -86,3 +86,5 @@ htmlcov/
 *.spec
 
 pyproject.toml
+main.py
+outputs/

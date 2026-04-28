@@ -3,7 +3,8 @@ import os
 import base64
 import pandas as pd
 import json
-from typing import Self
+from typing import Self, Callable
+from collections import OrderedDict
 
 from . import (
     BasicInfo,
@@ -12,7 +13,6 @@ from . import (
     VIFCalculator,
     ACFPACFCalculator,
     TimeComparisonReport,
-    TimeAggregatorReport,
     CausalityTest,
     CategoricalDistributionGenerator,
     DualAxisLineChartDataGenerator,
@@ -32,8 +32,8 @@ from .charts import (
 )
 
 from .summary_builder_config import SummaryBuilderConfig
-
 from .config_model import ChartsTitleConfig, build_charts_config
+from owlmix.typing.enums import ChartID
 
 
 class SummaryBuilder:
@@ -63,7 +63,98 @@ class SummaryBuilder:
             "categorical": None,
         }
 
+        self._charts: dict[ChartID, Callable] = OrderedDict([
+            (ChartID.DISTRIBUTION_CHART, self.add_distribution_chart),
+            (ChartID.CORRELATION_CHART, self.add_correlation_chart),
+            (ChartID.TIME_SERIES_CHART, self.add_time_series_chart),
+            (ChartID.OUTLIERS_CHART, self.add_outliers_chart),
+            (ChartID.VIF_CHART, self.add_vif_chart),
+            (ChartID.COMPARISON_CHART, self.add_time_comparison_chart),
+            (ChartID.LAG_CORRELATION_CHART, self.add_lag_correlation_chart),
+            (ChartID.ACF_PACF_CHART, self.add_acf_pacf_chart),
+            (ChartID.KPI_VS_FEATURE_CHART, self.add_kpi_vs_feature_chart),
+            (ChartID.CATEGORICAL_DISTRIBUTION_CHART, self.add_categorical_distribution_chart)
+        ])
+
+        self._non_charts: dict[str, Callable] = {
+            "report_title": self.add_report_title,
+            "header_title": self.add_header_title,
+            "header_subtitle": self.add_header_subtitle,
+            "columns_as_list": self.add_columns_as_list,
+            "footer": self.add_footer,
+            "basic_info": self.add_basic_info,
+            "correlation_matrix": self.add_correlation_matrix,
+            "vif_calculator": self.add_vif_calculator,
+            "kpi_vs_feature": self.add_kpi_vs_feature,
+            "acf_pacf_calculator": self.add_acf_pacf_calculator,
+            "causality_test": self.add_causality_test,
+            "time_comparison": self.add_time_comparison,
+            "categorical_distribution": self.add_categorical_distribution,
+        }
+
+        self._include: set[ChartID] | None = None
+        self._exclude: set[ChartID] = set()
+        self._custom_order: list[ChartID] | None = None
+
         os.makedirs(self.output_dir, exist_ok=True)
+
+    # Public API to include/exclude charts
+    def include_charts(self, *chart_ids: ChartID) -> Self:
+        """Only include these charts."""
+        self._include = {c for c in chart_ids}
+        return self
+
+    def exclude_charts(self, *chart_ids: ChartID) -> Self:
+        """Only exclude these charts."""
+        self._exclude = {c for c in chart_ids}
+        return self
+
+    def reorder_charts(self, *chart_ids: ChartID) -> Self:
+        """Reorder charts. Partial order is allowed."""
+        if not chart_ids:
+            raise ValueError("At least one chart_id must be provided")
+
+        # Remove duplicates while preserving order
+        seen = set()
+        ordered = []
+        for cid in chart_ids:
+            if cid not in seen:
+                seen.add(cid)
+                ordered.append(cid)
+
+        self._custom_order = ordered
+        return self
+
+    def _resolve_charts(self) -> list[ChartID]:
+        all_charts: list[ChartID] = list(self._charts.keys())
+
+        if self._include is not None:
+            invalid = self._include - set(all_charts)
+            if invalid:
+                raise KeyError(f"Invalid chart IDs in include: {invalid}")
+            filtered = [cid for cid in all_charts if cid in self._include]
+        else:
+            invalid = self._exclude - set(all_charts)
+            if invalid:
+                raise KeyError(f"Invalid chart IDs in exclude: {invalid}")
+            filtered = [cid for cid in all_charts if cid not in self._exclude]
+
+        # Apply custom ordering
+        if self._custom_order is None:
+            return filtered
+
+        # Validate custom order
+        invalid = set(self._custom_order) - set(all_charts)
+        if invalid:
+            raise ValueError(f"Invalid chart IDs in reorder: {invalid}")
+
+        # Keep only relevant ones (respect include/exclude)
+        custom = [cid for cid in self._custom_order if cid in filtered]
+
+        # Remaining charts in default order
+        remaining = [cid for cid in filtered if cid not in custom]
+
+        return custom + remaining
 
     # =========================
     # PRIVATE HELPER METHODS
@@ -159,19 +250,6 @@ class SummaryBuilder:
             precision=config["precision"]
         )
         self._add_section("time_comparison", report.generate())
-        return self
-
-    def add_time_aggregator(self) -> Self:
-        config = self.config.time_aggregator_config
-        report = TimeAggregatorReport(
-            df=self.df,
-            date_column=config["date_column"],
-            value_columns=config["value_columns"],
-            freq=config["freq"],
-            agg_func=config["agg_func"],
-            precision=config["precision"]
-        )
-        self._add_section("time_aggregator", report.aggregate())
         return self
 
     # =================================
@@ -280,15 +358,21 @@ class SummaryBuilder:
         self._append_chart("vif_chart", chart.generate())
         return self
 
-    def add_comparison_chart(self) -> Self:
-        config = self.config.time_comparison_config
-        chart = ComparisonChart(
+    def add_time_comparison_chart(self) -> Self:
+        config = self.config.time_comparison_chart_config
+        report = TimeComparisonReport(
             df=self.df,
             date_column=config["date_column"],
             value_columns=config["value_columns"],
-            freq=config.get("freq", "D"),
-            comparison=config.get("comparison", "yoy"),
-            output_dir=self.output_dir,
+            comparison_type=config["comparison_type"],
+            agg_func=config["agg_func"]
+        )
+
+        chart = ComparisonChart(
+            data=report.generate(),
+            comparison_type=config["comparison_type"],
+            mode=config["mode"],
+            output_dir=self.output_dir
         )
         self._append_chart("comparison_chart", chart.generate())
         return self
@@ -376,35 +460,24 @@ class SummaryBuilder:
     # BUILD ALL SECTIONS
     # =========================
 
-    def add_all(self):
-        """Add all default sections to the report."""
-        return (
-            self
-            .add_report_title()
-            .add_header_title()
-            .add_header_subtitle()
-            .add_columns_as_list()
-            .add_footer()
-            .add_basic_info()
-            .add_correlation_matrix()
-            .add_correlation_chart()
-            .add_vif_calculator()
-            .add_kpi_vs_feature()
-            .add_acf_pacf_calculator()
-            .add_causality_test()
-            .add_categorical_distribution()
-            .add_time_aggregator()
-            .add_time_comparison()
-            .add_time_series_chart()
-            .add_kpi_vs_feature_chart()
-            .add_outliers_chart()
-            .add_lag_correlation_chart()
-            .add_comparison_chart()
-            .add_vif_chart()
-            .add_acf_pacf_chart()
-            .add_distribution_chart()
-            .add_categorical_distribution_chart()
-        )
+    def add_all_non_charts(self) -> Self:
+        for _, func in self._non_charts.items():
+            func()
+        return self
+
+    def add_all_charts(self) -> Self:
+        """Run only valid charts"""
+        charts_to_run = self._resolve_charts()
+
+        for chart in charts_to_run:
+            self._charts[chart]()
+        return self
+
+    def add_all(self) -> Self:
+        self.add_all_non_charts()
+        self.add_all_charts()
+        return self
+
 
     # =========================
     # OUTPUT METHODS

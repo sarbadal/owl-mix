@@ -2,10 +2,12 @@
 import pandas as pd
 
 from .utils import ColumnMixin
+from owlmix.typing.types import PeriodType
+from owlmix.typing.normalize import normalize_period
 
 
 class DualAxisLineChartDataGenerator(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, date_column: str, target_column: str, period: str = "monthly", columns: list[str] = None, agg_func: str = "sum"):
+    def __init__(self, df: pd.DataFrame, date_column: str, target_column: str, period: PeriodType = "monthly", columns: list[str] = None, agg_func: str = "sum"):
         """
         Args:
             df: DataFrame
@@ -17,8 +19,8 @@ class DualAxisLineChartDataGenerator(ColumnMixin):
         """
         self.df = df.copy()
         self.date_column = date_column
-        self.period = period
-        # self.date_format = date_format if date_format else "%Y-%m-%d"
+        # self.period = period
+        self.period = normalize_period(period)
         self.target_column = target_column
         self.columns = [col for col in self._get_columns(columns) if col != self.target_column]
         self.agg_func = agg_func

@@ -1,7 +1,31 @@
 # src/owlmix/report/generator.py
+"""
+Report Generation Orchestrator Module
+
+This module serves as the primary high-level interface for the OwlMix EDA
+reporting system. It coordinates the data analysis process and the final
+rendering of results.
+
+The `OwlMixReport` class manages the end-to-end workflow:
+1.  **Initialization**: Configures data schemas and output directories.
+2.  **Analysis**: Leverages `SummaryBuilder` to perform statistical calculations
+    (VIF, ACF/PACF, correlations) and generate visualization assets.
+3.  **JSON Export**: Serializes the raw analysis results for data persistence.
+4.  **HTML Rendering**: Hands off the processed data and chart paths to
+    `HTMLRenderer` to produce a finalized, interactive browser report.
+
+This module is designed to be the main entry point for users looking to
+generate comprehensive Exploratory Data Analysis reports for MMM projects.
+"""
+
+__author__ = "Sarbadal Pal"
+__email__ = "sarbadal@gmail.com"
+
 import os
+import pandas as pd
 from pathlib import Path
 from dataclasses import dataclass
+from typing import Self, TypedDict, Unpack, NotRequired
 
 from owlmix.eda.summary import SummaryBuilder
 from owlmix.report.renderer import HTMLRenderer
@@ -18,9 +42,13 @@ class ReportSettings:  # Renamed from ReportConfig to avoid conflict
     html_file_name: str = "report.html"
 
 
+class UserTitleConfig(TypedDict):
+    user_title_config_path: NotRequired[str]
+
+
 class OwlMixReport:
 
-    def __init__(self, df: "pd.DataFrame", target: str, date_column: str, report_settings: ReportSettings | None = None, **kwargs):
+    def __init__(self, df: pd.DataFrame, target: str, date_column: str, report_settings: ReportSettings | None = None, **kwargs: Unpack[UserTitleConfig]):
         """
         Initialize OwlMixReport class.
 
@@ -41,7 +69,21 @@ class OwlMixReport:
         self.chart_dir = os.path.join(self.report_settings.output_dir, "charts")
 
         self._initialize_directories()
-        self.config = SummaryBuilderConfig(
+        self.config = self._get_summary_builder_config()
+        self.summary_builder = self._get_summary_builder()
+
+    def _get_summary_builder(self) -> SummaryBuilder:
+        return SummaryBuilder(
+            self.df,
+            target=self.target,
+            date_column=self.date_column,
+            output_dir=self.chart_dir,
+            config=self.config,
+            user_title_config_path=self.user_title_config_path
+        )
+
+    def _get_summary_builder_config(self) -> SummaryBuilderConfig:
+        return SummaryBuilderConfig(
             df=self.df,
             target=self.target,
             date_column=self.date_column
@@ -92,18 +134,9 @@ class OwlMixReport:
         """
         out_file_name = out_file_name or self.report_settings.json_file_name
 
-        builder = SummaryBuilder(
-            self.df,
-            target=self.target,
-            date_column=self.date_column,
-            output_dir=self.chart_dir,
-            config=self.config,
-            user_title_config_path=self.user_title_config_path
-        )
+        self._apply_builder_configs(self.summary_builder)
 
-        self._apply_builder_configs(builder)
-
-        builder = builder.add_all()
+        builder = self.summary_builder.add_all()
         report_dict = builder.build()
 
         json_path = os.path.join(self.report_settings.output_dir, out_file_name)
@@ -148,3 +181,12 @@ class OwlMixReport:
             self.report_settings.html_file_name = html_file_name
 
         self.generate_html(out_file_name=html_file_name)
+
+
+if "__main__" == __name__:
+    OwlMixReport(
+        df=pd.read_csv(),
+        target="target",
+        date_column="date",
+        user_title_config_path="user_title_config_path",
+    )

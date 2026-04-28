@@ -27,7 +27,6 @@ class BasicInfo:
             "summary_stats": summary
         }
         self.result = result
-        # print(result)
         return result
 
     def to_json(self) -> str:
