@@ -8,6 +8,7 @@ from . import outlier
 from . import time_aggregator
 from . import time_comparison
 from . import time_comparison_chart
+from . import time_series
 from . import vif
 
 
@@ -21,6 +22,7 @@ from .outlier import SetOutlierConfigArgs
 from .time_aggregator import SetTimeAggregatorConfigArgs
 from .time_comparison_chart import SetTimeComparisonChartConfigArgs
 from .time_comparison import SetTimeComparisonConfigArgs
+from .time_series import SetTimeSeriesConfigArgs
 from .vif import SetVIFConfigArgs
 
 
@@ -35,6 +37,7 @@ class Args:
     time_aggregator = time_aggregator
     time_comparison = time_comparison
     time_comparison_chart = time_comparison_chart
+    time_series = time_series
     vif = vif
 
 
@@ -50,5 +53,6 @@ __all__ = [
     "SetTimeAggregatorConfigArgs",
     "SetTimeComparisonChartConfigArgs",
     "SetTimeComparisonConfigArgs",
+    "SetTimeSeriesConfigArgs",
     "SetVIFConfigArgs"
 ]

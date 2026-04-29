@@ -353,11 +353,11 @@ class SummaryBuilder:
         config = self.config.time_comparison_config
         report = TimeComparisonReport(
             df=self.df,
-            date_column=config["date_column"],
-            value_columns=config["value_columns"],
-            comparison_type=config["comparison_type"],
-            agg_func=config["agg_func"],
-            precision=config["precision"]
+            date_column=config.date_column,
+            value_columns=config.value_columns,
+            comparison_type=config.comparison_type,
+            agg_func=config.agg_func,
+            precision=config.precision
         )
         self._add_section("time_comparison", report.generate())
         return self
@@ -470,7 +470,7 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        columns = self.config.time_series_config["columns"]
+        columns = self.config.time_series_config.columns
         chart = TimeSeriesChart(
             self.df,
             columns=columns,
@@ -491,9 +491,9 @@ class SummaryBuilder:
         config = self.config.outlier_chart_layout_config
         chart = OutlierChart(
             df=self.df,
-            columns=config["columns"],
-            max_cols_per_chart=config["max_cols_per_chart"],
-            single_image=config["single_image"],
+            columns=config.columns,
+            max_cols_per_chart=config.max_cols_per_chart,
+            single_image=config.single_image,
             output_dir=self.output_dir
         )
         self._append_chart("outliers_chart", chart.generate())
@@ -531,16 +531,16 @@ class SummaryBuilder:
         config = self.config.time_comparison_chart_config
         report = TimeComparisonReport(
             df=self.df,
-            date_column=config["date_column"],
-            value_columns=config["value_columns"],
-            comparison_type=config["comparison_type"],
-            agg_func=config["agg_func"]
+            date_column=config.date_column,
+            value_columns=config.value_columns,
+            comparison_type=config.comparison_type,
+            agg_func=config.agg_func
         )
 
         chart = ComparisonChart(
             data=report.generate(),
-            comparison_type=config["comparison_type"],
-            mode=config["mode"],
+            comparison_type=config.comparison_type,
+            mode=config.mode,
             output_dir=self.output_dir
         )
         self._append_chart("comparison_chart", chart.generate())
@@ -613,6 +613,7 @@ class SummaryBuilder:
             Self: The current instance for method chaining.
         """
         if not self.config.categorical_columns_config.columns:
+            print("No categorical columns specified. Skipping categorical distribution chart.")
             return self
 
         data = self._chart_data_cache.get("categorical")

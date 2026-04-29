@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypedDict, NotRequired
+from typing import TypedDict, NotRequired, Unpack
 
 
 class SetTimeComparisonConfigArgs(TypedDict):
@@ -21,12 +21,25 @@ class TimeComparison:
     freq: str | None = None
 
 
-def build(data: TimeComparison) -> SetTimeComparisonConfigArgs:
-    return {
-        "date_column": data.date_column,
-        "value_columns": data.value_columns,
-        "comparison_type": data.comparison_type,
-        "agg_func": data.agg_func,
-        "precision": data.precision,
-        "freq": data.freq
-    }
+def build(**values: Unpack[SetTimeComparisonConfigArgs]) -> TimeComparison:
+    """
+    Build a TimeComparison configuration object from the provided values.
+    Args:
+        date_column: Optional date column name.
+        value_columns: Optional list of value columns.
+        comparison_type: Optional comparison type.
+        agg_func: Optional aggregation function.
+        precision: Optional integer for precision.
+        freq: Optional string for frequency.
+    Returns:
+        TimeComparison object with the provided configuration.
+    """
+    values = values or {}
+    return TimeComparison(
+        date_column=values.get("date_column", None),
+        value_columns=values.get("value_columns", None),
+        comparison_type=values.get("comparison_type", "yoy"),
+        agg_func=values.get("agg_func", "sum"),  # default aggregation function to 'sum' if not provided
+        precision=values.get("precision", 2),  # default precision to 2 if not provided
+        freq=values.get("freq", "MED")  # default frequency to 'MED' if not provided
+    )

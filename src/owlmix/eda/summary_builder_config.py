@@ -22,6 +22,7 @@ from dataclasses import replace
 from typing import Self, Unpack
 
 from ..typing.types import PeriodType, ComparisonType, PlotModeType
+from .._deprecated import deprecated
 
 from .args import Args
 from .args import SetAcfPacfConfigArgs
@@ -34,6 +35,7 @@ from .args import SetOutlierConfigArgs
 from .args import SetTimeAggregatorConfigArgs
 from .args import SetTimeComparisonChartConfigArgs
 from .args import SetTimeComparisonConfigArgs
+from .args import SetTimeSeriesConfigArgs
 from .args import SetVIFConfigArgs
 
 
@@ -47,48 +49,18 @@ class SummaryBuilderConfig:
 
     def init_config(self) -> None:
         """Initialize all configuration dictionaries with defaults."""
-        self.correlation_chart_layout_config = Args.corr_chart_layout.build()
-        self.correlation_config = Args.correlation.build()
-        self.vif_config = Args.vif.build(target_column=self.target)
         self.acf_pacf_config = Args.acf_pacf.build(columns=[self.target])
         self.categorical_columns_config = Args.categorical_columns.build()
-        self.kpi_vs_feature_config = Args.kpi_vs_feature.build(target_column=self.target, date_column=self.date_column)
         self.causality_test_config = Args.causality_test.build(target_column=self.target, date_column=self.date_column)
-
-        self.outlier_chart_layout_config = {
-            "columns": None,
-            "max_cols_per_chart": 4,
-            "single_image": True
-        }
-
-        self.time_comparison_config = {
-            "date_column": self.date_column,
-            "value_columns": None,
-            "comparison_type": "yoy",
-            "agg_func": "sum",
-            "precision": 2,
-            "freq": "ME"
-        }
-
-        self.time_comparison_chart_config = {
-            "date_column": self.date_column,
-            "value_columns": None,
-            "comparison_type": "yoy",
-            "agg_func": "sum",
-            "mode": "pct_change"
-        }
-
-        self.time_aggregator_config = {
-            "date_column": self.date_column,
-            "value_columns": None,
-            "agg_func": "sum",
-            "freq": "YE",
-            "precision": 2
-        }
-
-        self.time_series_config = {
-            "columns": self.target
-        }
+        self.correlation_chart_layout_config = Args.corr_chart_layout.build()
+        self.correlation_config = Args.correlation.build()
+        self.kpi_vs_feature_config = Args.kpi_vs_feature.build(target_column=self.target, date_column=self.date_column)
+        self.outlier_chart_layout_config = Args.outlier.build()
+        self.time_aggregator_config = Args.time_aggregator.build(date_column=self.date_column)
+        self.time_comparison_chart_config = Args.time_comparison_chart.build(date_column=self.date_column)
+        self.time_comparison_config = Args.time_comparison.build(date_column=self.date_column)
+        self.time_series_config = Args.time_series.build(columns=self.target)
+        self.vif_config = Args.vif.build(target_column=self.target)
 
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
@@ -105,180 +77,62 @@ class SummaryBuilderConfig:
             elif key in defaults and config[key] is None:
                 config[key] = defaults[key]
 
-    def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
-        self.causality_test_config = replace(self.causality_test_config, **kwargs)
-        return self
-
-    def set_vif_config_(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
-        """
-        Set VIF configuration.
-
-        Args:
-            target_column: str - target column name
-            features: list[str] - features to analyze
-            precision: int - decimal precision for results
-        """
-        precision = kwargs.get("precision", 3)
-        self._validate_positive_int(precision, "precision")
-
-        updates = {
-            "target_column": kwargs.get("target_column"),
-            "features": kwargs.get("features"),
-            "precision": precision
-        }
-        self._update_config(self.vif_config, updates)
-        return self
-
-    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
-        self.vif_config = replace(self.vif_config, **kwargs)
-        return self
-
-    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
-        self.kpi_vs_feature_config = replace(self.kpi_vs_feature_config, **kwargs)
-        return self
-
-    def set_acf_pacf_config_(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
-        """
-        Set ACF/PACF configuration.
-
-        Args:
-            columns: list[str] - columns for analysis
-            n_lags: int - number of lags
-        """
-        updates = {
-            "columns": kwargs.get("columns") or [self.target],
-            "n_lags": kwargs.get("n_lags", 15)
-        }
-        self._update_config(self.acf_pacf_config, updates)
-        return self
-
+    @deprecated("update_acf_pacf_config")
     def set_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
+        pass
+
+    def update_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
         self.acf_pacf_config = replace(self.acf_pacf_config, **kwargs)
         return self
 
-    def set_correlation_config_(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
-        """
-        Set Correlation configuration.
+    @deprecated("update_categorical_columns_config")
+    def set_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
+        pass
 
-        Args:
-            columns: list[str] - columns for correlation analysis
-        """
-        updates = {"columns": kwargs.get("columns")}
-        self._update_config(self.correlation_config, updates)
+    def update_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
+        self.categorical_columns_config = replace(self.categorical_columns_config, **kwargs)
         return self
-
-    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
-        self.correlation_config = replace(self.correlation_config, **kwargs)
-        return self
-
-    def set_time_series_config(self, **kwargs) -> Self:
-        """
-        Set Time Series configuration.
-
-        Args:
-            columns: str or list[str] - columns for time series
-        """
-        updates = {"columns": kwargs.get("columns")}
-        self._update_config(self.time_series_config, updates)
-        return self
-
-    def set_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
-        """
-        Set Time Comparison configuration.
-
-        Args:
-            date_column: str - date column name
-            value_columns: list[str] - columns to compare
-            comparison_type: str - type of comparison (yoy, mom, etc.)
-            agg_func: str - aggregation function
-            precision: int - decimal precision
-            freq: str - frequency (ME=month-end, etc.)
-        """
-        precision = kwargs.get("precision", 2)
-        self._validate_positive_int(precision, "precision")
-
-        updates = {
-            "date_column": kwargs.get("date_column") or self.date_column,
-            "value_columns": kwargs.get("value_columns"),
-            "comparison_type": kwargs.get("comparison_type", "yoy"),
-            "agg_func": kwargs.get("agg_func", "sum"),
-            "precision": precision
-        }
-        self._update_config(self.time_comparison_config, updates)
-        return self
-
-    def set_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
-        """
-        Set Time Comparison chart configuration.
-
-        Args:
-            date_column: str - date column name
-            value_columns: list[str] - columns to compare
-            comparison_type: str - type of comparison (yoy, mom, etc.)
-            agg_func: str - aggregation function
-            mode: str - absolute, pct_change, dual
-        """
-        precision = kwargs.get("precision", 2)
-        self._validate_positive_int(precision, "precision")
-
-        updates = {
-            "date_column": kwargs.get("date_column") or self.date_column,
-            "value_columns": kwargs.get("value_columns"),
-            "comparison_type": kwargs.get("comparison_type", "yoy"),
-            "agg_func": kwargs.get("agg_func", "sum"),
-            "mode": kwargs.get("mode", "absolute")
-        }
-        self._update_config(self.time_comparison_chart_config, updates)
-        return self
-
-    def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
-        """
-        Set Time Aggregator configuration.
-
-        Args:
-            date_column: str - date column name
-            value_columns: list[str] - columns to aggregate
-            agg_func: str - aggregation function
-            freq: str - frequency (YE=year-end, etc.)
-            precision: int - decimal precision
-        """
-        precision = kwargs.get("precision", 2)
-        self._validate_positive_int(precision, "precision")
-
-        updates = {
-            "date_column": kwargs.get("date_column") or self.date_column,
-            "value_columns": kwargs.get("value_columns"),
-            "agg_func": kwargs.get("agg_func", "sum"),
-            "freq": kwargs.get("freq", "YE"),
-            "precision": precision
-        }
-        self._update_config(self.time_aggregator_config, updates)
-        return self
-
-    def set_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
-        """
-        Set Outlier Chart Layout configuration.
-
-        Args:
-            columns: list[str] - columns to analyze
-            max_cols_per_chart: int - maximum columns per chart
-            single_image: bool - whether to use single image
-        """
-        max_cols = kwargs.get("max_cols_per_chart", 4)
-        self._validate_positive_int(max_cols, "max_cols_per_chart")
-
-        updates = {
-            "columns": kwargs.get("columns"),
-            "max_cols_per_chart": max_cols,
-            "single_image": kwargs.get("single_image", True)
-        }
-        self._update_config(self.outlier_chart_layout_config, updates)
+    
+    def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
+        self.causality_test_config = replace(self.causality_test_config, **kwargs)
         return self
 
     def set_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
         self.correlation_chart_layout_config = replace(self.correlation_chart_layout_config, **kwargs)
         return self
 
-    def set_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
-        self.categorical_columns_config = replace(self.categorical_columns_config, **kwargs)
+    def set_corr_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
+        self.correlation_chart_layout_config = replace(self.correlation_chart_layout_config, **kwargs)
+        return self
+
+    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
+        self.correlation_config = replace(self.correlation_config, **kwargs)
+        return self
+
+    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
+        self.kpi_vs_feature_config = replace(self.kpi_vs_feature_config, **kwargs)
+        return self
+
+    def set_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
+        self.outlier_chart_layout_config = replace(self.outlier_chart_layout_config, **kwargs)
+        return self
+
+    def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
+        self.time_aggregator_config = replace(self.time_aggregator_config, **kwargs)
+        return self
+
+    def set_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
+        self.time_comparison_chart_config = replace(self.time_comparison_chart_config, **kwargs)
+        return self
+
+    def set_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
+        self.time_comparison_config = replace(self.time_comparison_config, **kwargs)
+        return self
+
+    def set_time_series_config(self, **kwargs: Unpack[SetTimeSeriesConfigArgs]) -> Self:
+        self.time_series_config = replace(self.time_series_config, **kwargs)
+        return self
+
+    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
+        self.vif_config = replace(self.vif_config, **kwargs)
         return self
