@@ -18,22 +18,23 @@ consistency across the JSON and HTML reporting workflows.
 """
 
 import pandas as pd
+from dataclasses import replace
 from typing import Self, Unpack
 
 from ..typing.types import PeriodType, ComparisonType, PlotModeType
-from .summary_builder_types import (
-    SetCausalityTestConfigArgs,
-    SetVIFConfigArgs,
-    SetKPIVsFeatureConfigArgs,
-    SetAcfPacfConfigArgs,
-    SetCorrelationConfigArgs,
-    SetTimeComparisonConfigArgs,
-    SetTimeComparisonChartConfigArgs,
-    SetTimeAggregatorConfigArgs,
-    SetOutlierConfigArgs,
-    SetCorrChartLayoutConfigArgs,
-    SetCategoricalColumnsConfigArgs,
-)
+
+from .args import Args
+from .args import SetAcfPacfConfigArgs
+from .args import SetCategoricalColumnsConfigArgs
+from .args import SetCausalityTestConfigArgs
+from .args import SetCorrChartLayoutConfigArgs
+from .args import SetCorrelationConfigArgs
+from .args import SetKPIVsFeatureConfigArgs
+from .args import SetOutlierConfigArgs
+from .args import SetTimeAggregatorConfigArgs
+from .args import SetTimeComparisonChartConfigArgs
+from .args import SetTimeComparisonConfigArgs
+from .args import SetVIFConfigArgs
 
 
 class SummaryBuilderConfig:
@@ -46,49 +47,18 @@ class SummaryBuilderConfig:
 
     def init_config(self) -> None:
         """Initialize all configuration dictionaries with defaults."""
+        self.correlation_chart_layout_config = Args.corr_chart_layout.build()
+        self.correlation_config = Args.correlation.build()
+        self.vif_config = Args.vif.build(target_column=self.target)
+        self.acf_pacf_config = Args.acf_pacf.build(columns=[self.target])
+        self.categorical_columns_config = Args.categorical_columns.build()
+        self.kpi_vs_feature_config = Args.kpi_vs_feature.build(target_column=self.target, date_column=self.date_column)
+        self.causality_test_config = Args.causality_test.build(target_column=self.target, date_column=self.date_column)
+
         self.outlier_chart_layout_config = {
             "columns": None,
             "max_cols_per_chart": 4,
             "single_image": True
-        }
-
-        self.correlation_chart_layout_config = {
-            "columns": None,
-            "precision": 2
-        }
-
-        self.correlation_config = {
-            "columns": None
-        }
-
-        self.vif_config = {
-            "target_column": self.target,
-            "features": None,
-            "precision": 3
-        }
-
-        self.acf_pacf_config = {
-            "columns": [self.target],
-            "n_lags": 15
-        }
-
-        self.categorical_columns_config = {
-            "columns": None
-        }
-
-        self.kpi_vs_feature_config = {
-            "target_column": self.target,
-            "columns": None,
-            "period": "weekly",
-            "date_column": self.date_column,
-            "agg_func": "sum"
-        }
-
-        self.causality_test_config = {
-            "target_column": self.target,
-            "columns": None,
-            "max_lag": 5,
-            "error_threshold": 0.15
         }
 
         self.time_comparison_config = {
@@ -136,28 +106,10 @@ class SummaryBuilderConfig:
                 config[key] = defaults[key]
 
     def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
-        """
-        Set Causality Test configuration.
-
-        Args:
-            target_column: str - target column name
-            columns: list[str] - columns to test
-            max_lag: int - maximum lag for testing
-            error_threshold: float - error threshold for MAPE
-        """
-        max_lag = kwargs.get("max_lag")
-        self._validate_positive_int(max_lag, "max_lag")
-
-        updates = {
-            "target_column": kwargs.get("target_column", self.causality_test_config["target_column"]),
-            "columns": kwargs.get("columns"),
-            "max_lag": max_lag or self.causality_test_config["max_lag"],
-            "error_threshold": kwargs.get("error_threshold") or self.causality_test_config["error_threshold"]
-        }
-        self._update_config(self.causality_test_config, updates)
+        self.causality_test_config = replace(self.causality_test_config, **kwargs)
         return self
 
-    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
+    def set_vif_config_(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
         """
         Set VIF configuration.
 
@@ -177,28 +129,15 @@ class SummaryBuilderConfig:
         self._update_config(self.vif_config, updates)
         return self
 
-    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
-        """
-        Set KPI vs Feature configuration.
-
-        Args:
-            target_column: str - target column name
-            columns: list[str] - feature columns
-            period: str - it could be any of "daily", "weekly", "monthly", "yearly"
-            date_column: str - date column name
-            agg_func: str - aggregation function (sum, mean, etc.)
-        """
-        updates = {
-            "target_column": kwargs.get("target_column") or self.target,
-            "columns": kwargs.get("columns"),
-            "period": kwargs.get("period") or "weekly",
-            "date_column": kwargs.get("date_column") or self.date_column,
-            "agg_func": kwargs.get("agg_func") or "sum"
-        }
-        self._update_config(self.kpi_vs_feature_config, updates)
+    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
+        self.vif_config = replace(self.vif_config, **kwargs)
         return self
 
-    def set_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
+    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
+        self.kpi_vs_feature_config = replace(self.kpi_vs_feature_config, **kwargs)
+        return self
+
+    def set_acf_pacf_config_(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
         """
         Set ACF/PACF configuration.
 
@@ -213,7 +152,11 @@ class SummaryBuilderConfig:
         self._update_config(self.acf_pacf_config, updates)
         return self
 
-    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
+    def set_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
+        self.acf_pacf_config = replace(self.acf_pacf_config, **kwargs)
+        return self
+
+    def set_correlation_config_(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
         """
         Set Correlation configuration.
 
@@ -222,6 +165,10 @@ class SummaryBuilderConfig:
         """
         updates = {"columns": kwargs.get("columns")}
         self._update_config(self.correlation_config, updates)
+        return self
+
+    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
+        self.correlation_config = replace(self.correlation_config, **kwargs)
         return self
 
     def set_time_series_config(self, **kwargs) -> Self:
@@ -329,30 +276,9 @@ class SummaryBuilderConfig:
         return self
 
     def set_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
-        """
-        Set Correlation Chart Layout configuration.
-
-        Args:
-            columns: list[str] - columns for analysis
-            precision: int - decimal precision
-        """
-        precision = kwargs.get("precision", 2)
-        self._validate_positive_int(precision, "precision")
-
-        updates = {
-            "columns": kwargs.get("columns"),
-            "precision": precision
-        }
-        self._update_config(self.correlation_chart_layout_config, updates)
+        self.correlation_chart_layout_config = replace(self.correlation_chart_layout_config, **kwargs)
         return self
 
     def set_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
-        """
-        Set Categorical Columns configuration.
-
-        Args:
-            columns: list[str] - categorical columns
-        """
-        updates = {"columns": kwargs.get("columns")}
-        self._update_config(self.categorical_columns_config, updates)
+        self.categorical_columns_config = replace(self.categorical_columns_config, **kwargs)
         return self

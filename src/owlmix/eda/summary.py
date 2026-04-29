@@ -286,7 +286,7 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        columns = self.config.correlation_config["columns"]
+        columns = self.config.correlation_config.columns
         corr = Correlation(df=self.df, columns=columns)
 
         self._add_section("correlation_matrix", corr.compute_correlation_matrix())
@@ -311,9 +311,9 @@ class SummaryBuilder:
 
         vif_calculator = VIFCalculator(
             df=self.df,
-            target_column=config["target_column"],
-            features=config["features"],
-            precision=config["precision"],
+            target_column=config.target_column,
+            features=config.features,
+            precision=config.precision,
         )
         self._add_section("vif", vif_calculator.compute_vif())
         return self
@@ -326,14 +326,13 @@ class SummaryBuilder:
             Self: The current instance for method chaining.
         """
         config = self.config.kpi_vs_feature_config
-
         kpi_vs_feature_generator = DualAxisLineChartDataGenerator(
             df=self.df,
-            target_column=config["target_column"],
-            columns=config["columns"],
-            period=config["period"],
-            date_column=config["date_column"],
-            agg_func=config["agg_func"],
+            target_column=config.target_column,
+            columns=config.columns,
+            period=config.period,
+            date_column=config.date_column,
+            agg_func=config.agg_func,
         )
         result = kpi_vs_feature_generator.generate()
         self._add_section("kpi_vs_features", result)
@@ -377,12 +376,12 @@ class SummaryBuilder:
         config = self.config.causality_test_config
         causality_test = CausalityTest(
             df=self.df,
-            target_column=config["target_column"],
-            columns=config["columns"]
+            target_column=config.target_column,  # config["target_column"],
+            columns=config.columns  # config["columns"]
         )
         result = causality_test.run(
-            max_lag=config["max_lag"],
-            error_threshold=config["error_threshold"]
+            max_lag=config.max_lag,  # config["max_lag"],
+            error_threshold=config.error_threshold  # config["error_threshold"]
         )
         self._add_section("causality_test", result)
         return self
@@ -394,8 +393,11 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        columns = self.config.categorical_columns_config["columns"]
-        generator = CategoricalDistributionGenerator(df=self.df, columns=columns)
+        config = self.config.categorical_columns_config
+        generator = CategoricalDistributionGenerator(
+            df=self.df, 
+            columns=config.columns
+        )
         result = generator.generate()
 
         self._add_section("categorical_distribution", result)
@@ -410,11 +412,10 @@ class SummaryBuilder:
             Self: The current instance for method chaining.
         """
         config = self.config.acf_pacf_config
-
         generator = ACFPACFCalculator(
             df=self.df,
-            columns=config["columns"],
-            n_lags=config["n_lags"],
+            columns= config.columns, 
+            n_lags=config.n_lags, 
         )
         result = generator.generate()
 
@@ -433,7 +434,7 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        columns = self.config.correlation_config["columns"]
+        columns = self.config.correlation_config.columns
         chart = DistributionChart(
             df=self.df,
             columns=columns,
@@ -452,8 +453,8 @@ class SummaryBuilder:
         config = self.config.correlation_chart_layout_config
         chart = CorrelationChart(
             df=self.df,
-            columns=config["columns"],
-            precision=config["precision"],
+            columns=config.columns,
+            precision=config.precision,
             output_dir=self.output_dir
         )
         self._append_chart("correlation_chart", chart.generate())
@@ -512,9 +513,9 @@ class SummaryBuilder:
         config = self.config.vif_config
         chart = VIFChart(
             df=self.df,
-            target_column=config["target_column"],
-            features=config["features"],
-            precision=config["precision"],
+            target_column=config.target_column,
+            features=config.features,
+            precision=config.precision,
             output_dir=self.output_dir
         )
         self._append_chart("vif_chart", chart.generate())
@@ -611,7 +612,7 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        if not self.config.categorical_columns_config["columns"]:
+        if not self.config.categorical_columns_config.columns:
             return self
 
         data = self._chart_data_cache.get("categorical")

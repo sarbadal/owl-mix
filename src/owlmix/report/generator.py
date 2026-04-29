@@ -18,9 +18,6 @@ This module is designed to be the main entry point for users looking to
 generate comprehensive Exploratory Data Analysis reports for MMM projects.
 """
 
-__author__ = "Sarbadal Pal"
-__email__ = "sarbadal@gmail.com"
-
 import os
 import pandas as pd
 from pathlib import Path
@@ -109,22 +106,6 @@ class OwlMixReport:
         """Create necessary output directories."""
         os.makedirs(self.chart_dir, exist_ok=True)
 
-    def _apply_builder_configs(self, builder: SummaryBuilder) -> None:
-        """Apply all configuration settings to builder."""
-        config_methods = [
-            ("set_time_comparison_config", self.config.time_comparison_config),
-            ("set_vif_config", self.config.vif_config),
-            ("set_kpi_vs_feature_config", self.config.kpi_vs_feature_config),
-            ("set_acf_pacf_config", self.config.acf_pacf_config),
-            ("set_categorical_columns_config", self.config.categorical_columns_config),
-            ("set_correlation_config", self.config.correlation_config),
-            ("set_outlier_chart_layout_config", self.config.outlier_chart_layout_config),
-            ("set_correlation_chart_layout_config", self.config.correlation_chart_layout_config),
-        ]
-
-        for method_name, config_value in config_methods:
-            getattr(builder.config, method_name)(**config_value)
-
     def generate_json(self, out_file_name: str | None = None) -> tuple[dict, str]:
         """
         Generate JSON report.
@@ -133,8 +114,6 @@ class OwlMixReport:
             Tuple of (report_dict, json_path)
         """
         out_file_name = out_file_name or self.report_settings.json_file_name
-
-        self._apply_builder_configs(self.summary_builder)
 
         builder = self.summary_builder.add_all()
         report_dict = builder.build()

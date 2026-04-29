@@ -1,4 +1,13 @@
+from dataclasses import dataclass
 from typing import TypedDict, NotRequired
+
+
+@dataclass
+class CausalityTestConfigArgs:
+    target_column: str | None = None
+    columns: list[str] | None = None
+    max_lag: int | None = None
+    error_threshold: float | None = None
 
 
 class SetCausalityTestConfigArgs(TypedDict):
