@@ -1,9 +1,16 @@
-# src/owlmix/eda/summary.py
+# owlmix/eda/summary.py
+"""
+This module defines the SummaryBuilder class, which orchestrates the generation of
+Exploratory Data Analysis (EDA) reports, including both textual and chart-based sections.
+It provides a flexible API to add, include, exclude, and reorder report sections and charts,
+and to output the report as a JSON file.
+"""
+
 import os
 import base64
 import pandas as pd
 import json
-from typing import Self, Callable
+from typing import Any, Self, Callable, Optional, Dict, List, Set
 from collections import OrderedDict
 
 from . import (
@@ -33,37 +40,63 @@ from .charts import (
 
 from .summary_builder_config import SummaryBuilderConfig
 from .config_model import ChartsTitleConfig, build_charts_config
-from owlmix.typing.enums import ChartID
+from ..typing.enums import ChartID
 
 
 class SummaryBuilder:
+    """
+    Builds and manages the generation of EDA (Exploratory Data Analysis) reports.
+
+    This class provides a flexible API to add various sections and charts to an EDA report,
+    configure which charts to include/exclude, and output the report as a JSON file.
+
+    Attributes:
+        df (pd.DataFrame): The input dataframe for analysis.
+        target (str): The target column for analysis.
+        date_column (str): The column representing dates.
+        output_dir (str): Directory to save output files.
+        config (SummaryBuilderConfig): Configuration for report sections and charts.
+        title_config (ChartsTitleConfig): Chart title and description configuration.
+        sections (List[dict]): List of report sections.
+        chart_paths (List[dict]): List of chart metadata and paths.
+        _chart_data_cache (Dict[str, Any]): Internal cache for intermediate chart data.
+        _charts (Dict[ChartID, Callable]): Mapping of chart IDs to chart-adding methods.
+        _non_charts (Dict[str, Callable]): Mapping of section names to non-chart methods.
+        _include (Optional[Set[ChartID]]): Set of chart IDs to include.
+        _exclude (Set[ChartID]): Set of chart IDs to exclude.
+        _custom_order (Optional[List[ChartID]]): Custom order for charts.
+    """
+
     def __init__(
-            self,
-            df: pd.DataFrame,
-            target: str,
-            date_column: str,
-            output_dir: str = "eda_output",
-            config: SummaryBuilderConfig = None,
-            user_title_config_path: str = None
-    ):
-        self.df = df
-        self.target = target
-        self.date_column = date_column
-        self.output_dir = output_dir
+        self, df: pd.DataFrame, target: str, date_column: str, output_dir: str = "outputs", config: Optional[SummaryBuilderConfig] = None, user_title_config_path: Optional[str] = None):
+        """
+        Initialize the SummaryBuilder.
 
-        self.sections = []
-        self.chart_paths = []
-        self.config = config
-        self.title_config = build_charts_config(user_title_config_path)
+        Args:
+            df (pd.DataFrame): The dataframe to analyze.
+            target (str): The target column for analysis.
+            date_column (str): The column containing date information.
+            output_dir (str, optional): Directory to save outputs. Defaults to "eda_output".
+            config (SummaryBuilderConfig, optional): Configuration object for the report.
+            user_title_config_path (str, optional): Path to user-defined chart titles.
+        """
+        self.df: pd.DataFrame = df
+        self.target: str = target
+        self.date_column: str = date_column
+        self.output_dir: str = output_dir
 
-        # Internal cache for intermediate data (consolidates _dual_axis_chart_data, etc.)
-        self._chart_data_cache = {
+        self.sections: List[dict] = []
+        self.chart_paths: List[dict] = []
+        self.config: Optional[SummaryBuilderConfig] = config
+        self.title_config: ChartsTitleConfig = build_charts_config(user_title_config_path)
+
+        self._chart_data_cache: Dict[str, Any] = {
             "dual_axis": None,
             "acf_pacf": None,
             "categorical": None,
         }
 
-        self._charts: dict[ChartID, Callable] = OrderedDict([
+        self._charts: Dict[ChartID, Callable[[], Self]] = OrderedDict([
             (ChartID.DISTRIBUTION_CHART, self.add_distribution_chart),
             (ChartID.CORRELATION_CHART, self.add_correlation_chart),
             (ChartID.TIME_SERIES_CHART, self.add_time_series_chart),
@@ -76,7 +109,7 @@ class SummaryBuilder:
             (ChartID.CATEGORICAL_DISTRIBUTION_CHART, self.add_categorical_distribution_chart)
         ])
 
-        self._non_charts: dict[str, Callable] = {
+        self._non_charts: Dict[str, Callable[[], Self]] = {
             "report_title": self.add_report_title,
             "header_title": self.add_header_title,
             "header_subtitle": self.add_header_subtitle,
@@ -92,31 +125,56 @@ class SummaryBuilder:
             "categorical_distribution": self.add_categorical_distribution,
         }
 
-        self._include: set[ChartID] | None = None
-        self._exclude: set[ChartID] = set()
-        self._custom_order: list[ChartID] | None = None
+        self._include: Optional[Set[ChartID]] = None
+        self._exclude: Set[ChartID] = set()
+        self._custom_order: Optional[List[ChartID]] = None
 
         os.makedirs(self.output_dir, exist_ok=True)
 
-    # Public API to include/exclude charts
     def include_charts(self, *chart_ids: ChartID) -> Self:
-        """Only include these charts."""
+        """
+        Specify which charts to include in the report.
+
+        Args:
+            *chart_ids (ChartID): Chart IDs to include.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._include = {c for c in chart_ids}
         return self
 
     def exclude_charts(self, *chart_ids: ChartID) -> Self:
-        """Only exclude these charts."""
+        """
+        Specify which charts to exclude from the report.
+
+        Args:
+            *chart_ids (ChartID): Chart IDs to exclude.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._exclude = {c for c in chart_ids}
         return self
 
     def reorder_charts(self, *chart_ids: ChartID) -> Self:
-        """Reorder charts. Partial order is allowed."""
+        """
+        Specify a custom order for charts in the report. Partial order is allowed.
+
+        Args:
+            *chart_ids (ChartID): Chart IDs in desired order.
+
+        Returns:
+            Self: The current instance for method chaining.
+
+        Raises:
+            ValueError: If no chart IDs are provided or invalid IDs are given.
+        """
         if not chart_ids:
             raise ValueError("At least one chart_id must be provided")
 
-        # Remove duplicates while preserving order
-        seen = set()
-        ordered = []
+        seen: Set[ChartID] = set()
+        ordered: List[ChartID] = []
         for cid in chart_ids:
             if cid not in seen:
                 seen.add(cid)
@@ -125,8 +183,18 @@ class SummaryBuilder:
         self._custom_order = ordered
         return self
 
-    def _resolve_charts(self) -> list[ChartID]:
-        all_charts: list[ChartID] = list(self._charts.keys())
+    def _resolve_charts(self) -> List[ChartID]:
+        """
+        Resolve the list of charts to include in the report, considering include/exclude and custom order.
+
+        Returns:
+            List[ChartID]: Ordered list of chart IDs to include.
+
+        Raises:
+            KeyError: If invalid chart IDs are specified.
+            ValueError: If invalid chart IDs are specified in custom order.
+        """
+        all_charts: List[ChartID] = list(self._charts.keys())
 
         if self._include is not None:
             invalid = self._include - set(all_charts)
@@ -139,37 +207,50 @@ class SummaryBuilder:
                 raise KeyError(f"Invalid chart IDs in exclude: {invalid}")
             filtered = [cid for cid in all_charts if cid not in self._exclude]
 
-        # Apply custom ordering
         if self._custom_order is None:
             return filtered
 
-        # Validate custom order
         invalid = set(self._custom_order) - set(all_charts)
         if invalid:
             raise ValueError(f"Invalid chart IDs in reorder: {invalid}")
 
-        # Keep only relevant ones (respect include/exclude)
         custom = [cid for cid in self._custom_order if cid in filtered]
-
-        # Remaining charts in default order
         remaining = [cid for cid in filtered if cid not in custom]
 
         return custom + remaining
 
-    # =========================
-    # PRIVATE HELPER METHODS
-    # =========================
+    def _get_config_value(self, config_dict: dict, key: str, fallback: Any = None) -> Any:
+        """
+        Safely retrieve a configuration value with optional fallback.
 
-    def _get_config_value(self, config_dict: dict, key: str, fallback=None):
-        """Safely retrieve a configuration value with optional fallback."""
+        Args:
+            config_dict (dict): Configuration dictionary.
+            key (str): Key to retrieve.
+            fallback (Any, optional): Fallback value if key is missing.
+
+        Returns:
+            Any: The configuration value or fallback.
+        """
         return config_dict.get(key, fallback)
 
-    def _add_section(self, section_key: str, section_value) -> None:
-        """Add a section to the report in a consistent manner."""
+    def _add_section(self, section_key: str, section_value: Any) -> None:
+        """
+        Internal helper to add a section to the report.
+
+        Args:
+            section_key (str): The key/name of the section.
+            section_value (Any): The content/value of the section.
+        """
         self.sections.append({section_key: section_value})
 
     def _append_chart(self, chart_id: str, path: str) -> None:
-        """Append a chart with metadata to chart_paths."""
+        """
+        Append a chart with metadata to chart_paths.
+
+        Args:
+            chart_id (str): The chart identifier.
+            path (str): Path to the chart image file.
+        """
         title = self.title_config.charts[chart_id].title
         description = self.title_config.charts[chart_id].description
         alt_text = self.title_config.charts[chart_id].alt_text
@@ -182,17 +263,29 @@ class SummaryBuilder:
             "alt_text": alt_text
         })
 
-    # ==========================================
+    # =========================
     # TEXT SECTIONS - Basic Info & Correlations
-    # ==========================================
+    # =========================
 
-    def add_basic_info(self):
+    def add_basic_info(self) -> Self:
+        """
+        Add basic information about the dataframe to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         basic = BasicInfo(self.df)
         json_content = basic.to_json()
         self._add_section("basic_info", json.loads(json_content))
         return self
 
     def add_correlation_matrix(self) -> Self:
+        """
+        Add correlation matrix and lagged correlations to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         columns = self.config.correlation_config["columns"]
         corr = Correlation(df=self.df, columns=columns)
 
@@ -208,6 +301,12 @@ class SummaryBuilder:
     # ===================================
 
     def add_vif_calculator(self) -> Self:
+        """
+        Add Variance Inflation Factor (VIF) analysis to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.vif_config
 
         vif_calculator = VIFCalculator(
@@ -220,6 +319,12 @@ class SummaryBuilder:
         return self
 
     def add_kpi_vs_feature(self) -> Self:
+        """
+        Add KPI vs. feature analysis to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.kpi_vs_feature_config
 
         kpi_vs_feature_generator = DualAxisLineChartDataGenerator(
@@ -240,6 +345,12 @@ class SummaryBuilder:
     # =============================
 
     def add_time_comparison(self) -> Self:
+        """
+        Add time comparison analysis to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.time_comparison_config
         report = TimeComparisonReport(
             df=self.df,
@@ -257,6 +368,12 @@ class SummaryBuilder:
     # =================================
 
     def add_causality_test(self) -> Self:
+        """
+        Add causality test results to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.causality_test_config
         causality_test = CausalityTest(
             df=self.df,
@@ -271,6 +388,12 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution(self) -> Self:
+        """
+        Add categorical distribution analysis to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         columns = self.config.categorical_columns_config["columns"]
         generator = CategoricalDistributionGenerator(df=self.df, columns=columns)
         result = generator.generate()
@@ -280,6 +403,12 @@ class SummaryBuilder:
         return self
 
     def add_acf_pacf_calculator(self) -> Self:
+        """
+        Add ACF/PACF analysis to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.acf_pacf_config
 
         generator = ACFPACFCalculator(
@@ -298,6 +427,12 @@ class SummaryBuilder:
     # ================================
 
     def add_distribution_chart(self) -> Self:
+        """
+        Add a distribution chart to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         columns = self.config.correlation_config["columns"]
         chart = DistributionChart(
             df=self.df,
@@ -307,7 +442,13 @@ class SummaryBuilder:
         self._append_chart("distribution_chart", chart.generate())
         return self
 
-    def add_correlation_chart(self):
+    def add_correlation_chart(self) -> Self:
+        """
+        Add a correlation chart to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.correlation_chart_layout_config
         chart = CorrelationChart(
             df=self.df,
@@ -318,7 +459,16 @@ class SummaryBuilder:
         self._append_chart("correlation_chart", chart.generate())
         return self
 
-    def add_time_series_chart(self, columns=None):
+    def add_time_series_chart(self, columns: Optional[List[str]] = None) -> Self:
+        """
+        Add a time series chart to the report.
+
+        Args:
+            columns (Optional[List[str]], optional): Columns to include. Defaults to config.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         columns = self.config.time_series_config["columns"]
         chart = TimeSeriesChart(
             self.df,
@@ -330,7 +480,13 @@ class SummaryBuilder:
         self._append_chart("time_series_chart", chart.generate())
         return self
 
-    def add_outliers_chart(self):
+    def add_outliers_chart(self) -> Self:
+        """
+        Add an outliers chart to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.outlier_chart_layout_config
         chart = OutlierChart(
             df=self.df,
@@ -347,6 +503,12 @@ class SummaryBuilder:
     # ================================
 
     def add_vif_chart(self) -> Self:
+        """
+        Add a VIF chart to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.vif_config
         chart = VIFChart(
             df=self.df,
@@ -359,6 +521,12 @@ class SummaryBuilder:
         return self
 
     def add_time_comparison_chart(self) -> Self:
+        """
+        Add a time comparison chart to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         config = self.config.time_comparison_chart_config
         report = TimeComparisonReport(
             df=self.df,
@@ -377,7 +545,16 @@ class SummaryBuilder:
         self._append_chart("comparison_chart", chart.generate())
         return self
 
-    def add_lag_correlation_chart(self, lag=1):
+    def add_lag_correlation_chart(self, lag: int = 1) -> Self:
+        """
+        Add a lag correlation chart to the report.
+
+        Args:
+            lag (int, optional): The lag value. Defaults to 1.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         chart = LagCorrelationChart(
             df=self.df,
             column=self.target,
@@ -392,6 +569,12 @@ class SummaryBuilder:
     # ===================================
 
     def add_acf_pacf_chart(self) -> Self:
+        """
+        Add an ACF/PACF chart to the report, if data is available.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         data = self._chart_data_cache.get("acf_pacf")
         if data is None:
             return self
@@ -404,6 +587,12 @@ class SummaryBuilder:
         return self
 
     def add_kpi_vs_feature_chart(self) -> Self:
+        """
+        Add a KPI vs. feature chart to the report, if data is available.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         data = self._chart_data_cache.get("dual_axis")
         if data is None:
             return self
@@ -416,6 +605,12 @@ class SummaryBuilder:
         return self
 
     def add_categorical_distribution_chart(self) -> Self:
+        """
+        Add a categorical distribution chart to the report, if data is available.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         if not self.config.categorical_columns_config["columns"]:
             return self
 
@@ -434,24 +629,66 @@ class SummaryBuilder:
     # METADATA SECTIONS
     # =========================
 
-    def add_report_title(self, title: str = "OwlMix EDA Report"):
+    def add_report_title(self, title: str = "OwlMix EDA Report") -> Self:
+        """
+        Add a report title section.
+
+        Args:
+            title (str, optional): The report title. Defaults to "OwlMix EDA Report".
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._add_section("title", title)
         return self
 
-    def add_header_title(self, title: str = "🦉 OwlMix EDA Report"):
+    def add_header_title(self, title: str = "🦉 OwlMix EDA Report") -> Self:
+        """
+        Add a header title section.
+
+        Args:
+            title (str, optional): The header title. Defaults to "🦉 OwlMix EDA Report".
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._add_section("header_title", title)
         return self
 
-    def add_header_subtitle(self, subtitle: str = None):
+    def add_header_subtitle(self, subtitle: Optional[str] = None) -> Self:
+        """
+        Add a header subtitle section.
+
+        Args:
+            subtitle (Optional[str], optional): The header subtitle. Defaults to a preset string.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         subtitle = subtitle or "Exploratory Data Analysis for Marketing Mix Modeling"
         self._add_section("header_subtitle", subtitle)
         return self
 
-    def add_columns_as_list(self):
+    def add_columns_as_list(self) -> Self:
+        """
+        Add a section listing all dataframe columns.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._add_section("columns", self.df.columns.tolist())
         return self
 
-    def add_footer(self, text: str = "Generated by OwlMix EDA"):
+    def add_footer(self, text: str = "Generated by OwlMix EDA") -> Self:
+        """
+        Add a footer section with generator info and report date.
+
+        Args:
+            text (str, optional): Footer text. Defaults to "Generated by OwlMix EDA".
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self._add_section("generator", text)
         self._add_section("report_date", pd.Timestamp.now().isoformat())
         return self
@@ -461,37 +698,62 @@ class SummaryBuilder:
     # =========================
 
     def add_all_non_charts(self) -> Self:
+        """
+        Add all non-chart sections to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         for _, func in self._non_charts.items():
             func()
         return self
 
     def add_all_charts(self) -> Self:
-        """Run only valid charts"""
-        charts_to_run = self._resolve_charts()
+        """
+        Add all chart sections to the report, respecting include/exclude and custom order.
 
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        charts_to_run = self._resolve_charts()
         for chart in charts_to_run:
             self._charts[chart]()
         return self
 
     def add_all(self) -> Self:
+        """
+        Add all sections (non-charts and charts) to the report.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
         self.add_all_non_charts()
         self.add_all_charts()
         return self
-
 
     # =========================
     # OUTPUT METHODS
     # =========================
 
     def build(self) -> dict:
-        """Build the final report dictionary."""
+        """
+        Build the final report dictionary.
+
+        Returns:
+            dict: The report as a dictionary with 'sections' and 'charts'.
+        """
         return {
             "sections": self.sections,
             "charts": self.chart_paths
         }
 
-    def save(self, filename: str = "eda_report.json"):
-        """Save the report to a JSON file."""
+    def save(self, filename: str = "eda_report.json") -> None:
+        """
+        Save the report to a JSON file.
+
+        Args:
+            filename (str, optional): The filename for the report. Defaults to "eda_report.json".
+        """
         result = self.build()
         if os.path.dirname(filename):
             file_path = filename
@@ -503,7 +765,15 @@ class SummaryBuilder:
             json.dump(result, f, indent=2)
 
     def _image_to_base64(self, image_path: str) -> str:
-        """Convert an image file to a base64 string for embedding in HTML."""
+        """
+        Convert an image file to a base64 string for embedding in HTML.
+
+        Args:
+            image_path (str): Path to the image file.
+
+        Returns:
+            str: Base64-encoded image string with MIME type, or empty string if not found.
+        """
         if not os.path.exists(image_path):
             print(f"Warning: Image file {image_path} not found.")
             return ""
@@ -511,7 +781,6 @@ class SummaryBuilder:
         with open(image_path, 'rb') as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
-            # Get file extension to determine MIME type
             ext = os.path.splitext(image_path)[1].lower()
             mime_types = {
                 '.png': 'image/png',

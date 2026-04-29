@@ -3,7 +3,7 @@ from typing import Mapping, Union
 from pathlib import Path
 import json
 
-from owlmix.eda.summary_builder_config import SummaryBuilderConfig
+from .summary_builder_config import SummaryBuilderConfig
 
 
 @dataclass(frozen=True)

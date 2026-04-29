@@ -17,86 +17,23 @@ By decoupling configuration from the execution logic, this module ensures
 consistency across the JSON and HTML reporting workflows.
 """
 
-__author__ = "Sarbadal Pal"
-__email__ = "sarbadal@gmail"
-
 import pandas as pd
-from typing import Self, TypedDict, Unpack, NotRequired, Literal, Callable, Any
+from typing import Self, Unpack
 
-from owlmix.typing.types import PeriodType, ComparisonType, PlotModeType
-
-
-class SetCausalityTestConfigArgs(TypedDict):
-    target_column: NotRequired[str]
-    columns: NotRequired[list[str]]
-    max_lag: NotRequired[int]
-    error_threshold: NotRequired[float]
-
-
-class SetVIFConfigArgs(TypedDict):
-    target_column: NotRequired[str]
-    features: NotRequired[list[str]]
-    precision: NotRequired[int]
-
-# Period = Literal["daily", "weekly", "monthly", "yearly"]
-
-class SetKPIVsFeatureConfigArgs(TypedDict):
-    target_column: NotRequired[str]
-    columns: NotRequired[list[str]]
-    period: NotRequired[PeriodType]
-    date_column: NotRequired[str]
-    agg_func: NotRequired[str]
-
-
-class SetAcfPacfConfigArgs(TypedDict):
-    columns: NotRequired[list[str]]
-    n_lags: NotRequired[int]
-
-
-class SetCorrelationConfigArgs(TypedDict):
-    columns: NotRequired[list[str]]
-
-
-# ComparisonType = Literal["yoy", "mom", "wow"]
-
-class SetTimeComparisonConfigArgs(TypedDict):
-    date_column: NotRequired[str]
-    value_columns: NotRequired[list[str]]
-    comparison_type: NotRequired[ComparisonType]
-    agg_func: NotRequired[str]
-    precision: NotRequired[int]
-    freq: NotRequired[str]
-
-
-class SetTimeComparisonChartConfigArgs(TypedDict):
-    date_column: NotRequired[str]
-    value_columns: NotRequired[list[str]]
-    comparison_type: NotRequired[ComparisonType]
-    agg_func: NotRequired[str]
-    mode: NotRequired[PlotModeType]
-
-
-class SetTimeAggregatorConfigArgs(TypedDict):
-    date_column: NotRequired[str]
-    value_columns: NotRequired[list[str]]
-    agg_func: NotRequired[str]
-    precision: NotRequired[int]
-    freq: NotRequired[int]
-
-
-class SetOutlierConfigArgs(TypedDict):
-    columns: NotRequired[list[str]]
-    max_cols_per_chart: NotRequired[int]
-    single_image: NotRequired[bool]
-
-
-class SetCorrChartLayoutConfigArgs(TypedDict):
-    columns: NotRequired[list[str]]
-    precision: NotRequired[int]
-
-
-class SetCategoricalColumnsConfigArgs(TypedDict):
-    columns: NotRequired[list[str]]
+from ..typing.types import PeriodType, ComparisonType, PlotModeType
+from .summary_builder_types import (
+    SetCausalityTestConfigArgs,
+    SetVIFConfigArgs,
+    SetKPIVsFeatureConfigArgs,
+    SetAcfPacfConfigArgs,
+    SetCorrelationConfigArgs,
+    SetTimeComparisonConfigArgs,
+    SetTimeComparisonChartConfigArgs,
+    SetTimeAggregatorConfigArgs,
+    SetOutlierConfigArgs,
+    SetCorrChartLayoutConfigArgs,
+    SetCategoricalColumnsConfigArgs,
+)
 
 
 class SummaryBuilderConfig:

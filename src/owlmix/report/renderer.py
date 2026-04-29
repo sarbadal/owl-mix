@@ -1,4 +1,4 @@
-# src/owlmix/report/renderer.py
+# owlmix/report/renderer.py
 """
 HTML Report Renderer Module
 
@@ -14,10 +14,6 @@ It handles the heavy lifting of report generation, including:
 The renderer is specifically designed to support Exploratory Data Analysis (EDA)
 visualizations such as correlation matrices, time-series charts, and VIF tables.
 """
-
-__author__ = "Sarbadal Pal"
-__email__ = "sarbadal@gmail.com"
-
 
 import os
 import base64

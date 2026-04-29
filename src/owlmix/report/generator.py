@@ -1,4 +1,4 @@
-# src/owlmix/report/generator.py
+# owlmix/report/generator.py
 """
 Report Generation Orchestrator Module
 
