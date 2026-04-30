@@ -10,11 +10,6 @@ from ..utils import ColumnMixin
 from ..args.vif import SetVIFConfigArgs
 
 
-class ColorThreshold(SetVIFConfigArgs):
-    color_thresholds: NotRequired[list[tuple[int, str]]]
-
-
-
 class VIFChart(ColumnMixin):
     def __init__(self, df: pd.DataFrame, output_dir: str = "charts", **config: Unpack[SetVIFConfigArgs]):
         self.df = df.copy()
@@ -43,25 +38,12 @@ class VIFChart(ColumnMixin):
         self.vif_df = pd.DataFrame(vif_data)
         return self.vif_df
 
-    def _add_colors(self) -> list[str]:
+    def add_colors(self, df: pd.DataFrame) -> list[str]:
         colors = []
-        for v in self.vif_df["vif"]:
-            if v < 5:
-                colors.append("green")
-            elif v < 10:
-                colors.append("orange")
-            else:
-                colors.append("red")
-
-        return colors
-
-    def add_colors(self):
-        colors = []
-        for v in self.vif_df["vif"]:
+        for v in df["vif"]:
             for threshold, color in self.color_thresholds:
                 if v < threshold:
                     colors.append(color)
-                    print(f"VIF: {v} < Threshold: {threshold} => Color: {color}")
                     break
         return colors
 
@@ -71,15 +53,15 @@ class VIFChart(ColumnMixin):
         Returns the saved file path.
         """
         _ = self._compute_vif()
-        colors = self.add_colors()
 
         if self.vif_df is None or self.vif_df.empty:
             raise ValueError("VIF DataFrame is empty.")
 
         # Sort by VIF descending
         df = self.vif_df.sort_values(by="vif", ascending=False)
+        colors = self.add_colors(df)  # Add colors based on thresholds based on the sorted VIF values
 
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(12, 6))
 
         plt.barh(df["feature"], df["vif"], color=colors)
         plt.gca().invert_yaxis() # highest VIF on top

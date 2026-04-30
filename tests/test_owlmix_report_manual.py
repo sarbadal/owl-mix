@@ -14,24 +14,26 @@ sys.path.append(str(SRC_DIR))
 import pandas as pd
 import random
 from owlmix.report.generator import OwlMixReport
+from owlmix.utils.sample_data_generator import create_sample_data
 
 def get_sample_df():
     # Create a simple DataFrame for testing
+    random.seed(42)
     data = {
-        "date": pd.date_range(start="2023-01-01", periods=50, freq="D"),
-        "target": [random.randint(10, 20) for _ in range(50)],
-        "tv_grp": [random.randint(1, 10) for _ in range(50)],
-        "radio_grp": [random.randint(2, 8) for _ in range(50)],
-        "tv_spend": [random.randint(100, 1000) for _ in range(50)],
+        "date": pd.date_range(start="2023-01-01", periods=100, freq="D"),
+        "target": [random.randint(10, 20) for _ in range(100)],
+        "tv_grp": [random.randint(1, 10) for _ in range(100)],
+        "radio_grp": [random.randint(2, 8) for _ in range(100)],
+        "tv_spend": [random.randint(100, 1000) for _ in range(100)],
     }
     return pd.DataFrame(data)
 
 def main():
-    df = get_sample_df()
+    df = create_sample_data(n=2046)
     report = OwlMixReport(
         df=df,
-        target="target",
-        date_column="date",
+        target="sales",
+        date_column="time",
         # Optionally, set user_title_config_path or other kwargs here
     )
 
@@ -44,7 +46,7 @@ def main():
         (float("inf"), "darkred")
     ]
 
-    # report.config.update_vif_config(color_thresholds=vif_color_rules)
+    report.config.update_vif_config(color_thresholds=vif_color_rules)
 
     # Test generate_json
     # report_dict, json_path = report.generate_json(
