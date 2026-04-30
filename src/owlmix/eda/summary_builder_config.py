@@ -30,6 +30,7 @@ from .args import SetCategoricalColumnsConfigArgs
 from .args import SetCausalityTestConfigArgs
 from .args import SetCorrChartLayoutConfigArgs
 from .args import SetCorrelationConfigArgs
+from .args import SetDistributionChartConfigArgs
 from .args import SetKPIVsFeatureConfigArgs
 from .args import SetOutlierConfigArgs
 from .args import SetTimeAggregatorConfigArgs
@@ -61,6 +62,7 @@ class SummaryBuilderConfig:
         self.time_comparison_config = Args.time_comparison.build(date_column=self.date_column)
         self.time_series_config = Args.time_series.build(columns=self.target)
         self.vif_config = Args.vif.build(target_column=self.target)
+        self.distribution_chart_config = Args.distribution_chart.build()
 
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
@@ -77,62 +79,118 @@ class SummaryBuilderConfig:
             elif key in defaults and config[key] is None:
                 config[key] = defaults[key]
 
+    # Deprecated set methods for backward compatibility - these will be removed in future versions
+
     @deprecated("update_acf_pacf_config")
     def set_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
         pass
-
-    def update_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
-        self.acf_pacf_config = replace(self.acf_pacf_config, **kwargs)
-        return self
 
     @deprecated("update_categorical_columns_config")
     def set_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
         pass
 
+    @deprecated("update_causality_test_config")
+    def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_correlation_chart_layout_config")
+    def set_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_corr_chart_layout_config")
+    def set_corr_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_correlation_config")
+    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_distribution_chart_config")
+    def set_distribution_chart_config(self, **kwargs: Unpack[SetDistributionChartConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_kpi_vs_feature_config")
+    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_outlier_chart_layout_config")
+    def set_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_time_aggregator_config")
+    def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_time_comparison_chart_config")
+    def set_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_time_comparison_config")
+    def set_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_time_series_config")
+    def set_time_series_config(self, **kwargs: Unpack[SetTimeSeriesConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_vif_config")
+    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
+        pass
+
+    # New update methods with defaults and validation
+
+    def update_acf_pacf_config(self, **kwargs: Unpack[SetAcfPacfConfigArgs]) -> Self:
+        self.acf_pacf_config = replace(self.acf_pacf_config, **kwargs)
+        return self
+
     def update_categorical_columns_config(self, **kwargs: Unpack[SetCategoricalColumnsConfigArgs]) -> Self:
         self.categorical_columns_config = replace(self.categorical_columns_config, **kwargs)
         return self
     
-    def set_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
+    def update_causality_test_config(self, **kwargs: Unpack[SetCausalityTestConfigArgs]) -> Self:
         self.causality_test_config = replace(self.causality_test_config, **kwargs)
         return self
 
-    def set_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
+    def update_correlation_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
         self.correlation_chart_layout_config = replace(self.correlation_chart_layout_config, **kwargs)
         return self
 
-    def set_corr_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
+    def update_corr_chart_layout_config(self, **kwargs: Unpack[SetCorrChartLayoutConfigArgs]) -> Self:
         self.correlation_chart_layout_config = replace(self.correlation_chart_layout_config, **kwargs)
         return self
 
-    def set_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
+    def update_correlation_config(self, **kwargs: Unpack[SetCorrelationConfigArgs]) -> Self:
         self.correlation_config = replace(self.correlation_config, **kwargs)
         return self
 
-    def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
+    def update_distribution_chart_config(self, **kwargs: Unpack[SetDistributionChartConfigArgs]) -> Self:
+        self.distribution_chart_config = replace(self.distribution_chart_config, **kwargs)
+        return self
+
+    def update_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
         self.kpi_vs_feature_config = replace(self.kpi_vs_feature_config, **kwargs)
         return self
 
-    def set_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
+    def update_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
         self.outlier_chart_layout_config = replace(self.outlier_chart_layout_config, **kwargs)
         return self
 
-    def set_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
+    def update_time_aggregator_config(self, **kwargs: Unpack[SetTimeAggregatorConfigArgs]) -> Self:
         self.time_aggregator_config = replace(self.time_aggregator_config, **kwargs)
         return self
 
-    def set_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
+    def update_time_comparison_chart_config(self, **kwargs: Unpack[SetTimeComparisonChartConfigArgs]) -> Self:
         self.time_comparison_chart_config = replace(self.time_comparison_chart_config, **kwargs)
         return self
 
-    def set_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
+    def update_time_comparison_config(self, **kwargs: Unpack[SetTimeComparisonConfigArgs]) -> Self:
         self.time_comparison_config = replace(self.time_comparison_config, **kwargs)
         return self
 
-    def set_time_series_config(self, **kwargs: Unpack[SetTimeSeriesConfigArgs]) -> Self:
+    def update_time_series_config(self, **kwargs: Unpack[SetTimeSeriesConfigArgs]) -> Self:
         self.time_series_config = replace(self.time_series_config, **kwargs)
         return self
 
-    def set_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
+    def update_vif_config(self, **kwargs: Unpack[SetVIFConfigArgs]) -> Self:
         self.vif_config = replace(self.vif_config, **kwargs)
         return self

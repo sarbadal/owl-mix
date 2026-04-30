@@ -434,7 +434,7 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
-        columns = self.config.correlation_config.columns
+        columns = self.config.distribution_chart_config.columns
         chart = DistributionChart(
             df=self.df,
             columns=columns,

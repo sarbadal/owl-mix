@@ -3,6 +3,7 @@ from . import categorical_columns
 from . import causality_test
 from . import corr_chart_layout
 from . import correlation
+from . import distribution_chart
 from . import kpi_vs_feature
 from . import outlier
 from . import time_aggregator
@@ -17,6 +18,7 @@ from .categorical_columns import SetCategoricalColumnsConfigArgs
 from .causality_test import SetCausalityTestConfigArgs
 from .corr_chart_layout import SetCorrChartLayoutConfigArgs
 from .correlation import SetCorrelationConfigArgs
+from .distribution_chart import SetDistributionChartConfigArgs
 from .kpi_vs_feature import SetKPIVsFeatureConfigArgs
 from .outlier import SetOutlierConfigArgs
 from .time_aggregator import SetTimeAggregatorConfigArgs
@@ -32,6 +34,7 @@ class Args:
     causality_test = causality_test
     corr_chart_layout = corr_chart_layout
     correlation = correlation
+    distribution_chart = distribution_chart
     kpi_vs_feature = kpi_vs_feature
     outlier = outlier
     time_aggregator = time_aggregator
@@ -48,6 +51,7 @@ __all__ = [
     "SetCausalityTestConfigArgs",
     "SetCorrChartLayoutConfigArgs",
     "SetCorrelationConfigArgs",
+    "SetDistributionChartConfigArgs",
     "SetKPIVsFeatureConfigArgs",
     "SetOutlierConfigArgs",
     "SetTimeAggregatorConfigArgs",
