@@ -613,7 +613,9 @@ class SummaryBuilder:
             Self: The current instance for method chaining.
         """
         if not self.config.categorical_columns_config.columns:
-            print("No categorical columns specified. Skipping categorical distribution chart.")
+            print("No categorical columns specified. Skipping categorical distribution chart.\n"
+                  "Use update_categorical_columns_config(columns=...) method to update the "
+                  "categorical columns in the config first.")
             return self
 
         data = self._chart_data_cache.get("categorical")
