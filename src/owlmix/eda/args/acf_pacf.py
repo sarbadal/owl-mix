@@ -10,7 +10,7 @@ class SetAcfPacfConfigArgs(TypedDict):
 @dataclass
 class AcfPacf:
     columns: list[str] | None = None
-    n_lags: int | None = None
+    n_lags: int | None = 10
 
 
 def build(**values: Unpack[SetAcfPacfConfigArgs]) -> AcfPacf:

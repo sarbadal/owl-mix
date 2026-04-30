@@ -11,8 +11,8 @@ class SetOutlierConfigArgs(TypedDict):
 @dataclass
 class Outlier:
     columns: list[str] | None = None
-    max_cols_per_chart: int | None = None
-    single_image: bool | None = None
+    max_cols_per_chart: int | None = 4
+    single_image: bool | None = True
 
 
 def build(**values: Unpack[SetOutlierConfigArgs]) -> Outlier:

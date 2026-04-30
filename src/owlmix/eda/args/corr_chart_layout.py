@@ -10,7 +10,7 @@ class SetCorrChartLayoutConfigArgs(TypedDict):
 @dataclass
 class CorrChartLayout:
     columns: list[str] | None = None
-    precision: int | None = None
+    precision: int | None = 3
 
 
 def build(**values: Unpack[SetCorrChartLayoutConfigArgs]) -> CorrChartLayout:

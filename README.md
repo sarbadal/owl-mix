@@ -50,6 +50,7 @@ pip install owl-mix
 - seaborn >= 0.12
 - statsmodels >= 0.14.6
 - scipy >= 1.10
+- "scikit-learn>=1.8.0"
 - Jinja2 >= 3.1
 
 ---
@@ -369,6 +370,7 @@ Detailed documentation is available in the `docs/` folder:
 - `docs/eda.md` → EDA module details
 - `docs/transform.md` → Data transformation features
 - `docs/saturation.md` → Saturation modeling
+- `docs/include_exclude_reorder_charts.md` → Include Exclude and Reorder charts
 
 ---
 

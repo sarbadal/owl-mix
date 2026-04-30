@@ -3,21 +3,30 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from typing import TypedDict, NotRequired, Unpack
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
-from owlmix.eda.utils import ColumnMixin
+from ..utils import ColumnMixin
+from ..args.vif import SetVIFConfigArgs
+
+
+class ColorThreshold(SetVIFConfigArgs):
+    color_thresholds: NotRequired[list[tuple[int, str]]]
+
 
 
 class VIFChart(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, target_column: str, features: list[str] = None, precision: int = 2, output_dir: str = "charts"):
+    def __init__(self, df: pd.DataFrame, output_dir: str = "charts", **config: Unpack[SetVIFConfigArgs]):
         self.df = df.copy()
-        self.target_column = target_column
+        self.target_column = config.get("target_column")
+        self.features = config.get("features")
         self.features = [
             col
-            for col in self._get_columns(features)
-            if col != target_column
+            for col in self._get_columns(config.get("features", None))
+            if col != self.target_column
         ]
-        self.precision = precision
+        self.precision = config.get("precision", 3)
+        self.color_thresholds = config.get("color_thresholds", None)
         self.output_dir = output_dir
 
         os.makedirs(self.output_dir, exist_ok=True)
@@ -34,7 +43,7 @@ class VIFChart(ColumnMixin):
         self.vif_df = pd.DataFrame(vif_data)
         return self.vif_df
 
-    def add_colors(self) -> list[str]:
+    def _add_colors(self) -> list[str]:
         colors = []
         for v in self.vif_df["vif"]:
             if v < 5:
@@ -44,6 +53,16 @@ class VIFChart(ColumnMixin):
             else:
                 colors.append("red")
 
+        return colors
+
+    def add_colors(self):
+        colors = []
+        for v in self.vif_df["vif"]:
+            for threshold, color in self.color_thresholds:
+                if v < threshold:
+                    colors.append(color)
+                    print(f"VIF: {v} < Threshold: {threshold} => Color: {color}")
+                    break
         return colors
 
     def generate(self) -> str:

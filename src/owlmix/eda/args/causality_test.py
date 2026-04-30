@@ -13,8 +13,8 @@ class SetCausalityTestConfigArgs(TypedDict):
 class CausalityTest:
     target_column: str | None = None
     columns: list[str] | None = None
-    max_lag: int | None = None
-    error_threshold: float | None = None
+    max_lag: int | None = 5
+    error_threshold: float | None = 0.15
 
 
 def build(**values: Unpack[SetCausalityTestConfigArgs]) -> CausalityTest:

@@ -516,6 +516,7 @@ class SummaryBuilder:
             target_column=config.target_column,
             features=config.features,
             precision=config.precision,
+            color_thresholds=config.color_thresholds,
             output_dir=self.output_dir
         )
         self._append_chart("vif_chart", chart.generate())

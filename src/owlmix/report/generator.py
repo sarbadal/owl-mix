@@ -106,7 +106,7 @@ class OwlMixReport:
         """Create necessary output directories."""
         os.makedirs(self.chart_dir, exist_ok=True)
 
-    def generate_json(self, out_file_name: str | None = None) -> tuple[dict, str]:
+    def generate_json(self, out_file_name: str | None = None, save: bool = True) -> tuple[dict, str]:
         """
         Generate JSON report.
 
@@ -119,11 +119,12 @@ class OwlMixReport:
         report_dict = builder.build()
 
         json_path = os.path.join(self.report_settings.output_dir, out_file_name)
-        builder.save(json_path)
+        if save:
+            builder.save(json_path)
 
         return report_dict, json_path
 
-    def generate_html(self, out_file_name: str | None = None) -> str:
+    def generate_html(self, out_file_name: str | None = None, save_json: bool = False) -> str:
         """
         Generate HTML report.
 
@@ -136,7 +137,10 @@ class OwlMixReport:
         out_file_name = out_file_name or self.report_settings.html_file_name
         html_output_path = os.path.join(self.report_settings.output_dir, out_file_name)
 
-        report_dict, _ = self.generate_json()
+        report_dict, _ = self.generate_json(
+            out_file_name=out_file_name[:-5] + ".json",  # Derive JSON name from HTML name
+            save=save_json
+        )
 
         renderer = HTMLRenderer(
             template_name=self.report_settings.template_name,
@@ -146,7 +150,7 @@ class OwlMixReport:
         renderer.render(report_dict, html_output_path)
         return html_output_path
 
-    def run(self, json_file_name: str | None = None, html_file_name: str | None = None) -> None:
+    def run(self, json_file_name: str | None = None, html_file_name: str | None = None, save_json: bool = False) -> None:
         """
         Generate both JSON and HTML reports.
 
@@ -155,11 +159,11 @@ class OwlMixReport:
             html_file_name: Custom HTML output filename
         """
         if json_file_name:
-            self.report_settings.json_file_name = json_file_name
+            self.report_settings.json_file_name = json_file_name or html_file_name[:-5] + ".json"  # Derive JSON name from HTML if not provided
         if html_file_name:
             self.report_settings.html_file_name = html_file_name
 
-        self.generate_html(out_file_name=html_file_name)
+        self.generate_html(out_file_name=html_file_name, save_json=save_json)
 
 
 if "__main__" == __name__:

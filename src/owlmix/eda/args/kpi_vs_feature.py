@@ -15,9 +15,9 @@ class SetKPIVsFeatureConfigArgs(TypedDict):
 class KPIVsFeature:
     target_column: str | None = None
     columns: list[str] | None = None
-    period: PeriodType | None = None
+    period: PeriodType | None = Period.MONTHLY
     date_column: str | None = None
-    agg_func: str | None = None
+    agg_func: str | None = "sum"
 
 
 def build(**values: Unpack[SetKPIVsFeatureConfigArgs]) -> KPIVsFeature:
