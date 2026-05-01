@@ -47,6 +47,9 @@ def main():
     ]
 
     report.config.update_vif_config(color_thresholds=vif_color_rules)
+    cat_columns = ["color", "smartphone", "car_model", "language"]
+
+    report.config.update_categorical_columns_config(columns=cat_columns)
 
     # Test generate_json
     # report_dict, json_path = report.generate_json(
@@ -67,6 +70,7 @@ def main():
     #     html_file_name="manual_test_report_run.html"
     # )
     # print("Run method executed. Check outputs directory for files.")
+
 
 if __name__ == "__main__":
     main()

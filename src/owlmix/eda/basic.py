@@ -2,10 +2,10 @@
 import json
 import pandas as pd
 
-from .utils import to_json
+from .utils import to_json, ColumnMixin
 
 
-class BasicInfo:
+class BasicInfo(ColumnMixin):
     """
     Computes and summarizes basic information about a pandas DataFrame.
 
@@ -44,7 +44,7 @@ class BasicInfo:
                 - summary_stats (dict): Descriptive statistics for numeric columns.
         """
         shape = self.df.shape
-        columns = self.df.columns.tolist()
+        columns = self._get_columns()
         dtypes = self.df.dtypes.apply(lambda x: str(x)).to_dict()
         missing = self.df.isnull().sum().to_dict()
         summary = self.df.describe().to_dict()
