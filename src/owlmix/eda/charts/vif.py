@@ -14,7 +14,6 @@ class VIFChart(ColumnMixin):
     def __init__(self, df: pd.DataFrame, output_dir: str = "charts", **config: Unpack[SetVIFConfigArgs]):
         self.df = df.copy()
         self.target_column = config.get("target_column")
-        self.features = config.get("features")
         self.features = [
             col
             for col in self._get_columns(config.get("features", None))

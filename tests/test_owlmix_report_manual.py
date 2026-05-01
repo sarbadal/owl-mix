@@ -39,9 +39,7 @@ def main():
 
     vif_color_rules = [
         (2, "blue"),
-        (3.5, "green"),
-        (5, "yellow"),
-        (7, "orange"),
+        (5, "green"),
         (10, "red"),
         (float("inf"), "darkred")
     ]

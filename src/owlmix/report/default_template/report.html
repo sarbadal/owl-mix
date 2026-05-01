@@ -281,15 +281,11 @@
                                 {% for row in range(vif.feature|length) %}
                                 <tr>
                                     <td class="date-col"
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10
-                                                        else '#DAA520' if vif.vif_value[row] > 5
-                                                        else 'green' }}; font-weight: bold;">
+                                        style="color: {{ vif.color[row] }}; font-weight: bold;">
                                         {{ vif.feature[row] }}
                                     </td>
                                     <td class="date-col"
-                                        style="color: {{ 'red' if vif.vif_value[row] > 10
-                                                        else '#DAA520' if vif.vif_value[row] > 5
-                                                        else 'green' }}; font-weight: bold;">
+                                        style="color: {{ vif.color[row] }}; font-weight: bold;">
                                         {{ vif.vif_value[row] }}
                                     </td>
                                 </tr>

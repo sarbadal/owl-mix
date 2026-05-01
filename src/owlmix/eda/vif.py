@@ -1,9 +1,11 @@
 # owlmix/eda/vif.py
 import pandas as pd
 import numpy as np
+from typing import Unpack, Dict, Any
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 from .utils import ColumnMixin
+from .args.vif import SetVIFConfigArgs
 
 
 class VIFCalculator(ColumnMixin):
@@ -11,13 +13,7 @@ class VIFCalculator(ColumnMixin):
     Calculates Variance Inflation Factor (VIF) for features in a DataFrame.
     """
 
-    def __init__(
-        self,
-        df: pd.DataFrame,
-        target_column: str,
-        features: Optional[List[str]] = None,
-        precision: int = 2
-    ):
+    def __init__(self, df: pd.DataFrame, **config: Unpack[SetVIFConfigArgs]):
         """
         Initialize the VIFCalculator.
 
@@ -28,19 +24,23 @@ class VIFCalculator(ColumnMixin):
             precision (int): Decimal precision for VIF values.
         """
         self.df = df.copy()
-        self.target_column = target_column
-        self._features = features
-        self.precision = precision
-
-    @property
-    def features(self) -> List[str]:
-        """
-        Returns the list of features used for VIF calculation, excluding the target column.
-        """
-        return [
-            col for col in self._get_columns(self._features)
+        self.target_column = config.get("target_column", None)
+        self.features = [
+            col
+            for col in self._get_columns(config.get("features", None))
             if col != self.target_column
         ]
+        self.precision = config.get("precision", 3)
+        self.color_thresholds = config.get("color_thresholds", None)
+
+    def add_colors(self, vif_values: list[float]) -> list[str]:
+        colors = []
+        for v in vif_values:
+            for threshold, color in self.color_thresholds:
+                if v < threshold:
+                    colors.append(color)
+                    break
+        return colors
 
     def compute_vif(self) -> Dict[str, Any]:
         """
@@ -57,4 +57,9 @@ class VIFCalculator(ColumnMixin):
             round(variance_inflation_factor(X.values, i), self.precision)
             for i in range(X.shape[1])
         ]
-        return {"feature": self.features, "vif_value": vif_values}
+        colors = self.add_colors(vif_values) if self.color_thresholds else ["black"] * len(vif_values)
+        return {
+            "feature": self.features, 
+            "vif_value": vif_values, 
+            "color": colors
+        }

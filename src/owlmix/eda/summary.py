@@ -314,6 +314,7 @@ class SummaryBuilder:
             target_column=config.target_column,
             features=config.features,
             precision=config.precision,
+            color_thresholds=config.color_thresholds,
         )
         self._add_section("vif", vif_calculator.compute_vif())
         return self
