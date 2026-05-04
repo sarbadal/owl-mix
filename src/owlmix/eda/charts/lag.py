@@ -2,14 +2,21 @@
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
+from typing import TypedDict, NotRequired, Unpack
  
  
+class LagCorrelationChartArgs(TypedDict):
+    output_dir: str
+    column: str
+    lag: NotRequired[int]
+
+
 class LagCorrelationChart:
-    def __init__(self, df: pd.DataFrame, column: str, output_dir: str = "charts", lag: int = 1):
+    def __init__(self, df: pd.DataFrame, **kwargs: Unpack[LagCorrelationChartArgs]):
         self.df = df
-        self.output_dir = output_dir
-        self.column = column
-        self.lag = lag
+        self.output_dir = kwargs.get("output_dir")
+        self.column = kwargs.get("column")
+        self.lag = kwargs.get("lag", 1)
 
         os.makedirs(self.output_dir, exist_ok=True)
  

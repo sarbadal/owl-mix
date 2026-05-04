@@ -9,10 +9,7 @@ from .args.vif import SetVIFConfigArgs
 
 
 class VIFCalculator(ColumnMixin):
-    """
-    Calculates Variance Inflation Factor (VIF) for features in a DataFrame.
-    """
-
+    """Calculates Variance Inflation Factor (VIF) for features in a DataFrame."""
     def __init__(self, df: pd.DataFrame, **config: Unpack[SetVIFConfigArgs]):
         """
         Initialize the VIFCalculator.

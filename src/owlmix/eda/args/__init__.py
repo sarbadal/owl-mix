@@ -5,6 +5,7 @@ from . import corr_chart_layout
 from . import correlation
 from . import distribution_chart
 from . import kpi_vs_feature
+from . import lag_corr
 from . import outlier
 from . import time_aggregator
 from . import time_comparison
@@ -20,6 +21,7 @@ from .corr_chart_layout import SetCorrChartLayoutConfigArgs
 from .correlation import SetCorrelationConfigArgs
 from .distribution_chart import SetDistributionChartConfigArgs
 from .kpi_vs_feature import SetKPIVsFeatureConfigArgs
+from .lag_corr import SetLagCorrelationChartArgs
 from .outlier import SetOutlierConfigArgs
 from .time_aggregator import SetTimeAggregatorConfigArgs
 from .time_comparison_chart import SetTimeComparisonChartConfigArgs
@@ -36,6 +38,7 @@ class Args:
     correlation = correlation
     distribution_chart = distribution_chart
     kpi_vs_feature = kpi_vs_feature
+    lag_corr = lag_corr
     outlier = outlier
     time_aggregator = time_aggregator
     time_comparison = time_comparison
@@ -53,6 +56,7 @@ __all__ = [
     "SetCorrelationConfigArgs",
     "SetDistributionChartConfigArgs",
     "SetKPIVsFeatureConfigArgs",
+    "SetLagCorrelationChartArgs",
     "SetOutlierConfigArgs",
     "SetTimeAggregatorConfigArgs",
     "SetTimeComparisonChartConfigArgs",

@@ -2,13 +2,20 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
- 
+from typing import TypedDict, NotRequired, Unpack
 
-# TODO: Add datapoints to the charts
+
+class OutlierChartArgs(TypedDict):
+    output_dir: str
+    columns: NotRequired[list[str]]
+    max_cols_per_chart: NotRequired[int]
+    single_image: NotRequired[bool]
+
 
 class OutlierChart:
-    def __init__(self, df, output_dir: str, columns=None, max_cols_per_chart=4, single_image=True):
+    def __init__(self, df: pd.DataFrame, **kwargs: Unpack[OutlierChartArgs]):
         """
+        Initializes the OutlierChart with the given DataFrame and configuration.
         Parameters:
         - df: pandas DataFrame
         - output_dir: where images will be saved
@@ -16,10 +23,10 @@ class OutlierChart:
         - single_image: if True → one grid image, else multiple images
         """
         self.df = df
-        self.output_dir = output_dir
-        self.columns = columns
-        self.max_cols_per_chart = max_cols_per_chart
-        self.single_image = single_image
+        self.output_dir = kwargs.get("output_dir")
+        self.columns = kwargs.get("columns")
+        self.max_cols_per_chart = kwargs.get("max_cols_per_chart", 4)
+        self.single_image = kwargs.get("single_image", True)
 
     def _get_numeric_columns(self):
         if self.columns is None:

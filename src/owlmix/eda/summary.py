@@ -477,6 +477,8 @@ class SummaryBuilder:
             columns=columns,
             target=self.target,
             date_column=self.date_column,
+            model=self.config.time_series_config.model,
+            period=self.config.time_series_config.period,
             output_dir=self.output_dir
         )
         self._append_chart("time_series_chart", chart.generate())
@@ -548,21 +550,19 @@ class SummaryBuilder:
         self._append_chart("comparison_chart", chart.generate())
         return self
 
-    def add_lag_correlation_chart(self, lag: int = 1) -> Self:
+    def add_lag_correlation_chart(self) -> Self:
         """
         Add a lag correlation chart to the report.
-
-        Args:
-            lag (int, optional): The lag value. Defaults to 1.
 
         Returns:
             Self: The current instance for method chaining.
         """
+        config = self.config.lag_corr_chart_config
         chart = LagCorrelationChart(
             df=self.df,
-            column=self.target,
-            output_dir=self.output_dir,
-            lag=lag
+            column=config.column,
+            lag=config.lag,
+            output_dir=self.output_dir
         )
         self._append_chart("lag_correlation_chart", chart.generate())
         return self

@@ -32,6 +32,7 @@ from .args import SetCorrChartLayoutConfigArgs
 from .args import SetCorrelationConfigArgs
 from .args import SetDistributionChartConfigArgs
 from .args import SetKPIVsFeatureConfigArgs
+from .args import SetLagCorrelationChartArgs
 from .args import SetOutlierConfigArgs
 from .args import SetTimeAggregatorConfigArgs
 from .args import SetTimeComparisonChartConfigArgs
@@ -56,7 +57,8 @@ class SummaryBuilderConfig:
         self.correlation_chart_layout_config = Args.corr_chart_layout.build()
         self.correlation_config = Args.correlation.build()
         self.kpi_vs_feature_config = Args.kpi_vs_feature.build(target_column=self.target, date_column=self.date_column)
-        self.outlier_chart_layout_config = Args.outlier.build()
+        self.lag_corr_chart_config = Args.lag_corr.build(column=self.target)
+        self.outlier_chart_layout_config = Args.outlier.build(column=self.target)
         self.time_aggregator_config = Args.time_aggregator.build(date_column=self.date_column)
         self.time_comparison_chart_config = Args.time_comparison_chart.build(date_column=self.date_column)
         self.time_comparison_config = Args.time_comparison.build(date_column=self.date_column)
@@ -111,6 +113,10 @@ class SummaryBuilderConfig:
 
     @deprecated("update_kpi_vs_feature_config")
     def set_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
+        pass
+
+    @deprecated("update_lag_corr_chart_config")
+    def set_lag_corr_chart_config(self, **kwargs: Unpack[SetLagCorrelationChartArgs]) -> Self:
         pass
 
     @deprecated("update_outlier_chart_layout_config")
@@ -169,6 +175,10 @@ class SummaryBuilderConfig:
 
     def update_kpi_vs_feature_config(self, **kwargs: Unpack[SetKPIVsFeatureConfigArgs]) -> Self:
         self.kpi_vs_feature_config = replace(self.kpi_vs_feature_config, **kwargs)
+        return self
+
+    def update_lag_corr_chart_config(self, **kwargs: Unpack[SetLagCorrelationChartArgs]) -> Self:
+        self.lag_corr_chart_config = replace(self.lag_corr_chart_config, **kwargs)
         return self
 
     def update_outlier_chart_layout_config(self, **kwargs: Unpack[SetOutlierConfigArgs]) -> Self:
