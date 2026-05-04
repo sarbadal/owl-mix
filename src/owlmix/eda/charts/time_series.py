@@ -1,9 +1,13 @@
-# src/owlmix/eda/charts/timeseries.py
+# owlmix/eda/charts/timeseries.py
 import os
+import logging
+from typing import Optional, List, Any, TypedDict
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose, DecomposeResult
-from typing import TypedDict, NotRequired, Unpack
+
+
+logger = logging.getLogger(__name__)
 
 
 class TimeSeriesChartArgs(TypedDict):
@@ -120,4 +124,3 @@ class TimeSeriesChart:
                 "error": str(e),
                 "status": "failed"
             })
-            raise

@@ -35,7 +35,8 @@ from .charts import (
     CategoricalDistributionChart,
     VIFChart,
     DualAxisLinePlotter,
-    ACFPACFPlotter,
+    ACFPACFPlotter, 
+    AcfPacfColorConfig,
 )
 
 from .summary_builder_config import SummaryBuilderConfig
@@ -578,11 +579,20 @@ class SummaryBuilder:
         Returns:
             Self: The current instance for method chaining.
         """
+        config = self.config.acf_pacf_config
+        color_config = AcfPacfColorConfig(
+            acf_marker=config.acf_marker,
+            pacf_marker=config.pacf_marker,
+            acf_stem=config.acf_stem,
+            pacf_stem=config.pacf_stem,
+            acf_conf=config.acf_conf,
+            pacf_conf=config.pacf_conf
+        )
         data = self._chart_data_cache.get("acf_pacf")
         if data is None:
             return self
 
-        chart = ACFPACFPlotter(data=data, output_dir=self.output_dir)
+        chart = ACFPACFPlotter(data=data, output_dir=self.output_dir, color_config=color_config)
         path = chart.generate()
 
         if path is not None:

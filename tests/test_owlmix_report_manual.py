@@ -72,6 +72,12 @@ def main():
         mode=PlotMode.ABSOLUTE
     )
 
+    report.config.update_acf_pacf_config(
+        n_lags=20,
+        acf_marker="green",
+        acf_stem="green"
+    )
+
     # report.config.update_time_series_config(
     #     # model="multiplicative",
     #     period=12,

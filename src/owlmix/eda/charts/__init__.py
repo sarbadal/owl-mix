@@ -9,7 +9,7 @@ from .distribution import DistributionChart
 from .categorical_distribution import CategoricalDistributionChart
 from .vif import VIFChart
 from .dualaxis_line_plot import DualAxisLinePlotter
-from .acf_pacf import ACFPACFPlotter
+from .acf_pacf import ACFPACFPlotter, AcfPacfColorConfig
  
 __all__ = [
     "CorrelationChart",
@@ -22,4 +22,5 @@ __all__ = [
     "VIFChart",
     "DualAxisLinePlotter",
     "ACFPACFPlotter",
+    "AcfPacfColorConfig",
 ]

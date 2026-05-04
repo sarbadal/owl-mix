@@ -3,26 +3,24 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import logging
 from scipy.stats import norm
 
 from owlmix.eda.utils import ColumnMixin
 
+logger = logging.getLogger(__name__)
 
 class DistributionChart(ColumnMixin):
-    def __init__(self, df: pd.DataFrame, columns: list[str] = None, output_dir: str="charts"):
+    def __init__(self, df: pd.DataFrame, columns: list[str] = None, output_dir: str = "charts"):
         self.df = df.copy()
         self.columns = self._get_columns(columns)
         self.output_dir = output_dir
-
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def generate(self, max_charts_per_row: int = 3) -> str:
+    def _generate(self, max_charts_per_row: int = 3) -> str:
         n = len(self.columns)
-
-        # Grid calculation (auto layout)
         cols = min(max_charts_per_row, n)
         rows = math.ceil(n / cols)
-
         fig, axes = plt.subplots(rows, cols, figsize=(5 * cols, 4 * rows))
 
         # Normalize axes shape
@@ -30,30 +28,20 @@ class DistributionChart(ColumnMixin):
             axes = [[axes]]
         elif rows == 1:
             axes = [axes]
-
         axes = np.array(axes).reshape(rows, cols)
 
         for idx, col in enumerate(self.columns):
             r, c = divmod(idx, cols)
             ax = axes[r][c]
-
             data = self.df[col].dropna()
-
             if len(data) == 0:
                 ax.set_title(f"{col} (no data)")
                 continue
-
-            # Histogram
             ax.hist(data, bins=30, density=True, alpha=0.6)
-
-            # Fit normal distribution
             mu, std = norm.fit(data)
-
-            # Smooth curve
             x_min, x_max = ax.get_xlim()
             x = np.linspace(x_min, x_max, 100)
             p = norm.pdf(x, mu, std)
-
             ax.plot(x, p)
             ax.set_title(col)
 
@@ -63,9 +51,19 @@ class DistributionChart(ColumnMixin):
             fig.delaxes(axes[r][c])
 
         plt.tight_layout()
-
         file_path = os.path.join(self.output_dir, "distribution_grid.png")
         plt.savefig(file_path, dpi=150)
         plt.close()
-
         return file_path
+
+    def generate(self) -> str:
+        """Generates distribution charts for specified columns and saves to file."""
+        try:
+            return self._generate()
+        except Exception as e:
+            logger.error({
+                "type": "distribution_chart",
+                "error": str(e),
+                "status": "failed"
+            })
+            raise

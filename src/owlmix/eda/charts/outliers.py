@@ -1,8 +1,12 @@
 # src/owlmix/eda/charts/outliers.py
 import os
+import logging
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import TypedDict, NotRequired, Unpack
+
+
+logger = logging.getLogger(__name__)
 
 
 class OutlierChartArgs(TypedDict):
@@ -89,13 +93,18 @@ class OutlierChart:
         return image_path
 
     def generate(self):
-        numeric_cols = self._get_numeric_columns()
- 
-        if not numeric_cols:
-            return []
- 
-        if self.single_image:
-            return self._generate_single_image(numeric_cols)
-        
-        return self._generate_multiple_images(numeric_cols)
+        try:
+            numeric_cols = self._get_numeric_columns()
+            if not numeric_cols:
+                return []
+            if self.single_image:
+                return self._generate_single_image(numeric_cols)
+            return self._generate_multiple_images(numeric_cols)
+        except Exception as e:
+            logger.error({
+                "type": "outlier_chart",
+                "error": str(e),
+                "status": "failed"
+            })
+            raise
  
