@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import TypedDict, NotRequired, Unpack
+from ...typing.types import ComparisonType
 
 
 class SetTimeComparisonConfigArgs(TypedDict):

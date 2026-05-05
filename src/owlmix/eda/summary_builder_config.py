@@ -19,7 +19,7 @@ consistency across the JSON and HTML reporting workflows.
 
 import pandas as pd
 from dataclasses import replace
-from typing import Self, Unpack
+from typing import Self, Unpack, Any
 
 from ..typing.types import PeriodType, ComparisonType, PlotModeType
 from .._deprecated import deprecated

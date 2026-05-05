@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import TypedDict, NotRequired, Unpack
 from ...typing.enums import Period
+from ...typing.types import PeriodType
 
 
 class SetKPIVsFeatureConfigArgs(TypedDict):

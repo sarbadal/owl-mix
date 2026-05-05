@@ -1,7 +1,7 @@
 # owlmix/eda/charts/timeseries.py
 import os
 import logging
-from typing import Optional, List, Any, TypedDict
+from typing import Optional, List, Any, TypedDict, NotRequired, Unpack
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose, DecomposeResult
