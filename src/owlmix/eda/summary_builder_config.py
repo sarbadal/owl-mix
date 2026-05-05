@@ -42,6 +42,13 @@ from .args import SetVIFConfigArgs
 
 
 class SummaryBuilderConfig:
+    """
+    Summary Builder Configuration Class
+
+    This class manages the configuration for the OwlMix EDA process.
+    It provides a centralized way to manage parameters for various
+    statistical tests, visualizations, and data schemas.
+    """
 
     def __init__(self, df: pd.DataFrame, target: str, date_column: str):
         self.df = df
