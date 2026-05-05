@@ -2,8 +2,6 @@
 from .constrants import PERIOD_VALUES, COMPARISON_TYPE_VALUES, MODE_VALUES, CHART_IDS
 from .enums import Period, ComparisonType, PlotMode, ChartID
 
-VALID_PERIODS = set(PERIOD_VALUES)
-
 
 def normalize_period(period: Period | str) -> str:
     if isinstance(period, Period):

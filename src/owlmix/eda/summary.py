@@ -132,57 +132,37 @@ class SummaryBuilder:
 
         os.makedirs(self.output_dir, exist_ok=True)
 
-    def include_charts(self, *chart_ids: ChartID) -> Self:
-        """
-        Specify which charts to include in the report.
+    @property
+    def include_charts(self) -> Optional[Set[ChartID]]:
+        return self._include
 
-        Args:
-            *chart_ids (ChartID): Chart IDs to include.
+    @include_charts.setter
+    def include_charts(self, chart_ids: list[ChartID]) -> None:
+        self._include = set(chart_ids)
 
-        Returns:
-            Self: The current instance for method chaining.
-        """
-        self._include = {c for c in chart_ids}
-        return self
+    @property
+    def exclude_charts(self) -> Set[ChartID]:
+        return self._exclude
 
-    def exclude_charts(self, *chart_ids: ChartID) -> Self:
-        """
-        Specify which charts to exclude from the report.
+    @exclude_charts.setter
+    def exclude_charts(self, chart_ids: list[ChartID]) -> None:
+        self._exclude = set(chart_ids)
 
-        Args:
-            *chart_ids (ChartID): Chart IDs to exclude.
+    @property
+    def reorder_charts(self) -> Optional[list[ChartID]]:
+        return self._custom_order
 
-        Returns:
-            Self: The current instance for method chaining.
-        """
-        self._exclude = {c for c in chart_ids}
-        return self
-
-    def reorder_charts(self, *chart_ids: ChartID) -> Self:
-        """
-        Specify a custom order for charts in the report. Partial order is allowed.
-
-        Args:
-            *chart_ids (ChartID): Chart IDs in desired order.
-
-        Returns:
-            Self: The current instance for method chaining.
-
-        Raises:
-            ValueError: If no chart IDs are provided or invalid IDs are given.
-        """
+    @reorder_charts.setter
+    def reorder_charts(self, chart_ids: list[ChartID]) -> None:
         if not chart_ids:
             raise ValueError("At least one chart_id must be provided")
-
         seen: Set[ChartID] = set()
         ordered: List[ChartID] = []
         for cid in chart_ids:
             if cid not in seen:
                 seen.add(cid)
                 ordered.append(cid)
-
         self._custom_order = ordered
-        return self
 
     def _resolve_charts(self) -> List[ChartID]:
         """
@@ -376,14 +356,18 @@ class SummaryBuilder:
             Self: The current instance for method chaining.
         """
         config = self.config.causality_test_config
+        config.validate_weights()
+
         causality_test = CausalityTest(
             df=self.df,
-            target_column=config.target_column,  # config["target_column"],
-            columns=config.columns  # config["columns"]
+            target_column=config.target_column,  
+            columns=config.columns  
         )
         result = causality_test.run(
-            max_lag=config.max_lag,  # config["max_lag"],
-            error_threshold=config.error_threshold  # config["error_threshold"]
+            max_lag=config.max_lag, 
+            error_threshold=config.error_threshold,
+            p_value_weight=config.p_value_weight,
+            mape_weight=config.mape_weight
         )
         self._add_section("causality_test", result)
         return self

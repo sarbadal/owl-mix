@@ -41,12 +41,13 @@ def main():
     vif_color_rules = [
         (2, "blue"),
         (5, "green"),
-        (10, "red"),
+        (6, "yellow"),
+        (7, "red"),
         (float("inf"), "darkred")
     ]
 
     report.config.update_vif_config(color_thresholds=vif_color_rules)
-    cat_columns = ["color", "smartphone", "car_model", "language"]
+    cat_columns = ["smartphone", "car_model", "language"]
 
     report.config.update_categorical_columns_config(columns=cat_columns)
 
@@ -59,8 +60,11 @@ def main():
     )
 
     report.config.update_lag_corr_chart_config(
-        lag=2
+        column="tv_spend",
+        lag=5
     )
+
+    # report.summary_builder.exclude_charts = [ChartID.LAG_CORRELATION_CHART]
 
     report.config.update_time_comparison_chart_config(
         comparison_type=ComparisonType.QoQ,
@@ -73,14 +77,19 @@ def main():
     )
 
     report.config.update_acf_pacf_config(
-        n_lags=20,
-        acf_marker="green",
-        acf_stem="green"
+        n_lags=5,
+        # pacf_marker="red",
+        # pacf_stem="red"
     )
 
-    # report.config.update_time_series_config(
-    #     # model="multiplicative",
-    #     period=12,
+    report.config.update_time_series_config(
+        model="multiplicative",
+        period=12,
+    )
+
+    # report.config.update_causality_test_config(
+    #     p_value_weight=0.95,
+    #     mape_weight=0.05
     # )
 
     # Test generate_json

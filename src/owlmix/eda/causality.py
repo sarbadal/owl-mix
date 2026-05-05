@@ -175,7 +175,7 @@ class CausalityTest(ColumnMixin):
 
         return p_values, coefficients
 
-    def _compute_score(self, min_p_value: float, mape_score: float) -> float:
+    def _compute_score(self, min_p_value: float, mape_score: float, p_value_weight: float = None, mape_weight: float = None) -> float:
         """
         Compute combined score from p-value and MAPE.
 
@@ -186,8 +186,8 @@ class CausalityTest(ColumnMixin):
         Returns:
             float: Combined score.
         """
-        p_score = (1 - min_p_value) * 60
-        e_score = (1 - min(mape_score, 1)) * 40
+        p_score = (1 - min_p_value) * (p_value_weight * 100)
+        e_score = (1 - min(mape_score, 1)) * (mape_weight * 100)
         return round(p_score + e_score, 2)
 
     def _get_coefficient_sign(self, coefficients: List[np.ndarray], best_lag: int) -> str:
@@ -227,7 +227,7 @@ class CausalityTest(ColumnMixin):
             "coefficient_sign": None,
         }
 
-    def granger_causality(self, column: str, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD) -> GrangerResult:
+    def granger_causality(self, column: str, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD, p_value_weight: float = None, mape_weight: float = None) -> GrangerResult:
         """
         Perform Granger causality test on the dataset for a given feature.
 
@@ -282,7 +282,7 @@ class CausalityTest(ColumnMixin):
 
         # Scoring
         mape_score: float = float(self.calculate_mape(column))
-        score: float = self._compute_score(min_p_value, mape_score)
+        score: float = self._compute_score(min_p_value, mape_score, p_value_weight, mape_weight)
 
         # Interpretation
         coefficient_sign: str = self._get_coefficient_sign(coefficients, best_lag)
@@ -303,13 +303,15 @@ class CausalityTest(ColumnMixin):
             "coefficient_sign": coefficient_sign,
         }
 
-    def run(self, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD) -> dict[dict[str, Any]]:
+    def run(self, max_lag: int = 5, error_threshold: float = ERROR_THRESHOLD, p_value_weight: float = None, mape_weight: float = None) -> dict[dict[str, Any]]:
         """
         Run Granger causality tests for all selected columns.
 
         Args:
             max_lag (int): Maximum lag to test.
             error_threshold (float): MAPE threshold for causality.
+            p_value_weight (float): Weight for the p-value in the score computation.
+            mape_weight (float): Weight for the MAPE in the score computation.
 
         Returns:
             dict: Dictionary containing test results and error threshold.
@@ -319,7 +321,7 @@ class CausalityTest(ColumnMixin):
 
         results = []
         for column in self.columns:
-            result = self.granger_causality(column, max_lag, error_threshold)
+            result = self.granger_causality(column, max_lag, error_threshold, p_value_weight, mape_weight)
             results.append(result)
 
         return {
