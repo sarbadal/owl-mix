@@ -273,6 +273,45 @@ report.config.update_vif_config(
 *   **Validation:** If a chart is missing from your report, verify that its corresponding `update_` method has been called with the correct column names.
 *   **Enums:** For methods like `update_correlation_config`, it is recommended to use the built-in `owlmix.typing.enums` to ensure parameter validity.
 
+---
+
+## Custom VIF Color Thresholds
+
+The Variance Inflation Factor (VIF) is used to detect multicollinearity among features. To make the report more intuitive, OwlMix allows you to define **Rule-Based Coloring**. This feature applies specific colors to VIF bars based on their numerical value.
+
+### Why Customize Thresholds?
+Different industries have different tolerances for multicollinearity. While a VIF of 5 is often considered "high," some models require stricter thresholds (e.g., 2.5) or allow for more leniency. Custom colors help stakeholders instantly identify "Safe," "Warning," or "Critical" variables.
+
+### Usage
+You can pass a list of tuples to the `color_thresholds` parameter within `update_vif_config`. Each tuple should follow the format: `(upper_bound, "color_name_or_hex")`.
+
+```python
+# 1. Define your rules (value, color)
+# The rule applies if the VIF value is less than or equal to the threshold
+vif_color_rules = [
+    (2, "blue"),              # Safe: VIF <= 2
+    (5, "green"),             # Moderate: 2 < VIF <= 5
+    (6, "yellow"),            # Warning: 5 < VIF <= 6
+    (10, "red"),              # High: 6 < VIF <= 10
+    (float("inf"), "darkred") # Critical: VIF > 10
+]
+
+# 2. Update the VIF configuration
+report.config.update_vif_config(color_thresholds=vif_color_rules)
+
+# 3. Run the report
+report.run(html_file_name="vif_analysis.html")
+```
+
+### Key Rules
+*   **Order Matters**: List your thresholds in **ascending order**. OwlMix evaluates these rules sequentially.
+*   **Infinity**: Use `float("inf")` as the final threshold to catch all values exceeding your last defined limit.
+*   **Color Support**: You can use standard CSS color names (e.g., `"red"`, `"orange"`) or Hex codes (e.g., `"#FF5733"`).
+
+> **Default Behavior:** If no custom thresholds are provided, OwlMix uses a standard internal color palette to differentiate VIF levels.
+
+---
+
 
 ## Working with Enums
 
