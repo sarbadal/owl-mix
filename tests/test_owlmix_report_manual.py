@@ -21,7 +21,7 @@ def get_sample_df():
     # Create a simple DataFrame for testing
     random.seed(42)
     data = {
-        "date": pd.date_range(start="2023-01-01", periods=100, freq="D"),
+        "date": pd.date_range(start="2023-01-01", periods=100, freq="M"),
         "target": [random.randint(10, 20) for _ in range(100)],
         "tv_grp": [random.randint(1, 10) for _ in range(100)],
         "radio_grp": [random.randint(2, 8) for _ in range(100)],
