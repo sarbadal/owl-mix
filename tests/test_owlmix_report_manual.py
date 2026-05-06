@@ -59,10 +59,14 @@ def main():
         period=Period.WEEKLY
     )
 
-    report.config.update_lag_corr_chart_config(
-        column="tv_spend",
-        lag=5
+    report.config.update_time_comparison_config(
+        comparison_type=ComparisonType.YoY_QUARTER
     )
+
+    # report.config.update_lag_corr_chart_config(
+    #     # column="tv_spend",
+    #     lag=2
+    # )
 
     # report.summary_builder.exclude_charts = [ChartID.LAG_CORRELATION_CHART]
 
@@ -77,7 +81,7 @@ def main():
     )
 
     report.config.update_acf_pacf_config(
-        n_lags=5,
+        n_lags=25,
         # pacf_marker="red",
         # pacf_stem="red"
     )

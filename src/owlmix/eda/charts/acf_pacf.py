@@ -35,12 +35,17 @@ class ACFPACFPlotter:
         self.data = data
         self.output_dir = output_dir
         self.color_config = color_config or AcfPacfColorConfig()
-        self.y_neg_break = -0.12
+        self.y_neg_break = self._get_dynamic_y_neg_break()
         self.y_pos_break = 0.2
         self.y_pos_resume = 0.9
         self.y_max = 1.02
 
         os.makedirs(self.output_dir, exist_ok=True)
+
+    def _get_dynamic_y_neg_break(self):
+        min_acf = min(min(item["acf"]) for item in self.data)
+        min_pacf = min(min(item["pacf"]) for item in self.data)
+        return min(min_acf, min_pacf, -0.09) - 0.01  # fallback to -0.1 if all values are higher
 
     def _get_max_positive_lag_value(self, values, lags):
         """Return the maximum value for lags > 0."""

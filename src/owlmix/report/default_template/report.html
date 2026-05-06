@@ -476,9 +476,9 @@
                 {% if time_comparison %}
                 <section>
                     <h2>📈 Time Comparison</h2>
-                    <p class="section-desc">The YoY table presents yearly aggregated values for each variable alongside
-                        their corresponding percentage changes compared to the previous year. This structured view allows
-                        for precise comparison of annual performance and growth rates, supporting detailed analysis of
+                    <p class="section-desc">The table presents yearly (Quarterly, Monthly, or Weekly) aggregated values for each variable alongside
+                        their corresponding percentage changes compared to the previous period (or last year same period). This structured view allows
+                        for precise comparison of performance and growth rates over different time intervals, supporting detailed analysis of
                         trends and facilitating data-driven decision-making.
                     </p>
 
@@ -487,7 +487,7 @@
                             <thead>
                                 <tr>
                                     <!-- Date column -->
-                                    <th class="date-col" style="background: #e8ecff;">Year</th>
+                                    <th class="date-col" style="background: #e8ecff;">Period</th>
 
                                     <!-- Dynamic columns -->
                                     {% for col in time_comparison.columns %}

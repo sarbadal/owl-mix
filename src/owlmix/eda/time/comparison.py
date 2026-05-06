@@ -54,51 +54,24 @@ class TimeComparisonReport(ColumnMixin, SerializableMixin, TimeColumnRenamer):
     def _add_period_keys(self):
         dt = pd.to_datetime(self.df[self.date_column], errors="coerce")
 
-        # Aggregate at YEAR level
-        if self.comparison_type == "yoy":
-            self.df["year"] = dt.dt.year  # e.g., 2024
-            self.df["period"] = None  # not needed for YoY
-            return None
+        def week_start(r): return r.start_time
 
-        # Aggregate at YEAR-MONTH level
-        if self.comparison_type == "mom":
-            self.df["year"] = dt.dt.to_period("M").astype(str)  # e.g., 2024-01
-            self.df["period"] = None  # sequential comparison
-            return None
+        mapping = {
+            "yoy":         (lambda dt: dt.dt.year, lambda dt: None),
+            "mom":         (lambda dt: dt.dt.to_period("M").astype(str), lambda dt: None),
+            "wow":         (lambda dt: dt.dt.to_period("W").apply(week_start), lambda dt: None),
+            "qoq":         (lambda dt: dt.dt.to_period("Q").astype(str), lambda dt: None),
+            "yoy_month":   (lambda dt: dt.dt.to_period("M").astype(str), lambda dt: dt.dt.month),
+            "yoy_quarter": (lambda dt: dt.dt.to_period("Q").astype(str), lambda dt: dt.dt.quarter),
+            "yoy_week":    (lambda dt: dt.dt.to_period("W").apply(week_start), lambda dt: dt.dt.isocalendar().week),
+        }
 
-        # Aggregate at WEEK level (use week start date)
-        if self.comparison_type == "wow":
-            week_period = dt.dt.to_period("W")
-            self.df["year"] = week_period.apply(lambda r: r.start_time)  # clean x-axis
-            self.df["period"] = None  # sequential comparison
-            return None
+        if self.comparison_type not in mapping:
+            raise ValueError(f"Unsupported comparison_type: {self.comparison_type}")
 
-        # Aggregate at Quarter level
-        if self.comparison_type == "qoq":
-            self.df["year"] = dt.dt.to_period("Q").astype(str)
-            self.df["period"] = None
-            return None
-
-        # YOY (MONTH LEVEL) → Jan vs Jan last year
-        if self.comparison_type == "yoy_month":
-            self.df["year"] = dt.dt.year
-            self.df["period"] = dt.dt.month
-            return None
-
-        # YOY (QUARTER LEVEL) → Q1 vs Q1 last year
-        if self.comparison_type == "yoy_quarter":
-            self.df["year"] = dt.dt.year
-            self.df["period"] = dt.dt.quarter
-            return None
-
-        # YOY (WEEK LEVEL) → Week 32 vs Week 32 last year
-        if self.comparison_type == "yoy_week":
-            iso = dt.dt.isocalendar()
-            self.df["year"] = iso.year
-            self.df["period"] = iso.week.astype(int)
-            return None
-
-        raise ValueError(f"Unsupported comparison_type: {self.comparison_type}")
+        year_func, period_func = mapping[self.comparison_type]
+        self.df["year"] = year_func(dt)
+        self.df["period"] = period_func(dt) if period_func(dt) is not None else None
 
     def _compute_pct_change(self):
         self.df = self.df.sort_values(["year", "period"] if "period" in self.df else ["year"])

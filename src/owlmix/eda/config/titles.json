@@ -9,7 +9,7 @@
             "in model coefficients and reduced interpretability. This chart enables quick identification ",
             "of problematic variables by highlighting those exceeding commonly accepted thresholds, ",
             "helping guide feature selection and dimensionality reduction decisions. ",
-            "<div style=\"font-family: sans-serif;\">\n  <h3 style=\"margin-left: 0; padding-left: 0;\">VIF Methodology</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n    <li>\n      <strong>Run Auxiliary Regression:</strong> \n      Regress the predictor X<sub>i</sub> against all other independent variables.\n    </li>\n    <li>\n      <strong>Calculate R-Squared:</strong> \n      Obtain the R<sub>i</sub>&sup2; value from that regression.\n    </li>\n    <li>\n      <strong>Apply VIF Formula:</strong><br>\n      VIF<sub>i</sub> = 1 / (1 &minus; R<sub>i</sub>&sup2;)\n    </li>\n  </ol>\n</div>"
+            "<div style=\"font-family: sans-serif;\">\n  <h3 style=\"margin-left: 0; padding-left: 0;\">VIF Methodology</h3>\n  <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n    <li>\n      <strong>Run Auxiliary Regression:</strong> \n      Regress the predictor X<sub>i</sub> against all other independent variables.\n    </li>\n    <li>\n      <strong>Calculate R-Squared:</strong> \n      Obtain the R<sub>i</sub>&sup2; value from that regression.\n    </li>\n    <li>\n      <strong>Apply VIF Formula:</strong>\n      VIF<sub>i</sub> = 1 / (1 &minus; R<sub>i</sub>&sup2;)\n    </li>\n  </ol>\n</div>"
         ]
     },
     "acf_pacf_chart": {
@@ -105,15 +105,10 @@
         ]
     },
     "comparison_chart": {
-        "title": "Comparison Chart - YoY",
-        "alt_text": "Comparison Chart - YoY",
+        "title": "Periodic Growth Comparison Chart",
+        "alt_text": "Comparison Chart",
         "description": [
-            "The Year-over-Year (YoY) line chart visualizes the annual percentage change in key variables, ",
-            "enabling a clear comparison of growth or decline trends over time. Each line represents a ",
-            "distinct variable, highlighting how its performance evolves relative to the previous year. ",
-            "This chart helps identify consistent trends, seasonal patterns, and periods of significant ",
-            "change across multiple variables.",
-            "<section style=\"display: flex; flex-direction: column; align-items: flex-start; font-family: sans-serif;\">\n    <div style=\"width: 100%; max-width: 600px;\">\n        <h3 style=\"margin-left: 0;\">Methodology: YoY Comparison Analysis</h3>\n        <ol style=\"list-style-position: inside; padding-left: 0; margin-left: 0;\">\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Data Collection:</strong> \n                Gather time-series data for consistent intervals.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>YoY Calculation:</strong> \n                Use: <code>((Current - Last Year) / Last Year) * 100</code>.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Normalization:</strong> \n                Convert results into percentages to standardize scales.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Visualization:</strong> \n                Plot changes on a line chart over a time-based X-axis.\n            </li>\n            <li style=\"margin-bottom: 10px;\">\n                <strong>Trend Identification:</strong> \n                Analyze slopes to detect growth or cyclical patterns.\n            </li>\n        </ol>\n    </div>\n</section>"
+            "<section><p>The Periodic Growth line chart visualizes the percentage change in key variables over sequential time intervals (e.g., WoW, MoM, QoQ, YoY). By plotting these relative changes, the chart highlights momentum, identifies cyclical volatility, and standardizes performance across variables with different absolute scales.</p><h3>Methodology: Periodic Trend Analysis</h3><ol style=\"list-style-position: inside; padding: 0;\"><li><strong>Data Collection:</strong> Gather time-series data at consistent intervals (Daily, Weekly, Monthly, Quarterly, or Yearly).</li><li><strong>Period-over-Period (PoP) Calculation:</strong> Use the standard growth formula: <code>((Current Period - Prior Period) / Prior Period) * 100</code></li><li><strong>Normalization:</strong> Convert all raw data into percentage deltas to standardize the scale across different metrics.</li><li><strong>Visualization:</strong> Plot the percentage changes on a line chart over a time-based X-axis, using a 0% baseline to distinguish growth from decline.</li><li><strong>Trend Interpretation:</strong> Analyze the direction and steepness of the slopes to detect acceleration, deceleration, or cyclical patterns.</li></ol></section>"
         ]
     }
 }
