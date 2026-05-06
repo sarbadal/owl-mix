@@ -36,7 +36,7 @@ def build(**values: Unpack[SetTimeComparisonChartConfigArgs]) -> TimeComparisonC
     return TimeComparisonChart(
         date_column=values.get("date_column", None),
         value_columns=values.get("value_columns", None),
-        comparison_type=values.get("comparison_type", "yoy"),  # default comparison type to 'yoy' if not provided
+        comparison_type=values.get("comparison_type", "mom"),  # default comparison type to 'mom' if not provided
         agg_func=values.get("agg_func", "sum"),  # default aggregation function to 'sum' if not provided
         mode=values.get("mode", "pct_change")  # default mode to 'pct_change' if not provided
     )

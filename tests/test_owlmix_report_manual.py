@@ -60,7 +60,7 @@ def main():
     )
 
     report.config.update_time_comparison_config(
-        comparison_type=ComparisonType.YoY_QUARTER
+        comparison_type=ComparisonType.YoY_MONTH
     )
 
     # report.config.update_lag_corr_chart_config(
@@ -71,13 +71,13 @@ def main():
     # report.summary_builder.exclude_charts = [ChartID.LAG_CORRELATION_CHART]
 
     report.config.update_time_comparison_chart_config(
-        comparison_type=ComparisonType.QoQ,
+        comparison_type=ComparisonType.YoY_MONTH,
         value_columns=[
             "tv_spend",
             "digital_spend",
             "radio_spend",
         ],
-        mode=PlotMode.ABSOLUTE
+        mode=PlotMode.DUAL
     )
 
     report.config.update_acf_pacf_config(
