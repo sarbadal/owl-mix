@@ -3,6 +3,9 @@ import sys
  
 # Add your package root to PYTHONPATH
 sys.path.insert(0, os.path.abspath('../../..'))
+
+def setup(app):
+    app.add_js_file('custom.js')
  
 project = 'owlmix-docs'
 copyright = '2026, Sarbadal Pal'

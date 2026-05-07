@@ -16,3 +16,14 @@ Wolmix Documentation
    configuration_api_reference
    working_with_enums
    file_resolver
+
+Modules
+=======
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Classes
+
+   vif
+   acf_pacf
+   causality
