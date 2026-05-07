@@ -19,45 +19,54 @@ All configuration updates must be performed on the ``report.config`` object **af
 
 **Available Update Methods & Parameters**
 
+.. list-table:: Available Update Methods & Parameters
+   :header-rows: 1
 
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| Method                                        | Description                                                   | Parameters (Keyword Arguments)                                |
-+===============================================+===============================================================+===============================================================+
-| ``update_categorical_columns_config``         | **Essential:** Defines columns for categorical analysis.       | ``columns``                                                   |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_time_series_config``                 | Configures the primary time series visualization.              | ``columns``, ``model``, ``period``                           |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_time_aggregator_config``             | Controls how data is grouped and aggregated.                   | ``date_column``, ``value_columns``, ``agg_func``,            |
-|                                               |                                                               | ``precision``, ``freq``                                      |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_time_comparison_config``             | Defines logic for PoP or YoY comparisons.                      | ``date_column``, ``value_columns``, ``comparison_type``,     |
-|                                               |                                                               | ``agg_func``, ``precision``, ``freq``                        |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_time_comparison_chart_config``       | Adjusts the visual layout of comparison charts.                | ``date_column``, ``value_columns``, ``comparison_type``,     |
-|                                               |                                                               | ``agg_func``, ``mode``                                       |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_correlation_config``                 | Sets parameters for correlation analysis.                      | ``columns``                                                  |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_correlation_chart_layout_config``    | Customizes the heatmap UI and labels.                          | ``columns``                                                  |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_lag_corr_chart_config``              | Configures cross-correlation with time lags.                   | ``column`` (required), ``lag``                               |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_acf_pacf_config``                    | Adjusts lags and markers for ACF/PACF plots.                   | ``columns``, ``n_lags``, ``acf_marker``, ``pacf_marker``,    |
-|                                               |                                                               | ``acf_stem``, ``pacf_stem``, ``acf_conf``, ``pacf_conf``     |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_distribution_chart_config``          | Sets binning logic and chart grid layout.                      | ``columns``, ``max_charts_per_row``                          |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_kpi_vs_feature_config``              | Configures analysis of Target vs Features.                     | ``target_column``, ``columns``, ``period``,                  |
-|                                               |                                                               | ``date_column``, ``agg_func``                                |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_causality_test_config``              | Fine-tunes Granger causality test parameters.                  | ``target_column``, ``columns``, ``max_lag``,                 |
-|                                               |                                                               | ``error_threshold``, ``p_value_weight``, ``mape_weight``     |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_vif_config``                         | Configures multicollinearity detection.                        | ``target_column``, ``features``, ``precision``,              |
-|                                               |                                                               | ``color_thresholds``                                         |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
-| ``update_outlier_chart_layout_config``        | Adjusts outlier detection and visual markers.                  | ``columns``, ``max_cols_per_chart``, ``single_image``        |
-+-----------------------------------------------+---------------------------------------------------------------+---------------------------------------------------------------+
+   * - Method
+     - Description
+     - Parameters (Keyword Arguments)
+   * - ``update_categorical_columns_config``
+     - **Essential:** Defines columns for categorical analysis.
+     - ``columns``
+   * - ``update_time_series_config``
+     - Configures the primary time series visualization.
+     - ``columns``, ``model``, ``period``
+   * - ``update_time_aggregator_config``
+     - Controls how data is grouped and aggregated.
+     - ``date_column``, ``value_columns``, ``agg_func``, ``precision``, ``freq``
+   * - ``update_time_comparison_config``
+     - Defines logic for PoP or YoY comparisons.
+     - ``date_column``, ``value_columns``, ``comparison_type``, ``agg_func``, ``precision``, ``freq``
+   * - ``update_time_comparison_chart_config``
+     - Adjusts the visual layout of comparison charts.
+     - ``date_column``, ``value_columns``, ``comparison_type``, ``agg_func``, ``mode``
+   * - ``update_correlation_config``
+     - Sets parameters for correlation analysis.
+     - ``columns``
+   * - ``update_correlation_chart_layout_config``
+     - Customizes the heatmap UI and labels.
+     - ``columns``
+   * - ``update_lag_corr_chart_config``
+     - Configures cross-correlation with time lags.
+     - ``column`` (required), ``lag``
+   * - ``update_acf_pacf_config``
+     - Adjusts lags and markers for ACF/PACF plots.
+     - ``columns``, ``n_lags``, ``acf_marker``, ``pacf_marker``, ``acf_stem``, ``pacf_stem``, ``acf_conf``, ``pacf_conf``
+   * - ``update_distribution_chart_config``
+     - Sets binning logic and chart grid layout.
+     - ``columns``, ``max_charts_per_row``
+   * - ``update_kpi_vs_feature_config``
+     - Configures analysis of Target vs Features.
+     - ``target_column``, ``columns``, ``period``, ``date_column``, ``agg_func``
+   * - ``update_causality_test_config``
+     - Fine-tunes Granger causality test parameters.
+     - ``target_column``, ``columns``, ``max_lag``, ``error_threshold``, ``p_value_weight``, ``mape_weight``
+   * - ``update_vif_config``
+     - Configures multicollinearity detection.
+     - ``target_column``, ``features``, ``precision``, ``color_thresholds``
+   * - ``update_outlier_chart_layout_config``
+     - Adjusts outlier detection and visual markers.
+     - ``columns``, ``max_cols_per_chart``, ``single_image``
 
 **Quick Usage Tip**
 

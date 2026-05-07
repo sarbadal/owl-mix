@@ -1,3 +1,15 @@
+.wy-nav-content {
+    max-width: 1000px !important;  /* For sphinx_rtd_theme */
+}
+
+body .document {
+    max-width: 1000px !important;  /* For alabaster and others */
+}
+
+.rst-footer .footer, .rst-footer .footer .rst-footer-buttons {
+    display: none !important;
+}
+
 /* Change font and color for the main title (usually h1) */
 h1 {
     font-family: 'Arial Black', Arial, sans-serif;
