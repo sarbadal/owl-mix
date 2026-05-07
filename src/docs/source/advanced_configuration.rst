@@ -1,11 +1,15 @@
+.. _advanced_configuration:
+
 Advanced Configuration
 ======================
 
-**Handling Categorical Variables**
+Handling Categorical Variables
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To get the most out of your analysis, it is essential to explicitly define your categorical columns. **If these are not set, OwlMix will not generate categorical distribution charts in the final report.**
 
-**Why This Is Important**
+Why This Is Important
+^^^^^^^^^^^^^^^^^^^^^
 
 Explicitly defining categorical variables ensures that the OwlMix engine:
 
@@ -46,17 +50,20 @@ Use the ``update_categorical_columns_config`` method after initializing your rep
     If you find that specific charts are missing from your HTML report, double-check that the column names in your list exactly match the headers in your DataFrame.
 
 
-**Customising Report Charts (Include, Exclude, & Reorder)**
+Customising Report Charts (Include, Exclude, & Reorder)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can control exactly which visualisations appear in your report and the order in which they are displayed using the ``summary_builder`` attributes. This is useful for removing noise or prioritising the most important insights for your stakeholders.
 
-**Chart Management Options**
+Chart Management Options
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 * **Exclude**: Remove specific charts you don't need (e.g., removing Correlation if it's not relevant).
 * **Include**: Explicitly whitelist only the charts you want to see.
 * **Reorder**: Define a custom sequence for the charts in the HTML output.
 
-**Usage**
+Usage
+^^^^^
 
 Use the ``ChartID`` enum to specify which charts to modify. These settings must be applied to ``report.summary_builder`` before calling ``.run()``.
 
@@ -89,13 +96,15 @@ Use the ``ChartID`` enum to specify which charts to modify. These settings must 
 
     report.run(save_json=True)
 
-**Key Rules**
+Key Rules to Remember
+^^^^^^^^^^^^^^^^^^^^^
 
 * **Precedence**: If you set ``include_charts``, OwlMix will prioritize that list and ignore exclusions outside of it.
 * **Enum Usage**: Always use the ``ChartID`` enum to reference charts to avoid string typos and ensure compatibility with future updates.
 
 
-**Time based comparison table and chart**
+Time Based Comparison Table and Chart
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. warning::
 
@@ -106,7 +115,9 @@ Use the ``ChartID`` enum to specify which charts to modify. These settings must 
     - The same week number across years may represent slightly different date ranges
     - This can lead to **minor inconsistencies in YoY week comparisons**
 
-**Supported Comparison Types**
+
+Supported Comparison Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * **yoy_year**
   

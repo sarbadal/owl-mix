@@ -1,9 +1,12 @@
+.. _configuration_api_reference:
+
 Configuration API Reference
 ==================================
 
 OwlMix provides a comprehensive suite of ``update_*`` methods to fine-tune your analysis. These methods allow you to modify statistical parameters, chart aesthetics, and data processing logic.
 
-**Implementation Pattern**
+Implementation Pattern
+^^^^^^^^^^^^^^^^^^^^^
 
 All configuration updates must be performed on the ``report.config`` object **after** initialization and **before** calling ``report.run()``.
 
@@ -17,7 +20,8 @@ All configuration updates must be performed on the ``report.config`` object **af
                  .update_acf_pacf_config(lags=40)
 
 
-**Available Update Methods & Parameters**
+Available Update Methods & Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table:: Available Update Methods & Parameters
    :header-rows: 1
@@ -68,8 +72,9 @@ All configuration updates must be performed on the ``report.config`` object **af
      - Adjusts outlier detection and visual markers.
      - ``columns``, ``max_cols_per_chart``, ``single_image``
 
-**Quick Usage Tip**
 
+Quick Usage Tips
+^^^^^^^^^^^^^^^^
 
 When passing values to these methods, ensure you use the argument names exactly as listed. For example:
 

@@ -14,3 +14,5 @@ Wolmix Documentation
    quickstart
    advanced_configuration
    configuration_api_reference
+   working_with_enums
+   file_resolver
