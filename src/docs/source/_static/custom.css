@@ -1,0 +1,12 @@
+/* Change font and color for the main title (usually h1) */
+h1 {
+    font-family: 'Arial Black', Arial, sans-serif;
+    color: #09346b;
+}
+
+/* Change font and color for toctree captions */
+.toctree-caption, .caption {
+    font-family: 'Georgia', serif;
+    color: #313130;
+    font-size: 1.2em !important;
+}
