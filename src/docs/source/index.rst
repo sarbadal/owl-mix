@@ -12,10 +12,10 @@ Owlmix Documentation
 
    installation
    quickstart
-   advanced_configuration
-   configuration_api_reference
-   working_with_enums
-   file_resolver
+   advanced-configuration
+   configuration-api-reference
+   working-with-enums
+   file-resolver
 
 Modules
 =======
@@ -25,6 +25,6 @@ Modules
    :caption: Classes
 
    vif
-   acf_pacf
+   acf-pacf
    causality
-   kpi_vs_feature
+   kpi-vs-feature
