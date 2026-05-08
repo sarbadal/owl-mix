@@ -22,6 +22,11 @@ readthedocs-flyout {
     display: none !important;
 }
 
+/* Hides the Read the Docs advertisement placements */
+.ea-placement, .ea-type-text {
+    display: none !important;
+}
+
 .wy-nav-content {
     max-width: 1000px !important;  /* For sphinx_rtd_theme */
 }
