@@ -22,8 +22,8 @@ readthedocs-flyout {
     display: none !important;
 }
 
-/* Hides the Read the Docs advertisement placements */
-.ea-placement, .ea-type-text {
+/* Hide Ethical Ads and Sidebar elements */
+.ethical-sidebar, .ea-placement, .ea-type-text {
     display: none !important;
 }
 
