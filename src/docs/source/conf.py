@@ -3,7 +3,10 @@ import sys
 # import sphinx_bootstrap_theme
  
 # Add your package root to PYTHONPATH
-sys.path.insert(0, os.path.abspath('../../..'))
+# sys.path.insert(0, os.path.abspath('../../..'))
+sys.path.insert(0, os.path.abspath('../../../owlmix'))
+
+from owlmix.eda.acf_pacf import ACFPACFCalculator
 
 def setup(app):
     app.add_js_file('custom.js')
