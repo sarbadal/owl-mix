@@ -121,7 +121,7 @@ Supported Comparison Types
 
 * **yoy_year**
   
-  - Granularity: Year
+  - Granularity: Year (``YYYY``)
   - Comparison: Current year vs previous year
 
 * **mom**
@@ -131,7 +131,7 @@ Supported Comparison Types
 
 * **wow**
   
-  - Granularity: Week (week start date)
+  - Granularity: Week (week start date in ``YYYY-MM-DD`` format)
   - Comparison: Current week vs previous week
 
 * **qoq**
@@ -141,15 +141,15 @@ Supported Comparison Types
 
 * **yoy_month**
   
-  - Granularity: Month
+  - Granularity: Month (``YYYY-MM``)
   - Comparison: Same month across years (e.g., Jan 2024 vs Jan 2023)
 
 * **yoy_quarter**
   
-  - Granularity: Quarter
+  - Granularity: Quarter (``YYYYQX``)
   - Comparison: Same quarter across years (e.g., Q1 2024 vs Q1 2023)
 
 * **yoy_week**
   
-  - Granularity: ISO Week
+  - Granularity: ISO Week (week start date in ``YYYY-MM-DD`` format)
   - Comparison: Same week number across years

@@ -84,73 +84,99 @@ In Python, the `statsmodels` library is the standard tool for this calculation:
 Calculator Module
 -----------------
 
-This module provides a class for calculating the Variance Inflation Factor (VIF) for features in a pandas DataFrame, which is useful for detecting multicollinearity in regression analysis.
+.. currentmodule:: owlmix.eda.vif
 
-Classes
-^^^^^^^
+**Overview**
 
-VIFCalculator
-^^^^^^^^^^^^^
+The ``VIFCalculator`` class computes the Variance Inflation Factor (VIF) for features in a pandas DataFrame. This is useful for detecting multicollinearity in regression analysis by quantifying how much the variance of a regression coefficient is inflated due to collinearity with other predictors.
 
-.. class:: VIFCalculator(df: pd.DataFrame, **config: Unpack[SetVIFConfigArgs])
+Class Reference
+---------------
 
-    Calculates Variance Inflation Factor (VIF) for features in a DataFrame.
+.. autoclass:: VIFCalculator
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-    :param df: Input pandas DataFrame containing the features.
-    :type df: pd.DataFrame
-    :param target_column: (Optional) The target column to exclude from VIF calculation.
-    :type target_column: str, optional
-    :param features: (Optional) List of features to include. If None, all columns except the target are used.
-    :type features: list of str, optional
-    :param precision: (Optional) Decimal precision for VIF values. Default is 3.
-    :type precision: int, optional
-    :param color_thresholds: (Optional) List of (threshold, color) tuples for coloring VIF values.
-    :type color_thresholds: list of (float, str), optional
+Initialization
+--------------
 
-    **Example usage:**
+.. py:class:: VIFCalculator(df, target_column=None, features=None, precision=3, color_thresholds=None)
 
-    .. code-block:: python
+   :param df: Input pandas DataFrame containing the features.
+   :type df: pandas.DataFrame
 
-        from owlmix.eda.vif import VIFCalculator
+   :param target_column: (Optional) The target column to exclude from VIF calculation.
+   :type target_column: str, optional
 
-        df = ...  # your pandas DataFrame
-        vif_calc = VIFCalculator(df, target_column="y", features=["x1", "x2"], precision=2)
-        result = vif_calc.compute_vif()
-        print(result)
+   :param features: (Optional) List of features to include. If None, all columns except the target are used.
+   :type features: list[str] or None
 
-    Methods
-    -------
+   :param precision: (Optional) Decimal precision for VIF values. Default is 3.
+   :type precision: int, optional
 
-    .. method:: add_colors(vif_values: list[float]) -> list[str]
+   :param color_thresholds: (Optional) List of (threshold, color) tuples for coloring VIF values.
+   :type color_thresholds: list[tuple[float, str]], optional
 
-        Assigns colors to VIF values based on specified thresholds.
+Usage Example
+-------------
 
-        :param vif_values: List of VIF values.
-        :type vif_values: list of float
-        :return: List of color strings corresponding to each VIF value.
-        :rtype: list of str
+.. code-block:: python
 
-    .. method:: compute_vif() -> Dict[str, Any]
+   import pandas as pd
+   from owlmix.eda.vif import VIFCalculator
 
-        Computes the VIF for the selected features.
+   df = pd.DataFrame({
+       "x1": [1, 2, 3],
+       "x2": [2, 4, 6],
+       "y": [3, 6, 9]
+   })
 
-        :return: Dictionary with keys:
-            - 'feature': list of feature names
-            - 'vif_value': list of VIF values (float)
-            - 'color': list of color strings (if color_thresholds provided, else 'black')
-        :rtype: dict
+   vif_calc = VIFCalculator(df, target_column="y", features=["x1", "x2"], precision=2)
+   result = vif_calc.compute_vif()
+   print(result)
 
-        If the number of features is less than 2, returns NaN for VIF values.
+Methods
+-------
+
+.. py:method:: compute_vif()
+
+   Computes the VIF for the selected features.
+
+   :returns: Dictionary with keys:
+      - 'feature': list of feature names
+      - 'vif_value': list of VIF values (float)
+      - 'color': list of color strings (if color_thresholds provided, else 'black')
+   :rtype: dict
+
+   If the number of features is less than 2, returns NaN for VIF values.
+
+.. py:method:: add_colors(vif_values)
+
+   Assigns colors to VIF values based on specified thresholds.
+
+   :param vif_values: List of VIF values.
+   :type vif_values: list[float]
+   :return: List of color strings corresponding to each VIF value.
+   :rtype: list[str]
+
+Details
+-------
+
+- **Feature Selection:** By default, all columns except the target are used. You can specify a subset via the `features` parameter.
+- **Precision:** VIF values are rounded to the specified decimal precision.
+- **Color Coding:** If `color_thresholds` are provided, VIF values are color-coded for easier interpretation.
+- **Output:** The result is a dictionary suitable for further analysis or visualization.
 
 Dependencies
-^^^^^^^^^^^^
+------------
 
 - pandas
 - numpy
 - statsmodels
 
 See Also
-^^^^^^^^
+--------
 
 - :class:`owlmix.eda.utils.ColumnMixin`
 - :class:`owlmix.eda.args.vif.SetVIFConfigArgs`

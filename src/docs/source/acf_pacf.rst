@@ -3,6 +3,8 @@
 Auto Correlation and Partial Auto Correlation
 =============================================
 
+.. currentmodule:: owlmix.eda.acf_pacf
+
 The ``ACFPACFCalculator`` class provides an easy interface to compute the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) for specified columns in a pandas DataFrame. It leverages the `statsmodels` library for time series analysis and supports configurable lag and precision settings.
 
 Overview
@@ -18,7 +20,10 @@ The ``ACFPACFCalculator`` is designed to:
 Class Reference
 ---------------
 
-.. py:class:: ACFPACFCalculator(df, columns, n_lags=15, precision=3)
+.. autoclass:: ACFPACFCalculator(df, columns, n_lags=15, precision=3)
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
    Calculates the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
    for specified columns in a pandas DataFrame.
