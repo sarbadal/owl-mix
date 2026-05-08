@@ -20,7 +20,7 @@ The ``ACFPACFCalculator`` is designed to:
 Class Reference
 ---------------
 
-.. autoclass:: ACFPACFCalculator(df, columns, n_lags=15, precision=3)
+.. autoclass:: owlmix.eda.acf_pacf.ACFPACFCalculator(df, columns, n_lags=15, precision=3)
    :members:
    :undoc-members:
    :show-inheritance:
