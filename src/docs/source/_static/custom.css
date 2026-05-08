@@ -23,8 +23,18 @@ readthedocs-flyout {
 }
 
 /* Hide Ethical Ads and Sidebar elements */
-.ethical-sidebar, .ea-placement, .ea-type-text {
+.switch-menus, 
+.ethical-sidebar, 
+.ea-placement, 
+.ea-type-text, 
+.floating.container.bottom-right,
+readthedocs-flyout,
+#rtd-footer-container {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
 }
 
 .wy-nav-content {
