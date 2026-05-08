@@ -10,6 +10,14 @@
     display: none !important;
 }
 
+.switch-menus {
+    display: none !important;
+}
+
+.floating container bottom-right {
+    display: none !important;
+}
+
 .wy-nav-content {
     max-width: 1000px !important;  /* For sphinx_rtd_theme */
 }
