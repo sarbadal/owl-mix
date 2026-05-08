@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 def setup(app):
     app.add_js_file('custom.js')
  
-project = 'owlmix-docs'
+project = 'OwlMix'
 copyright = '2026, Sarbadal Pal'
 author = 'Sarbadal Pal'
 release = '0.0.1'
