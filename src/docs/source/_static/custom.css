@@ -14,7 +14,7 @@
     display: none !important;
 }
 
-.floating container bottom-right {
+.floating.container.bottom-right {
     display: none !important;
 }
 
