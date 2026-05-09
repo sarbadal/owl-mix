@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 def setup(app):
     app.add_js_file('custom.js')
 
+html_title = 'OwlMix'
 project = 'OwlMix'
 copyright = '2026, Sarbadal Pal'
 author = 'Sarbadal Pal'
