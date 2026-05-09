@@ -69,7 +69,16 @@ h1 {
     padding-left: 0.75em !important;
 }
 
-/* Hides the "Made with Furo" line in the footer */
-.footer-furo-credit {
+
+.left-details {
+    color: transparent !important;
+}
+
+.left-details a {
     display: none !important;
+    color: transparent !important;
+}
+
+.copyright {
+    color: var(--color-foreground-primary) !important;
 }

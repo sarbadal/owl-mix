@@ -24,6 +24,8 @@ extensions = [
 ]
  
 templates_path = ['_templates']
+print(f"Templates path set to: {templates_path}")
+
 exclude_patterns = []
 
 html_context = { 
@@ -46,9 +48,6 @@ html_css_files = [
     'custom.css',
 ]
 
-
 html_show_sphinx = False
 html_copy_source = False
 html_show_sourcelink = False
-
-print("Sphinx configuration loaded successfully.")
