@@ -4,6 +4,7 @@ import sys
  
 # Add your package root to PYTHONPATH
 sys.path.insert(0, os.path.abspath('../..'))
+from owlmix.eda.acf_pacf import ACFPACFCalculator
 
 
 def setup(app):
