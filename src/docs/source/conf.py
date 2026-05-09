@@ -4,13 +4,11 @@ import sys
  
 # Add your package root to PYTHONPATH
 sys.path.insert(0, os.path.abspath('../..'))
-from owlmix.eda.acf_pacf import ACFPACFCalculator
 
 
 def setup(app):
     app.add_js_file('custom.js')
- 
-html_title = "OwlMix" 
+
 project = 'OwlMix'
 copyright = '2026, Sarbadal Pal'
 author = 'Sarbadal Pal'
@@ -21,12 +19,9 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'myst_parser',
-    'sphinx_copybutton',
 ]
  
 templates_path = ['_templates']
-print(f"Templates path set to: {templates_path}")
-
 exclude_patterns = []
 
 html_context = { 
@@ -34,7 +29,6 @@ html_context = {
     "display_lower_left": False,
 }
  
-# html_theme = 'furo' 
 html_theme = 'sphinx_rtd_theme'
 # html_theme = 'python_docs_theme'
 
@@ -43,6 +37,11 @@ html_theme = 'sphinx_rtd_theme'
 
 # html_permalinks_icon = '<span>#</span>'
 # html_theme = 'sphinxawesome_theme'
+
+html_theme_options = {
+    'display_version': False,  # For older theme versions
+    'version_selector': False, # For newer theme versions
+}
  
 html_static_path = ['_static']
 html_css_files = [
