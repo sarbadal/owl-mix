@@ -1,21 +1,29 @@
-.. _acfpacf:
+.. _acf-pacf:
 
-Auto Correlation and Partial Auto Correlation
-=============================================
+ACF and PACF Module
+===================
 
 .. currentmodule:: owlmix.eda.acf_pacf
 
-The ``ACFPACFCalculator`` class provides an easy interface to compute the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) for specified columns in a pandas DataFrame. It leverages the `statsmodels` library for time series analysis and supports configurable lag and precision settings.
+Autocorrelation and partial autocorrelation are essential tools in time series analysis, helping to identify patterns, 
+seasonality, and the appropriate lag structure for modeling.
+
+The ``ACFPACFCalculator`` class provides an easy interface to compute the Autocorrelation Function (ACF) 
+and Partial Autocorrelation Function (PACF) for specified columns in a pandas DataFrame. 
+It leverages the `statsmodels` library for time series analysis and supports configurable lag and precision settings.
+
+It is particularly useful in identifying lag relationships and temporal dependencies in MMM (Market Mix Modeling) datasets.
 
 Overview
 --------
 
-Autocorrelation and partial autocorrelation are essential tools in time series analysis, helping to identify patterns, seasonality, and the appropriate lag structure for modeling.
+The module exposes a calculator class that:
+ 
+- Accepts a pandas DataFrame
+- Computes ACF and PACF values for selected columns
+- Supports configurable lag values
+- Returns structured output for downstream analysis or visualization
 
-The ``ACFPACFCalculator`` is designed to:
-- Compute ACF and PACF for one or more columns in a DataFrame.
-- Allow users to specify the number of lags and decimal precision.
-- Return results in a structured dictionary format for further analysis or visualization.
 
 Class Reference
 ---------------
@@ -87,6 +95,69 @@ Methods
               ...
           ]
       }
+
+
+Usage Example
+-------------
+ 
+Below is a simple example of how to use the calculator:
+ 
+.. code-block:: python
+ 
+    import pandas as pd
+    from owlmix.eda.acf_pacf import ACFPACFCalculator
+ 
+    # Sample data
+    df = pd.DataFrame({
+        "sales": [100, 120, 130, 125, 140, 150],
+        "spend": [10, 15, 14, 13, 16, 18],
+        "impressions": [1000, 1100, 1050, 1200, 1300, 1250],
+        "tv_grp": [5, 6, 5.5, 7, 8, 7.5]
+    })
+ 
+    # Initialize calculator
+    calculator = ACFPACFCalculator(
+        data=df,
+        columns=["sales", "spend", "impressions", "tv_grp"],
+        nlags=5,
+        precision=2
+    )
+ 
+    # Generate ACF & PACF values
+    result = calculator.generate()
+ 
+    print(result)
+
+
+Output Format
+-------------
+ 
+The ``generate()`` method returns a list of dictionaries. Each dictionary contains ACF and PACF values for a given column and lag.
+ 
+Example structure:
+ 
+.. code-block:: python
+ 
+    {
+        "data": [
+            {
+                "column": "sales",
+                "n_obs": 10,
+                "lags": [0, 1, 2, 3, 4, 5],
+                "acf": [1.0, 0.8, 0.6, 0.4, 0.2, 0.0],
+                "pacf": [1.0, 0.8, 0.1, -0.2, 0.05, -0.1]
+            },
+            {
+                "column": "spend",
+                "n_obs": 10,
+                "lags": [0, 1, 2, 3, 4, 5],
+                "acf": [1.0, 0.7, 0.5, 0.3, 0.1, 0.0],
+                "pacf": [1.0, 0.7, 0.2, -0.1, 0.05, -0.05]
+            },
+            ...
+        ]
+    }
+
 
 Notes
 -----

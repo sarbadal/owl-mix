@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 def setup(app):
     app.add_js_file('custom.js')
  
+html_title = "OwlMix" 
 project = 'OwlMix'
 copyright = '2026, Sarbadal Pal'
 author = 'Sarbadal Pal'
@@ -29,7 +30,8 @@ html_context = {
     "display_lower_left": False,
 }
  
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo' 
+# html_theme = 'sphinx_rtd_theme'
 # html_theme = 'python_docs_theme'
 
 # html_theme = 'bootstrap'
@@ -37,16 +39,12 @@ html_theme = 'sphinx_rtd_theme'
 
 # html_permalinks_icon = '<span>#</span>'
 # html_theme = 'sphinxawesome_theme'
-
-html_theme_options = {
-    'display_version': False,  # For older theme versions
-    'version_selector': False, # For newer theme versions
-}
  
 html_static_path = ['_static']
 html_css_files = [
     'custom.css',
 ]
+
 
 html_show_sphinx = False
 html_copy_source = False

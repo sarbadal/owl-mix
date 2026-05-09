@@ -1,30 +1,64 @@
-.. owlmix documentation master file, created by
-   sphinx-quickstart on Thu May  7 12:36:50 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to OwlMix's documentation!
+=======================================
+ 
+OwlMix is a Python library for performing advanced exploratory data analysis (EDA),
+including lag analysis, correlation insights, and automated reporting.
+ 
+✨ Key Features
+---------------
+ 
+- Automated EDA report generation
+- Time series lag analysis
+- Correlation and statistical insights
+- Easy-to-use API for quick integration
+ 
+🚀 Quick Example
+----------------
+ 
+.. code-block:: python
+ 
+   import pandas as pd
+   from owlmix.report import OwlMixReport
 
-Owlmix Documentation
-====================
+   # Load your data
+   df = pd.read_csv("your_data.csv")
+
+   # Create and generate report
+   report = OwlMixReport(
+      df=df,
+      target="kpi",                             # Target variable for analysis
+      date_column="date",                       # Date column for time series analysis
+      template_name="custom_eda_template.html"  # Optional: use "custom_eda_template_dark.html" for dark theme
+   )
+
+   # Generate HTML and JSON reports
+   report.run(
+      json_file_name="eda_report.json",
+      html_file_name="eda_report.html"
+   )
+ 
+📚 Documentation Overview
+-------------------------
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started
+ 
+   getting-started/installation
+   getting-started/quickstart
+
 
 .. toctree::
    :maxdepth: 2
    :caption: User Guide
+ 
+   user-guide/overview
 
-   installation
-   quickstart
-   advanced-configuration
-   configuration-api-reference
-   working-with-enums
-   file-resolver
-
-Modules
-=======
 
 .. toctree::
    :maxdepth: 2
-   :caption: Classes
+   :caption: API Reference
 
-   vif
-   acf-pacf
-   causality
-   kpi-vs-feature
+   api/acf-pacf
+   api/kpi-vs-feature
