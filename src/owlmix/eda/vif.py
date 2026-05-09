@@ -19,6 +19,7 @@ class VIFCalculator(ColumnMixin):
             target_column (str): The target column to exclude from VIF calculation.
             features (Optional[List[str]]): List of features to include. If None, all columns except target are used.
             precision (int): Decimal precision for VIF values.
+            color_thresholds (Optional[List[Tuple[float, str]]]): List of (threshold, color) tuples for coloring VIF values.
         """
         self.df = df.copy()
         self.target_column = config.get("target_column", None)

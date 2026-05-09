@@ -62,3 +62,4 @@ including lag analysis, correlation insights, and automated reporting.
 
    api/acf-pacf
    api/kpi-vs-feature
+   api/vif
