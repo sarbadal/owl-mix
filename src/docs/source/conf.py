@@ -3,7 +3,7 @@ import sys
 # import sphinx_bootstrap_theme
  
 # Add your package root to PYTHONPATH
-sys.path.insert(0, os.path.abspath('../../owlmix'))
+sys.path.insert(0, os.path.abspath('../..'))
 from owlmix.eda.acf_pacf import ACFPACFCalculator
 
 
@@ -34,8 +34,8 @@ html_context = {
     "display_lower_left": False,
 }
  
-html_theme = 'furo' 
-# html_theme = 'sphinx_rtd_theme'
+# html_theme = 'furo' 
+html_theme = 'sphinx_rtd_theme'
 # html_theme = 'python_docs_theme'
 
 # html_theme = 'bootstrap'
