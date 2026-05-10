@@ -55,7 +55,6 @@ including lag analysis, correlation insights, and automated reporting.
  
    user-guide/overview
 
-
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
@@ -63,3 +62,4 @@ including lag analysis, correlation insights, and automated reporting.
    api/acf-pacf
    api/kpi-vs-feature
    api/vif
+   api/utils/file-resolver

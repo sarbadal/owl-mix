@@ -1,4 +1,3 @@
-# owlmix/file_resolver/file_resolver.py
 """
 Configuration Resolver Module
 
@@ -23,6 +22,8 @@ Features:
 from pathlib import Path
 from typing import Any, Union
 import json
+
+from .io import read_file, save_json
 
 
 class ConfigFileResolver:
@@ -53,6 +54,7 @@ class ConfigFileResolver:
         raise TypeError("config must be dict or path to JSON file")
 
     def resolve(self) -> dict:
+        """Resolves all *_file keys and returns the updated config."""
         self.resolved_config = self._resolve_recursive(self.raw_config)
         return self.resolved_config
 
@@ -139,13 +141,7 @@ class ConfigFileResolver:
         if path in self._cache:
             return self._cache[path]
 
-        file_path = Path(path).resolve()
-        if not file_path.exists():
-            raise FileNotFoundError(f"File not found: {path}")
-
-        with open(file_path, mode="r", encoding="utf-8") as f:
-            content = f.read()
-
+        content = read_file(path)
         self._cache[path] = content
         return content
 
@@ -153,6 +149,4 @@ class ConfigFileResolver:
         if self.resolved_config is None:
             raise ValueError("Call resolve() before saving.")
 
-        output_path = Path(output_path).resolve()
-        with open(output_path, mode="w", encoding="utf-8") as f:
-            json.dump(self.resolved_config, f, indent=2, ensure_ascii=False)
+        save_json(self.resolved_config, output_path)

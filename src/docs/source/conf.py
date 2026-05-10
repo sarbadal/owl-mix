@@ -38,11 +38,6 @@ html_theme = 'furo'
 
 # html_permalinks_icon = '<span>#</span>'
 # html_theme = 'sphinxawesome_theme'
-
-html_theme_options = {
-    'display_version': False,  # For older theme versions
-    'version_selector': False, # For newer theme versions
-}
  
 html_static_path = ['_static']
 html_css_files = [
