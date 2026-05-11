@@ -59,7 +59,14 @@ including lag analysis, correlation insights, and automated reporting.
    :maxdepth: 2
    :caption: API Reference
 
-   api/acf-pacf
+   api/analysis/acf-pacf
+   api/plotter/acf-pacf
    api/kpi-vs-feature
    api/vif
    api/utils/file-resolver
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Type Definitions
+
+   api/typing

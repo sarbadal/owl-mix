@@ -67,3 +67,7 @@ class ChartID(BaseEnum):
     OUTLIERS_CHART = ("outliers_chart", "Outliers Chart")
     COMPARISON_CHART = ("comparison_chart", "Comparison Chart")
 
+
+class SectionEnum(BaseEnum):
+    ACF_PACF = ("acf_pacf", "ACF and PACF Analysis")
+

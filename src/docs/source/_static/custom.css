@@ -2,6 +2,11 @@
     display: none !important;
 }
 
+table.docutils {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
 #rtd-footer-content {
     display: none !important;
 }
