@@ -1,24 +1,4 @@
-"""
-Configuration Resolver Module
-
-This module provides the `ConfigFileResolver` class, designed to automate the
-injection of external file content into a JSON-based configuration.
-
-It recursively scans a dictionary or JSON file for keys ending in `_file`.
-When found, it replaces the key with a version sans the suffix and populates
-it with the raw text content of the referenced file.
-
-Example:
-    Input:  {"description_file": "docs/readme.txt"}
-    Output: {"description": "This is the content of the file."}
-
-Features:
-    - Recursive resolution (handles nested dicts and lists).
-    - Content caching to prevent redundant disk I/O.
-    - Formatting utilities for terminal printing and Python code generation.
-    - Export functionality to save the resolved config back to JSON.
-"""
-
+"""Configuration Resolver Module"""
 from pathlib import Path
 from typing import Any, Union
 import json
@@ -28,14 +8,25 @@ from .io import read_file, save_json
 
 class ConfigFileResolver:
     """
-    Resolves *_file keys in a JSON config:
+    Resolves file references in a configuration dictionary or JSON file.
+    Keys ending with `_file` are treated as file paths, and their content is read
+    and injected into the config under a new key without the suffix.
 
-    - "description_file": "path/to/file.html"
-        ↓
-      "description": "<file content>"
+    Args:
+        config (Union[str, Path, dict]): A path to a JSON config file or a dictionary.
 
-    - Works recursively for nested dicts/lists
-    - Supports any file type (html, txt, md, etc.)
+    Methods:
+        resolve() -> dict: Resolves all file references and returns the updated config.
+        print(): Nicely prints the resolved config with proper formatting.
+        to_python_string() -> str: Returns the resolved config as a valid Python dictionary string.
+        save(output_path: Union[str, Path]): Saves the resolved config to a JSON file.
+
+    Example:
+        resolver = ConfigFileResolver(config="config.json")
+        resolved_config = resolver.resolve()
+        resolver.print()
+        python_str = resolver.to_python_string()
+        resolver.save("resolved_config.json")
     """
 
     def __init__(self, config: Union[str, Path, dict]):
@@ -54,7 +45,7 @@ class ConfigFileResolver:
         raise TypeError("config must be dict or path to JSON file")
 
     def resolve(self) -> dict:
-        """Resolves all *_file keys and returns the updated config."""
+        """Resolves all ``*_file`` keys and returns the updated config."""
         self.resolved_config = self._resolve_recursive(self.raw_config)
         return self.resolved_config
 

@@ -52,33 +52,10 @@ API Reference
 -------------
 
 .. autoclass:: ConfigFileResolver
+    :no-index:
     :members:
     :undoc-members:
     :show-inheritance:
-
-Class Details
--------------
-
-.. class:: ConfigFileResolver(config)
-
-    Resolves ``*_file`` keys in a JSON config or dictionary.
-
-    :param config: The configuration to resolve. Can be a dict, a path to a JSON file, or a string path.
-    :type config: dict or str or pathlib.Path
-
-    **Methods:**
-
-    .. method:: resolve()
-
-        Recursively resolves all ``*_file`` keys and returns the updated configuration as a dictionary.
-
-    .. method:: print()
-
-        Nicely prints the resolved configuration with proper formatting.
-
-    .. method:: export(path)
-
-        Exports the resolved configuration to a JSON file at the specified path.
 
 How It Works
 ------------
