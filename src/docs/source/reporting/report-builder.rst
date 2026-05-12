@@ -7,7 +7,7 @@ It provides a flexible API to add, include, exclude, and reorder report sections
 and to output the report as a JSON file.
 
 Classes and Data Structures
---------------------------
+---------------------------
 
 SectionContent
 ~~~~~~~~~~~~~

@@ -61,8 +61,8 @@ including lag analysis, correlation insights, and automated reporting.
 
    api/analysis/acf-pacf
    api/plotter/acf-pacf
+   api/analysis/vif
    api/kpi-vs-feature
-   api/vif
    api/utils/file-resolver
 
 .. toctree::

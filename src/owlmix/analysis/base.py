@@ -8,7 +8,7 @@ class BaseAnalyzer:
 
     def __init__(self, df, params):
         self.df = df.copy()
-        self.params = params()
+        self.params = params
 
     def compute(self):
         """

@@ -39,7 +39,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
     """
 
     def __init__(self, df: pd.DataFrame, params: AcfPacfParams) -> None:
-        super().__init__(df, AcfPacfParams)
+        super().__init__(df, params)
         self.columns = self._get_numeric_columns(params.columns)
         self.n_lags = params.n_lags
         self.precision = params.precision
@@ -75,7 +75,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
             })
         return results
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2):
+    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
         """
         Prints the ACF and PACF results as pretty-formatted JSON.
         Args:
@@ -86,7 +86,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
             results = self.compute()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: list[dict] = None):
+    def print_results(self, results: list[dict] = None) -> None:
         """
         Prints the ACF and PACF results in a readable format.
         Args:
