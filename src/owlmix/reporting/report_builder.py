@@ -68,10 +68,6 @@ class ReportBuilder:
         self.sections: OrderedDict[str, SectionContent] = OrderedDict()
         self._report_data: Optional[Dict[str, Any]] = None
 
-        # Auto-add all registered sections
-        for section_name in SECTION_BUILDERS.keys():
-            self.add_section_by_name(section_name)
-
     def _config(self) -> ConfigBuilder:
         """Initializes and returns a ConfigBuilder instance based on the current DataFrame, target column, and date column."""
         return ConfigBuilder(
@@ -79,6 +75,12 @@ class ReportBuilder:
             target_col=self.target_col,
             date_col=self.date_col,
         )
+
+    def add_all_sections(self):
+        """Adds all registered sections to the report by iterating through the 
+        SECTION_BUILDERS registry and adding each section by name."""
+        for section_name in SECTION_BUILDERS.keys():
+            self.add_section_by_name(section_name)
 
     def include_sections(self, section_names: list[Union[str, SectionEnum]]) -> None:
         """

@@ -67,6 +67,16 @@ including lag analysis, correlation insights, and automated reporting.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Reporting
+
+   reporting/overview
+   reporting/html-renderer
+   reporting/report-builder
+   reporting/section/acf-pacf
+   reporting/section/protocol-cls
+
+.. toctree::
+   :maxdepth: 2
    :caption: Type Definitions
 
    api/typing

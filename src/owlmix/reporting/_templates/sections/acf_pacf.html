@@ -1,0 +1,80 @@
+{% if sections.acf_pacf is defined %}
+<section>
+    <h2>📊 ACF & PACF Analysis</h2>
+    <p class="section-desc">
+        The ACF and PACF tables present the numerical values of autocorrelation and partial autocorrelation
+        coefficients for each variable across specified lags. These tabulated values enable precise identification
+        of statistically significant lags and the strength of relationships over time.
+    </p>
+
+    {% for item in sections.acf_pacf.data %}
+        {% set table_idx = loop.index %}
+        <div style="margin-bottom: 40px;">
+            <!-- Common title for both table and chart -->
+            <div style="font-size: 1.2rem; font-weight: 600; color: #1e293b; margin-bottom: 18px; text-align: center;">
+                ACF and PACF for {{ item.column }}
+            </div>
+            <div style="
+                display: flex;
+                flex-direction: row;
+                gap: 32px;
+                align-items: flex-start;
+                justify-content: center;
+                flex-wrap: wrap;
+            ">
+                <!-- Table -->
+                <div class="table-container" style="flex: 0 0 260px; max-width: 260px; min-width: 160px;">
+                    <table class="acf-pacf-table" style="font-size: 0.85rem; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">Lag</th>
+                                <th style="width: 80px;">ACF</th>
+                                <th style="width: 80px;">PACF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="acf-pacf-tbody-{{ table_idx }}">
+                            {% for idx in range(item.lags | length) %}
+                            <tr class="{% if idx >= 12 %}hidden-row-{{ table_idx }}{% endif %}">
+                                <td><strong>{{ item.lags[idx] }}</strong></td>
+                                <td>
+                                    {% if item.acf[idx] is number %}
+                                        {{ "%.3f" | format(item.acf[idx]) }}
+                                    {% else %}
+                                        {{ item.acf[idx] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.pacf[idx] is number %}
+                                        {{ "%.3f" | format(item.pacf[idx]) }}
+                                    {% else %}
+                                        {{ item.pacf[idx] }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% if item.lags | length > 12 %}
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align:center;">
+                                    <button type="button" onclick="toggleRows({{ table_idx }})" id="toggle-btn-{{ table_idx }}">Show more rows</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+                <!-- Chart -->
+                {% if sections.acf_pacf.chart and sections.acf_pacf.chart.image %}
+                <div style="flex: 1 1 350px; min-width: 220px; max-width: 1400px; display: flex; align-items: flex-start; height: 100%;">
+                    <div class="chart-card" style="padding: 16px; width: 100%; height: 100%;">
+                        <img src="{{ sections.acf_pacf.chart.image }}" alt="Chart for ACF PACF"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block;">
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</section>
+{% endif %}

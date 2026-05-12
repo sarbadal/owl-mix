@@ -1,12 +1,26 @@
 import os
-from ..registry.registry import (
-    register_section,
-    ANALYZERS_REGISTRY,
-    PLOTTERS_REGISTRY
-)
+from ...registry.registry import register_section, ANALYZERS_REGISTRY, PLOTTERS_REGISTRY
+from .protocol_cls import ReportBuilderProtocol
+
 
 @register_section("acf_pacf")
-def build_acf_pacf_section(report_builder: 'ReportBuilder') -> Dict[str, Any]:
+def build_acf_pacf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
+    """
+    Builds the ACF and PACF section for the report.
+
+    This function retrieves configuration for ACF/PACF analysis from the report builder,
+    initializes the appropriate analyzer and plotter classes with their parameters,
+    computes the ACF/PACF data, generates the corresponding plots, and returns a dictionary
+    containing both the computed data and chart metadata (including a base64-encoded image).
+
+    Args:
+        report_builder (ReportBuilderProtocol): The report builder instance containing the 
+        dataframe and configuration.
+
+    Returns:
+        Dict[str, Any]: A dictionary with keys 'data' (the computed ACF/PACF results)
+                        and 'chart' (metadata and image for the generated plot).
+    """
     config = report_builder.config.acf_pacf_config
     analyzer_cls = ANALYZERS_REGISTRY["acf_pacf"]["analyzer"]
     plotter_cls = PLOTTERS_REGISTRY["acf_pacf"]["analyzer"]
@@ -27,7 +41,10 @@ def build_acf_pacf_section(report_builder: 'ReportBuilder') -> Dict[str, Any]:
         pacf_conf=config.pacf_conf,
     )
 
-    analyzer = analyzer_cls(report_builder.df, analyzer_params)
+    analyzer = analyzer_cls(
+        df=report_builder.df,
+        params=analyzer_params
+    )
     data = analyzer.compute()
 
     plotter = plotter_cls(data=data, params=plotter_params)
