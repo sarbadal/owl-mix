@@ -63,6 +63,7 @@ including lag analysis, correlation insights, and automated reporting.
    api/plotter/acf-pacf
    api/analysis/vif
    api/plotter/vif
+   api/analysis/correlation
    api/kpi-vs-feature
    api/utils/file-resolver
 

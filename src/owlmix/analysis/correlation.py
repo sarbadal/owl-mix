@@ -85,7 +85,7 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         Compute the correlation matrix for the selected columns.
 
         Returns:
-            Dict[str, Dict[str, float]]: Nested dictionary representing the correlation matrix.
+            Dict[str, Dict[str, Dict[str, float]]]: Nested dictionary representing the correlation matrix.
         """
         corr = self.df[self.columns].corr(numeric_only=True).round(self.precision)
         self.corr_matrix = corr.to_dict()
@@ -96,7 +96,7 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         Compute the correlation between a lagged version of a column (t) and the original column (t-lag).
 
         Returns:
-            Dict[str, Dict[int, float]]: Dictionary mapping lag values to their corresponding correlation.
+            Dict[str, Dict[int, float]]: Nested dictionary mapping lag values to their corresponding correlation.
         """
         lag_corr = {}
         for col in self.columns:
