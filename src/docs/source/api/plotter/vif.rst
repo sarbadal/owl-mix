@@ -1,0 +1,73 @@
+.. _vif:
+
+VIF Module - Plotting
+=====================
+
+.. currentmodule:: owlmix.plotting.vif
+
+The ``VIFPlotter`` class provides functionality to visualize the Variance Inflation Factor (VIF) 
+for features in a dataset. This module helps users detect multicollinearity by generating 
+informative bar plots of VIF values for each feature.
+
+Overview
+--------
+
+The module exposes a plotter class that:
+
+- Accepts a pandas DataFrame with VIF values and feature names
+- Plots VIF values for each feature as a horizontal bar chart
+- Highlights common VIF thresholds (5 and 10) for interpretation
+- Supports output directory customization and plot styling
+
+Class Reference
+---------------
+
+.. autoclass:: owlmix.plotting.vif.VIFPlotter
+   :members:
+   :show-inheritance:
+
+   Plots the Variance Inflation Factor (VIF) for features in a pandas DataFrame.
+
+   :param data: Input DataFrame containing feature names, VIF values, and colors.
+   :type data: pandas.DataFrame
+   :param params: Configuration parameters for VIF plotting.
+   :type params: VIFPlotParams
+
+   **Example:**
+
+   .. code-block:: python
+
+      import pandas as pd
+      from owlmix.plotting.vif import VIFPlotter
+
+      data = pd.DataFrame({
+          "feature": ["feature1", "feature2", "feature3"],
+          "vif": [2.5, 8.1, 12.3],
+          "color": ["#1f77b4", "#ff7f0e", "#2ca02c"]
+      })
+
+      plotter = VIFPlotter(data=data)
+      plotter.generate(output_dir="outputs/charts")
+
+Methods
+-------
+
+.. py:method:: generate(output_dir: str = "outputs/charts") -> str
+
+   Generates and saves a horizontal bar plot of VIF values for each feature.
+
+   :param output_dir: Directory to save the generated plot.
+   :type output_dir: str
+   :returns: File path to the saved VIF chart image.
+
+Sample Output
+-------------
+
+The **VIF** plot consists of a horizontal bar chart where each bar represents the VIF value for a feature. 
+Dashed vertical lines at VIF=5 and VIF=10 indicate common thresholds for multicollinearity concerns. 
+VIF values are annotated on each bar for clarity.
+
+.. image:: /_static/image/vif_chart.png
+   :alt: Sample VIF Plot
+   :width: 800px
+   :align: center

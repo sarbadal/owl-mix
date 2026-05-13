@@ -23,7 +23,7 @@ def test_render_html_report_from_json():
     renderer.save_html(html_str, CURRENT_DIR / "tests/output/report.html")
 
 
-def test_acf_pacf_report_generation():
+def test_report_generation():
     df = create_sample_data(n=500)
     report_builder = ReportBuilder(
         df=df,
@@ -40,13 +40,21 @@ def test_acf_pacf_report_generation():
 
     report_builder.config.update_config(
         acf_pacf_config={
-            "columns": ["sales"],
-            "n_lags": 20,
+            "columns": ["sales", "tv_spend"],
+            "n_lags": 5,
             "precision": 3
+        },
+        vif_config={
+            # "features": [
+            #     "tv_spend",
+            #     "digital_spend",
+            #     "radio_spend"
+            # ],
+            "precision": 2
         }
     )
 
-    report_builder.add_all_sections()
+    report_builder.add_all_sections(verbose=True)
 
     # report_builder.add_section_by_name("acf_pacf")
 
@@ -56,5 +64,5 @@ def test_acf_pacf_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    test_acf_pacf_report_generation()
+    test_report_generation()
     test_render_html_report_from_json()

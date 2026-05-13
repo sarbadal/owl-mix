@@ -68,9 +68,11 @@ ReportBuilder
       :return: The current instance of the ReportBuilder.
       :raises ValueError: If no section builder is registered for the given name.
 
-   .. py:method:: add_all_sections()
+   .. py:method:: add_all_sections(verbose: bool = False) -> None
 
       Adds all registered sections to the report by iterating through the SECTION_BUILDERS registry and adding each section by name.
+      
+      :param verbose: If True, prints the name of each section as it is added to the report. Default is False.
 
    .. py:method:: include_sections(section_names: list[Union[str, SectionEnum]]) -> None
 

@@ -52,17 +52,19 @@ Class Reference
       ]
 
       plotter = AcfPacfPlotter(data=data)
-      plotter.plot()
+      plotter.generate(output_dir="outputs/charts")
 
 
 Methods
 -------
 
-.. py:method:: plot()
+.. py:method:: generate(output_dir: str = "outputs/charts") -> str
 
-   Generates and displays ACF and PACF plots for each specified column or series.
+   Generates and saves ACF and PACF plots for each specified column or series.
 
-   :returns: None
+   :param output_dir: Directory to save the generated plots.
+   :type output_dir: str
+   :returns: File path to the saved ACF and PACF chart image.
 
 
 Sample Output

@@ -9,8 +9,7 @@ CURRENT_DIR = Path(__file__).parent.parent.parent
 SRC_DIR = CURRENT_DIR / "src"
 sys.path.append(str(SRC_DIR))
 #===============================================================================
-
-import pandas as pd
+from owlmix.plotting.vif import VIFPlotter, VIFPlotParams
 from owlmix.utils.sample_data_generator import create_sample_data
 from owlmix.analysis.vif import VIFAnalyzer, VIFParams
 
@@ -24,10 +23,13 @@ def test_vif_analyzer():
     )
     analyzer = VIFAnalyzer(df, params)
     result = analyzer.compute()
-    print(result)
+    return result
 
-    analyzer.print_results(result)
-    analyzer.print_results_json(result)
+def test_vif_plotter():
+    data = test_vif_analyzer()
+    plotter = VIFPlotter(data)
+    output_path = plotter.generate()
+    print(f"VIF chart saved to: {output_path}")
 
 if __name__ == "__main__":
-    test_vif_analyzer()
+    test_vif_plotter()

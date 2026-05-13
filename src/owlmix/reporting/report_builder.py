@@ -76,11 +76,13 @@ class ReportBuilder:
             date_col=self.date_col,
         )
 
-    def add_all_sections(self):
+    def add_all_sections(self, verbose: bool = False) -> None:
         """Adds all registered sections to the report by iterating through the 
         SECTION_BUILDERS registry and adding each section by name."""
         for section_name in SECTION_BUILDERS.keys():
             self.add_section_by_name(section_name)
+            if verbose:
+                print(f"Added section: {section_name}")
 
     def include_sections(self, section_names: list[Union[str, SectionEnum]]) -> None:
         """

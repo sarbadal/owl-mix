@@ -20,6 +20,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'myst_parser',
     'sphinx_togglebutton',
+    'sphinx_copybutton',
 ]
  
 templates_path = ['_templates']

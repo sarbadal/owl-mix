@@ -1,32 +1,68 @@
 .. _quickstart:
 
-Quick Start
-===========
+Quickstart
+==========
 
-.. code-block:: python
+This guide shows how to quickly generate an EDA report using the `owlmix` package.
 
-    import pandas as pd
-    from owlmix.report import OwlMixReport
+1. **Install dependencies** (if not already installed):
 
-    # Load your data
-    df = pd.read_csv("your_data.csv")
+   .. code-block:: bash
 
-    # Create and generate report
-    report = OwlMixReport(
-        df=df,
-        target="sales",              # Target variable for analysis
-        date_column="date",          # Date column for time series analysis
-        template_name="custom_eda_template.html"  # Optional: use "custom_eda_template_dark.html" for dark theme
-    )
+      pip install -r requirements.txt
 
-    # Generate HTML and JSON reports
-    report.run(
-        json_file_name="eda_report.json",
-        html_file_name="eda_report.html"
-    )
+2. **Generate a report and render HTML**
 
-**Output:**
+   .. code-block:: python
 
-- ``eda_report.json``: Structured analysis data in JSON format
-- ``eda_report.html``: Interactive HTML report with charts and statistics
-- ``outputs/charts/``: Generated visualization files
+      import warnings
+      from pathlib import Path
+
+      # Suppress user warnings for cleaner output
+      warnings.simplefilter('ignore', category=UserWarning)
+
+      # Import necessary modules from owlmix
+      from owlmix.utils.sample_data_generator import create_sample_data
+      from owlmix.reporting import ReportBuilder, ReportHTMLRenderer
+
+      # Set up paths
+      CURRENT_DIR = Path(__file__).parent
+      OUTPUT_DIR = CURRENT_DIR / "output"
+      OUTPUT_DIR.mkdir(exist_ok=True)
+
+      # Generate sample data (you should replace this with your own dataset)
+      df = create_sample_data(n=500)
+
+      # Build the report
+      report_builder = ReportBuilder(
+          df=df,
+          target_col="sales",
+          date_col="time"
+      )
+
+      # Update configuration for ACF/PACF and VIF
+      report_builder.config.update_config(
+          acf_pacf_config={
+              "columns": ["sales", "tv_spend"],
+              "n_lags": 5,
+              "precision": 3
+          },
+          vif_config={
+              "precision": 2
+          }
+      )
+
+      # Add all sections to the report
+      report_builder.add_all_sections(verbose=True)
+
+      # Build and save the report as JSON
+      report = report_builder.build()
+      report_builder.save(OUTPUT_DIR / "result.json")
+
+      # Render HTML from the JSON report
+      renderer = ReportHTMLRenderer()
+      html_str = renderer.render_from_json(OUTPUT_DIR / "result.json")
+      renderer.save_html(html_str, OUTPUT_DIR / "report.html")
+
+3. **View the generated HTML report**  
+   Open `output/report.html` in your browser to see the EDA report.

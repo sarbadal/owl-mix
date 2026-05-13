@@ -121,6 +121,22 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
                     colors.append("black")
         return colors
 
+    def sort_results_by_vif(self, results: dict) -> dict:
+        combined = list(zip(results["feature"], results["vif"], results["color"]))
+        combined.sort(key=lambda x: x[1], reverse=True)
+        if combined:
+            sorted_features, sorted_vifs, sorted_colors = zip(*combined)
+            return {
+                "feature": list(sorted_features),
+                "vif": list(sorted_vifs),
+                "color": list(sorted_colors)
+            }
+        return {
+            "feature": [],
+            "vif": [],
+            "color": []
+        }
+
     def compute(self) -> Dict[str, Any]:
         """
         Compute the VIF values for the selected features.
@@ -149,11 +165,12 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
             if self.color_thresholds else
             ["black"] * len(vif_values)
         )
-        return {
+        results = {
             "feature": self.features,
             "vif": vif_values,
             "color": colors
         }
+        return self.sort_results_by_vif(results)
 
     def print_results_json(self, results: list[dict] = None, indent: int = 2):
         """

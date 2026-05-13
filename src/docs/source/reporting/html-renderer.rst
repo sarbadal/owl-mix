@@ -96,3 +96,7 @@ Module Attributes
 .. data:: DEFAULT_TEMPLATE_PATH
 
    Default path to the internal '_templates' directory for Jinja2 templates.
+
+.. data:: STATIC_PATH
+
+   Path to the internal '_static' directory for Jinja2 static assets used in reports.

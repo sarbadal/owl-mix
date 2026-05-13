@@ -18,10 +18,12 @@ Typical usage example:
 
 import os
 import json
+from datetime import datetime
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 DEFAULT_TEMPLATE_PATH = Path(__file__).parent / "_templates"
+STATIC_PATH = Path(__file__).parent / "_static"
 
 class ReportHTMLRenderer:
     """
@@ -68,7 +70,13 @@ class ReportHTMLRenderer:
         Returns:
             str: The rendered HTML as a string.
         """
-        self._html_str = self.template.render(sections=report_data.get("sections", {}))
+        now = datetime.now()
+        self._html_str = self.template.render(
+            static_path=STATIC_PATH,
+            sections=report_data.get("sections", {}), 
+            year=now.year,
+            report_datetime=now.strftime("%Y-%m-%d %H:%M:%S")
+        )
         return self._html_str
 
     def render_from_json(self, json_path: str | Path) -> str:

@@ -1,0 +1,44 @@
+{% if sections.vif is defined %}
+<section>
+    <h2>📈 Variance Inflation Factor (VIF) Analysis</h2>
+    <p class="section-desc">
+        The VIF table presents the variance inflation factors for each variable, helping to identify multicollinearity in your dataset.
+    </p>
+
+    {% set vif_data = sections.vif.data %}
+    {% if vif_data and vif_data|length > 0 %}
+        <div style="overflow-x: auto; margin-bottom: 32px;">
+            <table class="vif-table" style="font-size: 0.85rem; width: 100%; min-width: 400px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">Feature Variable</th>
+                        <th style="border-right: 2px solid #ccc;">VIF Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for idx in range(vif_data.feature | length) %}
+                    <tr>
+                        <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">
+                            {{ vif_data.feature[idx] }}
+                        </td>
+                        <td style="border-right: 2px solid #ccc;">
+                            {{ "%.3f"|format(vif_data.vif[idx]) if vif_data.vif[idx] is number else vif_data.vif[idx] }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    <!-- Chart row (always below table) -->
+    {% if sections.vif.chart and sections.vif.chart.image %}
+        <div style="width: 100%; display: flex; justify-content: center; margin-top: 32px;">
+            <div class="chart-card" style="padding: 16px; width: 100%; max-width: 1200px;">
+                <img src="{{ sections.vif.chart.image }}" alt="Chart for VIF"
+                    style="width: 100%; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block;">
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endif %}
