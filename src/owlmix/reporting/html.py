@@ -60,6 +60,22 @@ class ReportHTMLRenderer:
         self.template = self.env.get_template("_default.html")
         self._html_str = None
 
+    def _get_css_content(self, css_path: str | Path = STATIC_PATH / "report.css") -> str:
+        """
+        Read the content of a CSS file.
+
+        Args:
+            css_path (str | Path): The path to the CSS file.
+
+        Returns:
+            str: The content of the CSS file as a string.
+        """
+        css_path = Path(css_path)
+        if not css_path.is_file():
+            return ""
+        with open(css_path, mode="r") as f:
+            return f.read()
+
     def render(self, report_data: dict) -> str:
         """
         Render HTML from a dictionary of report data.
@@ -72,7 +88,7 @@ class ReportHTMLRenderer:
         """
         now = datetime.now()
         self._html_str = self.template.render(
-            static_path=STATIC_PATH,
+            css=self._get_css_content(),
             sections=report_data.get("sections", {}), 
             year=now.year,
             report_datetime=now.strftime("%Y-%m-%d %H:%M:%S")
