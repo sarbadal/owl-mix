@@ -17,16 +17,16 @@ from owlmix.plotting.acf_pacf import AcfPacfPlotter, AcfPacfPlotParams
 def test_acf_pacf_analyzer():
     df = create_sample_data(n=100)
     params = AcfPacfParams(
-        columns=["sales"],
-        n_lags=20,
-        precision=2
+        columns=["sales", "radio_spend", "digital_spend"],
+        n_lags=5,
+        precision=4
     )
     analyzer = AcfPacfAnalyzer(df, params)
     result = analyzer.compute()
-    print(result)
+    # print(result)
 
-    analyzer.print_results(result)
     analyzer.print_results_json(result)
+    analyzer.print_results(result)
 
 
 

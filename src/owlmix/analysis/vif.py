@@ -25,6 +25,7 @@ import json
 import pandas as pd
 import numpy as np
 from dataclasses import dataclass
+from tabulate import tabulate
 from typing import Dict, Any, List, Optional, Tuple
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
@@ -203,10 +204,9 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
             print("No features to display.")
             return
 
-        # Header
-        print(f"{'Feature':<20} {'VIF':>10} {'Color':>10}")
-        print("-" * 42)
-        # Rows
+        table = []
         for feat, vif, color in zip(features, vifs, colors):
-            print(f"{feat:<20} {vif:>10} {color:>10}")
+            table.append([feat, vif, color])
+        headers = ["Feature", "VIF", "Color"]
+        print(tabulate(table, headers=headers, tablefmt='fancy_grid', floatfmt=f".{self.precision}f"))
         

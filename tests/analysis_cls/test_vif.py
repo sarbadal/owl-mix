@@ -24,10 +24,10 @@ def test_vif_analyzer():
     )
     analyzer = VIFAnalyzer(df, params)
     result = analyzer.compute()
-    print(result)
+    # print(result)
 
-    analyzer.print_results(result)
     analyzer.print_results_json(result)
+    analyzer.print_results(result)
 
 if __name__ == "__main__":
     test_vif_analyzer()

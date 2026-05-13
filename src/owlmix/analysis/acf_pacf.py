@@ -4,6 +4,7 @@ import numpy as np
 from dataclasses import dataclass
 from statsmodels.tsa.stattools import acf, pacf
 from typing import List, Dict, Any
+from tabulate import tabulate
 
 from .base import BaseAnalyzer
 from ..utils.mixin import ColumnMixin
@@ -88,17 +89,18 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
 
     def print_results(self, results: list[dict] = None) -> None:
         """
-        Prints the ACF and PACF results in a readable format.
+        Prints the ACF and PACF results in a readable tabular format.
         Args:
             results (list, optional): Results from ``compute()``. If None, ``compute()`` is called.
         """
         if results is None:
             results = self.compute()
+            
         for res in results:
             print(f"\nColumn: {res['column']} (n_obs={res['n_obs']})")
-            print("Lag |   ACF   |  PACF")
-            print("-" * 25)
+            # Prepare table data
+            table = []
             for lag, acf_val, pacf_val in zip(res['lags'], res['acf'], res['pacf']):
-                print(f"{lag:>3} | {acf_val:>7} | {pacf_val:>7}")
-
-    
+                table.append([lag, acf_val, pacf_val])
+            headers = ["Lag", "ACF", "PACF"]
+            print(tabulate(table, headers=headers, tablefmt='fancy_grid', floatfmt=f".{self.precision}f"))
