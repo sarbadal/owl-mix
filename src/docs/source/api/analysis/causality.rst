@@ -34,36 +34,36 @@ Class Reference
 .. toggle:: click to expand
 
     .. autoclass:: owlmix.analysis.causality.CausalityParams
-        :members:
-        :show-inheritance:
+    :members:
+    :show-inheritance:
 
-        Dataclass for specifying causality analysis parameters.
+    Dataclass for specifying causality analysis parameters.
 
-        :param target_column: Name of the target column for causality analysis.
-        :type target_column: Optional[str]
-        :param columns: List of column names to include in the analysis. If None, all numeric columns except the target are used.
-        :type columns: Optional[List[str]]
-        :param max_lag: Maximum number of lag values to compute for causality analysis.
-        :type max_lag: int
-        :param precision: Number of decimal places to round causality values.
-        :type precision: int
-        :param error_threshold: MAPE error threshold for considering a relationship causal (default 0.15).
-        :type error_threshold: float
-        :param p_value_weight: Weight for p-value in combined score (default 0.60).
-        :type p_value_weight: float
-        :param mape_weight: Weight for MAPE in combined score (default 0.40).
-        :type mape_weight: float
+    :param target_column: Name of the target column for causality analysis.
+    :type target_column: Optional[str]
+    :param columns: List of column names to include in the analysis. If None, all numeric columns except the target are used.
+    :type columns: Optional[List[str]]
+    :param max_lag: Maximum number of lag values to compute for causality analysis.
+    :type max_lag: int
+    :param precision: Number of decimal places to round causality values.
+    :type precision: int
+    :param error_threshold: MAPE error threshold for considering a relationship causal (default 0.15).
+    :type error_threshold: float
+    :param p_value_weight: Weight for p-value in combined score (default 0.60).
+    :type p_value_weight: float
+    :param mape_weight: Weight for MAPE in combined score (default 0.40).
+    :type mape_weight: float
 
     .. autoclass:: owlmix.analysis.causality.CausalityAnalyzer(df, params)
-        :members:
-        :show-inheritance:
+    :members:
+    :show-inheritance:
 
-        Computes Granger causality between a target column and other features in a pandas DataFrame.
+    Computes Granger causality between a target column and other features in a pandas DataFrame.
 
-        :param df: Input DataFrame containing the data.
-        :type df: pandas.DataFrame
-        :param params: Configuration parameters for causality analysis.
-        :type params: CausalityParams
+    :param df: Input DataFrame containing the data.
+    :type df: pandas.DataFrame
+    :param params: Configuration parameters for causality analysis.
+    :type params: CausalityParams
 
 ----
 
