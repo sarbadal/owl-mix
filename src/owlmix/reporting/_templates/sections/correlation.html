@@ -67,17 +67,18 @@
 
     <!-- Images row -->
     {% if sections.correlation.chart and sections.correlation.chart.images %}
+    <h5 style="margin-top: 0; padding-left: 16px;">Visualizations Heatmap for Correlation Analysis</h5>
     <div style="display: flex; gap: 32px; justify-content: center; margin-top: 32px;">
         {% if sections.correlation.chart.images.correlation_matrix %}
         <div style="flex: 1; text-align: center;">
             <img src="{{ sections.correlation.chart.images.correlation_matrix }}" alt="Correlation Matrix Chart"
-                 style="width: 100%; max-width: 500px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
+                 style="width: 100%; max-width: 600px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
         </div>
         {% endif %}
         {% if sections.correlation.chart.images.lagged_correlation_matrix %}
         <div style="flex: 1; text-align: center;">
             <img src="{{ sections.correlation.chart.images.lagged_correlation_matrix }}" alt="Lagged Correlation Matrix Chart"
-                 style="width: 100%; max-width: 500px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
+                 style="width: 100%; max-width: 600px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
         </div>
         {% endif %}
     </div>

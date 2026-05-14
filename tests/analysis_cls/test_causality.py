@@ -35,7 +35,7 @@ def test_causality_analyzer():
     results = analyzer.compute()
 
     # Print results in JSON format
-    # analyzer.print_results_json(results)
+    analyzer.print_results_json(results)
 
     # Print results in tabular format
     analyzer.print_results(results)

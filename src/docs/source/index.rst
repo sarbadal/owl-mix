@@ -64,6 +64,8 @@ including lag analysis, correlation insights, and automated reporting.
    api/analysis/vif
    api/plotter/vif
    api/analysis/correlation
+   api/plotter/correlation
+   api/analysis/causality
    api/kpi-vs-feature
    api/utils/file-resolver
 

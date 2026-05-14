@@ -19,7 +19,7 @@ class VIFPlotter(BasePlotter):
         super().__init__(data, params)
 
     def generate(self, output_dir: str = "outputs/charts") -> str:
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(12, 8))
         plt.barh(self.data["feature"], self.data["vif"], color=self.data["color"])
         plt.gca().invert_yaxis()  # Invert y-axis to have the highest VIF on top
 

@@ -5,9 +5,12 @@ Correlation Module - Analysis
 
 .. currentmodule:: owlmix.analysis.correlation
 
-Correlation analysis is a fundamental tool in data analysis, used to measure the strength and direction of relationships between variables. This module provides functionality to compute both the correlation matrix and lagged correlations for selected columns in a pandas DataFrame.
+Correlation analysis is a fundamental tool in data analysis, used to measure the strength 
+and direction of relationships between variables. This module provides functionality to 
+compute both the correlation matrix and lagged correlations for selected columns in a pandas DataFrame.
 
-The ``CorrelationAnalyzer`` class offers a convenient interface for correlation analysis, supporting configurable lag values and precision, and is suitable for time series and general data exploration.
+The ``CorrelationAnalyzer`` class offers a convenient interface for correlation analysis, 
+supporting configurable lag values and precision, and is suitable for time series and general data exploration.
 
 Overview
 --------

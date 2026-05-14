@@ -1,0 +1,52 @@
+{% if sections.causality is defined %}
+<section>
+    <h2>🔗 Causality Analysis</h2>
+    <p class="section-desc">
+        The causality analysis section summarizes the results of causality tests between variables and the target. 
+        It includes key statistics such as best lag, p-values, scores, and whether a variable is considered causal.
+    </p>
+    {% set causality_results = sections.causality.data.causality_test_results %}
+    {% if causality_results %}
+    <div style="overflow-x: auto; margin-bottom: 32px;">
+        <p style="color: rgb(124, 124, 124); padding-left: 16px;"><strong>Error Threshold: {{ sections.causality.data.error_threshold }} %</strong></p>
+        <table style="font-size: 0.95rem; width: 100%; min-width: 600px; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Best Lag</th>
+                    <th>P-Value</th>
+                    <th>Min P-Value</th>
+                    <th>Score</th>
+                    <th>MAPE Score</th>
+                    <th>Lags Tested</th>
+                    <th>Causal</th>
+                    <th>Coeff. Sign</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in causality_results %}
+                <tr>
+                    <td>{{ row.variable }}</td>
+                    <td>{{ row.best_lag }}</td>
+                    <td>{{ "%.3f"|format(row.p_value) }}</td>
+                    <td>{{ "%.3f"|format(row.min_p_value) }}</td>
+                    <td>{{ "%.2f"|format(row.score) }}</td>
+                    <td>{{ "%.3f"|format(row.mape_score) }}</td>
+                    <td>{{ row.number_of_lags_tested }}</td>
+                    <td>
+                        {% if row.causal %}
+                            <span style="color: green;">Yes</span>
+                        {% else %}
+                            <span style="color: #b00;">No</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ row.coefficient_sign|capitalize }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    <!-- You can add chart/image rendering here if sections.causality.chart contains images in the future -->
+</section>
+{% endif %}
