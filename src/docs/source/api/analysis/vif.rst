@@ -29,31 +29,57 @@ The module exposes:
 Class Reference
 ---------------
 
-.. autoclass:: owlmix.analysis.vif.VIFParams
-   :members:
-   :show-inheritance:
+.. toggle:: click to expand
 
-   Dataclass for specifying VIF analysis parameters.
+    .. autoclass:: owlmix.analysis.vif.VIFParams
+       :members:
+       :show-inheritance:
 
-   :param target_column: The name of the target column to exclude from VIF calculation.
-   :type target_column: str
-   :param features: List of feature column names to include in the analysis. If None, all numeric columns are used.
-   :type features: Optional[List[str]]
-   :param precision: Number of decimal places to round VIF values.
-   :type precision: int
-   :param color_thresholds: List of (threshold, color) tuples for color-coding VIF values. If None, no color-coding is applied.
-   :type color_thresholds: Optional[List[Tuple[float, str]]]
+       Dataclass for specifying VIF analysis parameters.
 
-.. autoclass:: owlmix.analysis.vif.VIFAnalyzer(df, params)
-   :members:
-   :show-inheritance:
+       :param target_column: The name of the target column to exclude from VIF calculation.
+       :type target_column: str
+       :param features: List of feature column names to include in the analysis. If None, all numeric columns are used.
+       :type features: Optional[List[str]]
+       :param precision: Number of decimal places to round VIF values.
+       :type precision: int
+       :param color_thresholds: List of (threshold, color) tuples for color-coding VIF values. If None, no color-coding is applied.
+       :type color_thresholds: Optional[List[Tuple[float, str]]]
 
-   Calculates the Variance Inflation Factor (VIF) for specified features in a pandas DataFrame.
+    .. autoclass:: owlmix.analysis.vif.VIFAnalyzer(df, params)
+       :members:
+       :show-inheritance:
 
-   :param df: Input DataFrame containing the data.
-   :type df: pandas.DataFrame
-   :param params: Configuration parameters for VIF analysis.
-   :type params: VIFParams
+       Calculates the Variance Inflation Factor (VIF) for specified features in a pandas DataFrame.
+
+       :param df: Input DataFrame containing the data.
+       :type df: pandas.DataFrame
+       :param params: Configuration parameters for VIF analysis.
+       :type params: VIFParams
+
+----
+
+Methods
+-------
+
+.. py:method:: compute()
+
+   Calculates VIF values for each specified feature.
+
+   :returns: A dictionary with keys:
+     - ``feature``: List of feature names analyzed.
+     - ``vif``: List of VIF values (rounded to specified precision).
+     - ``color``: List of color codes for each VIF value (if color_thresholds provided).
+   :rtype: dict[str, list]
+
+.. py:method:: add_colors(vif_values)
+
+   Assigns colors to VIF values based on the defined color thresholds.
+
+   :param vif_values: List of VIF values.
+   :type vif_values: List[float]
+   :returns: List of color strings corresponding to each VIF value.
+   :rtype: List[str]
 
 **Example:**
 

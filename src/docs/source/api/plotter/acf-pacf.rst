@@ -22,37 +22,45 @@ The module exposes a plotter class that:
 Class Reference
 ---------------
 
-.. autoclass:: owlmix.plotting.acf_pacf.AcfPacfPlotter
-   :members:
-   :show-inheritance:
+.. toggle:: click to expand
 
-   Plots the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
-   for specified columns in a pandas DataFrame or a single Series.
+   .. autoclass:: owlmix.plotting.acf_pacf.AcfPacfPlotParams
+      :members:
+      :show-inheritance:
 
-   :param data: Input DataFrame or Series containing time series data.
-   :type data: pandas.DataFrame or pandas.Series
-   :param params: Configuration parameters for ACF/PACF plotting.
-   :type params: AcfPacfParams
+      Dataclass for specifying ACF/PACF plotting parameters.
 
-   **Example:**
+   .. autoclass:: owlmix.plotting.acf_pacf.AcfPacfPlotter
+      :members:
+      :show-inheritance:
 
-   .. code-block:: python
+      Plots the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
+      for specified columns in a pandas DataFrame or a single Series.
 
-      import pandas as pd
-      from owlmix.plotting.acf_pacf import AcfPacfPlotter
+      :param data: Input DataFrame or Series containing time series data.
+      :type data: pandas.DataFrame or pandas.Series
+      :param params: Configuration parameters for ACF/PACF plotting.
+      :type params: AcfPacfPlotParams
 
-      data = [
-          {
-             "column": "sales",
-             "n_obs": 500,
-             "lags": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-             "acf": [1.0, -0.0145, -0.0466, 0.0489, -0.0108, 0.0131, -0.031, 0.0764, 0.0464, -0.0455, -0.051],
-             "pacf": [1.0, -0.0146, -0.047, 0.0479, -0.0118, 0.0176, -0.0346, 0.0797, 0.0446, -0.0346, -0.0586]
-          }
-      ]
+**Example:**
 
-      plotter = AcfPacfPlotter(data=data)
-      plotter.generate(output_dir="outputs/charts")
+.. code-block:: python
+
+   import pandas as pd
+   from owlmix.plotting.acf_pacf import AcfPacfPlotter
+
+   data = [
+         {
+            "column": "sales",
+            "n_obs": 500,
+            "lags": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            "acf": [1.0, -0.0145, -0.0466, 0.0489, -0.0108, 0.0131, -0.031, 0.0764, 0.0464, -0.0455, -0.051],
+            "pacf": [1.0, -0.0146, -0.047, 0.0479, -0.0118, 0.0176, -0.0346, 0.0797, 0.0446, -0.0346, -0.0586]
+         }
+   ]
+
+   plotter = AcfPacfPlotter(data=data)
+   plotter.generate(output_dir="outputs/charts")
 
 
 Methods

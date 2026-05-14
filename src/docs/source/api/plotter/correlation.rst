@@ -20,43 +20,51 @@ The module exposes a plotter class that:
 Class Reference
 ---------------
 
-.. autoclass:: owlmix.plotting.correlation.CorrelationPlotter
-   :members:
-   :show-inheritance:
+.. toggle:: click to expand
 
-   Plots the correlation matrix and lagged correlation matrix for the provided data.
+   .. autoclass:: owlmix.plotting.correlation.CorrPlotParams
+      :members:
+      :show-inheritance:
 
-   :param data: Dictionary containing correlation matrices (e.g., "correlation_matrix", "lagged_correlation_matrix").
-   :type data: dict
-   :param params: Configuration parameters for correlation plotting.
-   :type params: CorrPlotParams
+      Dataclass for specifying correlation plotting parameters.
 
-   **Example:**
+   .. autoclass:: owlmix.plotting.correlation.CorrelationPlotter
+      :members:
+      :show-inheritance:
 
-   .. code-block:: python
+      Plots the correlation matrix and lagged correlation matrix for the provided data.
 
-      import pandas as pd
-      from owlmix.utils.sample_data_generator import create_sample_data
-      from owlmix.analysis.correlation import CorrelationAnalyzer, CorrelationParams
-      from owlmix.plotting.correlation import CorrelationPlotter, CorrPlotParams
+      :param data: Dictionary containing correlation matrices (e.g., "correlation_matrix", "lagged_correlation_matrix").
+      :type data: dict
+      :param params: Configuration parameters for correlation plotting.
+      :type params: CorrPlotParams
 
-      # Generate sample data
-      df = create_sample_data(n=100)
+**Example:**
 
-      # Define parameters for CorrelationAnalyzer
-      params = CorrelationParams(
-          columns=None,  # Use all numeric columns
-          n_lags=25,
-          precision=4
-      )
+.. code-block:: python
 
-      # Create and compute the analyzer
-      analyzer = CorrelationAnalyzer(df, params)
-      result = analyzer.compute()
+   import pandas as pd
+   from owlmix.utils.sample_data_generator import create_sample_data
+   from owlmix.analysis.correlation import CorrelationAnalyzer, CorrelationParams
+   from owlmix.plotting.correlation import CorrelationPlotter, CorrPlotParams
 
-      # Create and generate the plotter
-      plotter = CorrelationPlotter(result)
-      corr_file_path, lagged_corr_file_path = plotter.generate(output_dir="outputs/charts")
+   # Generate sample data
+   df = create_sample_data(n=100)
+
+   # Define parameters for CorrelationAnalyzer
+   params = CorrelationParams(
+      columns=None,  # Use all numeric columns
+      n_lags=25,
+      precision=4
+   )
+
+   # Create and compute the analyzer
+   analyzer = CorrelationAnalyzer(df, params)
+   result = analyzer.compute()
+
+   # Create and generate the plotter
+   plotter = CorrelationPlotter(result)
+   corr_file_path, lagged_corr_file_path = plotter.generate(output_dir="outputs/charts")
 
 Methods
 -------

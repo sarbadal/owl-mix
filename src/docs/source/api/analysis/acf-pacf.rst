@@ -28,17 +28,32 @@ The module exposes a calculator class that:
 Class Reference
 ---------------
 
-.. autoclass:: owlmix.analysis.acf_pacf.AcfPacfAnalyzer(df, params)
-   :members:
-   :show-inheritance:
+.. toggle:: click to expand
 
-   Calculates the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
-   for specified columns in a pandas DataFrame.
+  .. autoclass:: owlmix.analysis.acf_pacf.AcfPacfParams
+     :members:
+     :show-inheritance:
 
-   :param df: Input DataFrame containing time series data.
-   :type df: pandas.DataFrame
-   :param params: Configuration parameters for ACF/PACF analysis.
-   :type params: AcfPacfParams
+     Dataclass for specifying ACF/PACF analysis parameters.
+
+     :param columns: List of column names to include in the analysis. If None, all numeric columns are used.
+     :type columns: Optional[List[str]]
+     :param n_lags: Number of lag values to compute for ACF and PACF.
+     :type n_lags: int
+     :param precision: Number of decimal places to round ACF and PACF values.
+     :type precision: int
+
+  .. autoclass:: owlmix.analysis.acf_pacf.AcfPacfAnalyzer(df, params)
+     :members:
+     :show-inheritance:
+ 
+     Calculates the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
+     for specified columns in a pandas DataFrame.
+ 
+     :param df: Input DataFrame containing time series data.
+     :type df: pandas.DataFrame
+     :param params: Configuration parameters for ACF/PACF analysis.
+     :type params: AcfPacfParams
 
 **Example:**
 

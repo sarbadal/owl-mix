@@ -22,32 +22,40 @@ The module exposes a plotter class that:
 Class Reference
 ---------------
 
-.. autoclass:: owlmix.plotting.vif.VIFPlotter
-   :members:
-   :show-inheritance:
+.. toggle:: click to expand
 
-   Plots the Variance Inflation Factor (VIF) for features in a pandas DataFrame.
+   .. autoclass:: owlmix.plotting.vif.VIFPlotParams
+      :members:
+      :show-inheritance:
 
-   :param data: Input DataFrame containing feature names, VIF values, and colors.
-   :type data: pandas.DataFrame
-   :param params: Configuration parameters for VIF plotting.
-   :type params: VIFPlotParams
+      Dataclass for specifying VIF plotting parameters.
 
-   **Example:**
+   .. autoclass:: owlmix.plotting.vif.VIFPlotter
+      :members:
+      :show-inheritance:
 
-   .. code-block:: python
+      Plots the Variance Inflation Factor (VIF) for features in a pandas DataFrame.
 
-      import pandas as pd
-      from owlmix.plotting.vif import VIFPlotter
+      :param data: Input DataFrame containing feature names, VIF values, and colors.
+      :type data: pandas.DataFrame
+      :param params: Configuration parameters for VIF plotting.
+      :type params: VIFPlotParams
 
-      data = pd.DataFrame({
-          "feature": ["feature1", "feature2", "feature3"],
-          "vif": [2.5, 8.1, 12.3],
-          "color": ["#1f77b4", "#ff7f0e", "#2ca02c"]
-      })
+**Example:**
 
-      plotter = VIFPlotter(data=data)
-      plotter.generate(output_dir="outputs/charts")
+.. code-block:: python
+
+   import pandas as pd
+   from owlmix.plotting.vif import VIFPlotter
+
+   data = pd.DataFrame({
+         "feature": ["feature1", "feature2", "feature3"],
+         "vif": [2.5, 8.1, 12.3],
+         "color": ["#1f77b4", "#ff7f0e", "#2ca02c"]
+   })
+
+   plotter = VIFPlotter(data=data)
+   plotter.generate(output_dir="outputs/charts")
 
 Methods
 -------

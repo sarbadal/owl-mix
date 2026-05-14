@@ -34,28 +34,28 @@ Class Reference
 .. toggle:: click to expand
 
     .. autoclass:: owlmix.analysis.correlation.CorrelationParams
-    :members:
-    :show-inheritance:
+       :members:
+       :show-inheritance:
 
-    Dataclass for specifying correlation analysis parameters.
+       Dataclass for specifying correlation analysis parameters.
 
-    :param columns: List of column names to include in the analysis. If None, all numeric columns are used.
-    :type columns: Optional[List[str]]
-    :param n_lags: Number of lag values to compute for lagged correlation.
-    :type n_lags: int
-    :param precision: Number of decimal places to round correlation values.
-    :type precision: int
+       :param columns: List of column names to include in the analysis. If None, all numeric columns are used.
+       :type columns: Optional[List[str]]
+       :param n_lags: Number of lag values to compute for lagged correlation.
+       :type n_lags: int
+       :param precision: Number of decimal places to round correlation values.
+       :type precision: int
 
     .. autoclass:: owlmix.analysis.correlation.CorrelationAnalyzer(df, params)
-    :members:
-    :show-inheritance:
+       :members:
+       :show-inheritance:
 
-    Computes the correlation matrix and lagged correlations for specified features in a pandas DataFrame.
+       Computes the correlation matrix and lagged correlations for specified features in a pandas DataFrame.
 
-    :param df: Input DataFrame containing the data.
-    :type df: pandas.DataFrame
-    :param params: Configuration parameters for correlation analysis.
-    :type params: CorrelationParams
+       :param df: Input DataFrame containing the data.
+       :type df: pandas.DataFrame
+       :param params: Configuration parameters for correlation analysis.
+       :type params: CorrelationParams
 
 ----
 
