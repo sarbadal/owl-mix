@@ -35,4 +35,24 @@ def test_correlation_analyzer():
     analyzer.print_results(result)
 
 if __name__ == "__main__":    
-    test_correlation_analyzer()
+    # test_correlation_analyzer()
+    ...
+
+    import pandas as pd
+    from owlmix.analysis.correlation import CorrelationAnalyzer, CorrelationParams
+
+    df = pd.DataFrame({
+        "a": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "b": [2, 3, 2, 5, 7, 8, 6, 5, 4, 3],
+        "c": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    })
+
+    params = CorrelationParams(
+        columns=["a", "b", "c"],
+        n_lags=2,
+        precision=2
+    )
+    analyzer = CorrelationAnalyzer(df=df, params=params)
+    result = analyzer.compute()
+    # analyzer.print_results(result)
+    analyzer.print_results_json(result)

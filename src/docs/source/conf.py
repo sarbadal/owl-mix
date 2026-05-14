@@ -46,6 +46,7 @@ html_css_files = [
     'custom.css',
 ]
 
+html_allow_unsafe = True
 html_show_sphinx = False
 html_copy_source = False
 html_show_sourcelink = False

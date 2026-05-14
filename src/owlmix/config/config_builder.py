@@ -5,6 +5,7 @@ from typing import Self, Unpack, Any
 from ..typing.types import PeriodType, ComparisonType, PlotModeType
 from ..params import Args
 from ..params import AcfPacfConfigArgs
+from ..params import CorrelationConfigArgs
 from ..params import VifConfigArgs
 
 OUTPUT_DIR = "output"
@@ -25,6 +26,7 @@ class ConfigBuilder:
     def _init_config(self) -> None:
         self.acf_pacf_config = Args.acf_pacf.build(columns=[self.target_col])
         self.vif_config = Args.vif.build(target_column=self.target_col)
+        self.correlation_config = Args.correlation.build()
 
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
@@ -42,6 +44,7 @@ class ConfigBuilder:
         config_mapping = {
             "acf_pacf_config": self.update_acf_pacf_config,
             "vif_config": self.update_vif_config,
+            "correlation_config": self.update_correlation_config,
             # Add other config update methods here as needed
         }
 
@@ -59,6 +62,17 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.acf_pacf_config = replace(self.acf_pacf_config, **kwargs)
+        return self
+
+    def update_correlation_config(self, **kwargs: Unpack[CorrelationConfigArgs]) -> Self:
+        """
+        Update the Correlation configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Correlation configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.correlation_config = replace(self.correlation_config, **kwargs)
         return self
 
     def update_vif_config(self, **kwargs: Unpack[VifConfigArgs]) -> Self:

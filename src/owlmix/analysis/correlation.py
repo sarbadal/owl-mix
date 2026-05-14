@@ -137,7 +137,7 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         if corr_matrix:
             # Convert nested dict to a DataFrame-like structure for tabulate
             df = pd.DataFrame(corr_matrix)
-            print(tabulate(df, headers='keys', tablefmt='fancy_grid', floatfmt=f".{self.precision}f"))
+            print(tabulate(df, headers='keys', tablefmt='simple', floatfmt=f".{self.precision}f"))
         else:
             print("No correlation matrix available.")
 
@@ -151,6 +151,6 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
             for col, lag_values in lag_corr.items():
                 row = [col] + [lag_values.get(lag, None) for lag in lags]
                 lagged_table.append(row)
-            print(tabulate(lagged_table, headers=headers, tablefmt='fancy_grid', floatfmt=f".{self.precision}f"))
+            print(tabulate(lagged_table, headers=headers, tablefmt='simple', floatfmt=f".{self.precision}f"))
         else:
             print("No lagged correlation matrix available.")

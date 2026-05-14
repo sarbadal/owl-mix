@@ -30,4 +30,6 @@ def test_vif_analyzer():
     analyzer.print_results(result)
 
 if __name__ == "__main__":
-    test_vif_analyzer()
+    # test_vif_analyzer()
+    ...
+

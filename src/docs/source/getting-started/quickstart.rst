@@ -69,6 +69,8 @@ This guide shows how to quickly generate an EDA report using the `owlmix` packag
 
 **Sample HTML Report**
 
-.. raw:: html
+.. toggle:: click to expand
 
-   <iframe src="../../_static/report.html" width="100%" height="600px" style="border:none;"></iframe>
+    .. raw:: html
+
+        <iframe src="../../_static/report.html" width="100%" height="600px" style="border:none;"></iframe>
