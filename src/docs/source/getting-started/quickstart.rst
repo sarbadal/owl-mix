@@ -42,14 +42,19 @@ This guide shows how to quickly generate an EDA report using the `owlmix` packag
 
       # Update configuration for ACF/PACF and VIF
       report_builder.config.update_config(
-          acf_pacf_config={
+          acf_pacf={
               "columns": ["sales", "tv_spend"],
               "n_lags": 5,
               "precision": 3
           },
-          vif_config={
+          vif={
               "precision": 2
-          }
+          },
+          correlation={
+            # "columns": ["sales", "tv_spend"],
+            "n_lags": 8,
+            "precision": 5
+        }
       )
 
       # Add all sections to the report

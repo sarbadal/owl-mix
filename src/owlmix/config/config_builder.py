@@ -5,6 +5,7 @@ from typing import Self, Unpack, Any
 from ..typing.types import PeriodType, ComparisonType, PlotModeType
 from ..params import Args
 from ..params import AcfPacfConfigArgs
+from ..params import CausalityConfigArgs
 from ..params import CorrelationConfigArgs
 from ..params import VifConfigArgs
 
@@ -26,6 +27,7 @@ class ConfigBuilder:
     def _init_config(self) -> None:
         self.acf_pacf_config = Args.acf_pacf.build(columns=[self.target_col])
         self.vif_config = Args.vif.build(target_column=self.target_col)
+        self.causality_config = Args.causality.build(target_column=self.target_col)
         self.correlation_config = Args.correlation.build()
 
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
@@ -42,9 +44,10 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         config_mapping = {
-            "acf_pacf_config": self.update_acf_pacf_config,
-            "vif_config": self.update_vif_config,
-            "correlation_config": self.update_correlation_config,
+            "acf_pacf": self.update_acf_pacf_config,
+            "vif": self.update_vif_config,
+            "correlation": self.update_correlation_config,
+            "causality": self.update_causality_config,
             # Add other config update methods here as needed
         }
 
@@ -84,4 +87,15 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.vif_config = replace(self.vif_config, **kwargs)
+        return self
+
+    def update_causality_config(self, **kwargs: Unpack[CausalityConfigArgs]) -> Self:
+        """
+        Update the Causality configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Causality configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.causality_config = replace(self.causality_config, **kwargs)
         return self

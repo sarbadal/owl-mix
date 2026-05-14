@@ -2,6 +2,8 @@ import os, sys
 import warnings
 from pathlib import Path
 
+from statsmodels.graphics import correlation
+
 warnings.simplefilter('ignore', category=UserWarning)
 
 # Add src to the path
@@ -39,18 +41,23 @@ def test_report_generation():
     # )
 
     report_builder.config.update_config(
-        acf_pacf_config={
+        acf_pacf={
             "columns": ["sales", "tv_spend"],
             "n_lags": 5,
             "precision": 3
         },
-        vif_config={
+        vif={
             # "features": [
             #     "tv_spend",
             #     "digital_spend",
             #     "radio_spend"
             # ],
             "precision": 2
+        },
+        correlation={
+            # "columns": ["sales", "tv_spend"],
+            "n_lags": 8,
+            "precision": 5
         }
     )
 

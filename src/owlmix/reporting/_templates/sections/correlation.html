@@ -1,0 +1,86 @@
+{% if sections.correlation is defined %}
+<section>
+    <h2>🔗 Correlation Analysis</h2>
+    <p class="section-desc">
+        The correlation analysis section provides insights into the relationships between variables in your dataset. 
+        It includes both the correlation matrix and the lagged correlation matrix, along with visualizations to 
+        help you understand these relationships better.
+    </p>
+    <div style="display: flex; gap: 32px; margin-bottom: 32px;">
+        <!-- Correlation Matrix Table -->
+        {% set corr_matrix = sections.correlation.data.correlation_matrix %}
+        {% if corr_matrix %}
+        <div style="flex: 1; overflow-x: auto;">
+            <h3>Correlation Matrix</h3>
+            <table style="font-size: 0.85rem; width: 100%; min-width: 300px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        {% for col in corr_matrix.keys() %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in corr_matrix.keys() %}
+                    <tr>
+                        <td>{{ row }}</td>
+                        {% for col in corr_matrix.keys() %}
+                        <td>{{ "%.2f"|format(corr_matrix[row][col]) }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Lagged Correlation Matrix Table -->
+        {% set lagged_corr = sections.correlation.data.lagged_correlation_matrix %}
+        {% if lagged_corr %}
+        <div style="flex: 1; overflow-x: auto;">
+            <h3>Lagged Correlation Matrix</h3>
+            <table style="font-size: 0.85rem; width: 100%; min-width: 300px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        {% set lags = lagged_corr[lagged_corr|list|first].keys() %}
+                        {% for lag in lags %}
+                        <th>Lag {{ lag }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for col in lagged_corr.keys() %}
+                    <tr>
+                        <td>{{ col }}</td>
+                        {% for lag in lags %}
+                        <td>{{ "%.2f"|format(lagged_corr[col][lag]) }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Images row -->
+    {% if sections.correlation.chart and sections.correlation.chart.images %}
+    <div style="display: flex; gap: 32px; justify-content: center; margin-top: 32px;">
+        {% if sections.correlation.chart.images.correlation_matrix %}
+        <div style="flex: 1; text-align: center;">
+            <img src="{{ sections.correlation.chart.images.correlation_matrix }}" alt="Correlation Matrix Chart"
+                 style="width: 100%; max-width: 500px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
+        </div>
+        {% endif %}
+        {% if sections.correlation.chart.images.lagged_correlation_matrix %}
+        <div style="flex: 1; text-align: center;">
+            <img src="{{ sections.correlation.chart.images.lagged_correlation_matrix }}" alt="Lagged Correlation Matrix Chart"
+                 style="width: 100%; max-width: 500px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee;">
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endif %}
