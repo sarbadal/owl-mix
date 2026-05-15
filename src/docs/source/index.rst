@@ -77,6 +77,8 @@ including lag analysis, correlation insights, and automated reporting.
    reporting/html-renderer
    reporting/report-builder
    reporting/section/acf-pacf
+   reporting/section/causality
+   reporting/section/correlation
    reporting/section/vif
    reporting/section/protocol-cls
 

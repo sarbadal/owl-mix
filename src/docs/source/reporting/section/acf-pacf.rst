@@ -1,20 +1,20 @@
 .. _section.acf-pacf:
 
-Section ACF/PACF
-================
+reporting.sections.acf_pacf
+===========================
 
-This module provides the implementation for building the ACF (Autocorrelation Function) and PACF (Partial Autocorrelation Function) section in a report. It integrates with the report builder framework and utilizes registered analyzers and plotters to compute and visualize ACF/PACF for specified columns in a DataFrame.
+.. currentmodule:: owlmix.reporting.sections.acf_pacf
 
-.. automodule:: owlmix.reporting.sections.acf_pacf
-    :members:
-    :undoc-members:
-    :show-inheritance:
+This function provides the implementation for building the ACF (Autocorrelation Function) 
+and PACF (Partial Autocorrelation Function) section in a report. It integrates with the 
+report builder framework and utilizes registered analyzers and plotters to compute a
+nd visualize ACF/PACF for specified columns in a DataFrame.
+
 
 Functions
 ---------
 
 .. py:function:: build_acf_pacf_section(report_builder)
-    :no-index:
 
     Builds the ACF and PACF section for the report.
 
@@ -27,31 +27,33 @@ Functions
     :type report_builder: ReportBuilderProtocol
 
     :returns: A dictionary with keys:
-        - ``data``: The computed ACF/PACF results.
-        - ``chart``: Metadata and image for the generated plot, including:
-        - ``title``: Title of the chart.
-        - ``description``: Description of the chart.
-        - ``alt_text``: Alternative text for the image.
-        - ``image``: Base64-encoded image of the plot.
+
+                - ``data``: The computed ACF/PACF results.
+                - ``chart``: Metadata and image for the generated plot, including:
+
+                    - ``title``: Title of the chart.
+                    - ``description``: Description of the chart.
+                    - ``alt_text``: Alternative text for the image.
+                    - ``image``: Base64-encoded image of the plot.
     :rtype: dict
 
-    **Workflow:**
+**Workflow:**
 
-    1. Retrieves the ACF/PACF configuration from the report builder.
-    2. Fetches the analyzer and plotter classes and their parameter classes from the registries.
-    3. Initializes analyzer and plotter parameter objects using the configuration.
-    4. Instantiates the analyzer with the DataFrame and parameters, then computes the ACF/PACF data.
-    5. Instantiates the plotter with the computed data and plot parameters, then generates the plot.
-    6. Converts the plot image to a base64 string for embedding in the report.
-    7. Returns a dictionary containing both the computed data and chart metadata.
+1. Retrieves the ACF/PACF configuration from the report builder.
+2. Fetches the analyzer and plotter classes and their parameter classes from the registries.
+3. Initializes analyzer and plotter parameter objects using the configuration.
+4. Instantiates the analyzer with the DataFrame and parameters, then computes the ACF/PACF data.
+5. Instantiates the plotter with the computed data and plot parameters, then generates the plot.
+6. Converts the plot image to a base64 string for embedding in the report.
+7. Returns a dictionary containing both the computed data and chart metadata.
 
-    **Example Usage:**
+**Example Usage:**
 
-    .. code-block:: python
+.. code-block:: python
 
-        section = build_acf_pacf_section(report_builder)
-        data = section["data"]
-        chart = section["chart"]
+    section = build_acf_pacf_section(report_builder)
+    data = section["data"]
+    chart = section["chart"]
 
 Dependencies
 ------------
