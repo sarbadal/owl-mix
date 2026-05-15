@@ -3,7 +3,10 @@
 reporting.sections.box_plot
 ===========================
 
-.. currentmodule:: owlmix.reporting.sections.box_plot
+.. automodule:: owlmix.reporting.sections.box_plot
+    :members: build_box_plot_section
+    :undoc-members:
+    :show-inheritance:
 
 This function provides the implementation for building the Box Plot section in a 
 report. It integrates with the report builder framework and utilizes registered 
@@ -83,4 +86,8 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
+- :mod:`owlmix.reporting.sections.acf_pacf`
 - :mod:`owlmix.reporting.sections.box_plot`
+- :mod:`owlmix.reporting.sections.correlation`
+- :mod:`owlmix.reporting.sections.causality`
+- :mod:`owlmix.reporting.sections.vif`

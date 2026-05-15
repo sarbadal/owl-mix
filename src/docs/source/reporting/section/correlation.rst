@@ -8,7 +8,10 @@ section in a report. It integrates with the report builder framework and utilize
 registered analyzers and plotters to compute and visualize correlation matrices 
 and lagged correlations for specified features in a DataFrame.
 
-.. currentmodule:: owlmix.reporting.sections.correlation
+.. automodule:: owlmix.reporting.sections.correlation
+    :members: build_correlation_section
+    :undoc-members:
+    :show-inheritance:
 
 Functions
 ---------
@@ -85,4 +88,8 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
+- :mod:`owlmix.reporting.sections.acf_pacf`
+- :mod:`owlmix.reporting.sections.box_plot`
 - :mod:`owlmix.reporting.sections.correlation`
+- :mod:`owlmix.reporting.sections.causality`
+- :mod:`owlmix.reporting.sections.vif`

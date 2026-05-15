@@ -5,7 +5,10 @@ reporting.sections.vif
 
 This function provides the implementation for building the VIF (Variance Inflation Factor) section in a report. It integrates with the report builder framework and utilizes registered analyzers and plotters to compute and visualize VIF for specified features in a DataFrame.
 
-.. currentmodule:: owlmix.reporting.sections.vif
+.. automodule:: owlmix.reporting.sections.vif
+    :members: build_vif_section
+    :undoc-members:
+    :show-inheritance:
 
 Functions
 ---------
@@ -80,4 +83,8 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
+- :mod:`owlmix.reporting.sections.acf_pacf`
+- :mod:`owlmix.reporting.sections.box_plot`
+- :mod:`owlmix.reporting.sections.correlation`
+- :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`

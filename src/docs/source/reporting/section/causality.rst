@@ -5,7 +5,10 @@ reporting.sections.causality
 
 This function provides the implementation for building the causality analysis section in a report. It integrates with the report builder framework and utilizes registered analyzers to compute causality results for specified features in a DataFrame.
 
-.. currentmodule:: owlmix.reporting.sections.causality
+.. automodule:: owlmix.reporting.sections.causality
+    :members: build_causality_section
+    :undoc-members:
+    :show-inheritance:
 
 Functions
 ---------
@@ -72,4 +75,8 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
+- :mod:`owlmix.reporting.sections.acf_pacf`
+- :mod:`owlmix.reporting.sections.box_plot`
 - :mod:`owlmix.reporting.sections.causality`
+- :mod:`owlmix.reporting.sections.correlation`
+- :mod:`owlmix.reporting.sections.vif`

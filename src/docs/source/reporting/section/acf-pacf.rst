@@ -3,7 +3,10 @@
 reporting.sections.acf_pacf
 ===========================
 
-.. currentmodule:: owlmix.reporting.sections.acf_pacf
+.. automodule:: owlmix.reporting.sections.acf_pacf
+    :members: build_acf_pacf_section
+    :undoc-members:
+    :show-inheritance:
 
 This function provides the implementation for building the ACF (Autocorrelation Function) 
 and PACF (Partial Autocorrelation Function) section in a report. It integrates with the 
@@ -85,3 +88,7 @@ See Also
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
 - :mod:`owlmix.reporting.sections.acf_pacf`
+- :mod:`owlmix.reporting.sections.box_plot`
+- :mod:`owlmix.reporting.sections.correlation`
+- :mod:`owlmix.reporting.sections.causality`
+- :mod:`owlmix.reporting.sections.vif`
