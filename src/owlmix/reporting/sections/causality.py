@@ -1,4 +1,5 @@
 import os
+from typing import Any, Dict
 from ...registry.registry import register_section, ANALYZERS_REGISTRY, PLOTTERS_REGISTRY
 from .protocol_cls import ReportBuilderProtocol
 
