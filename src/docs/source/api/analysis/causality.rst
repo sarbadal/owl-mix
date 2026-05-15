@@ -26,7 +26,6 @@ The module exposes:
   - Supports configurable lag values, precision, and scoring weights
   - Returns structured output for further analysis or reporting
 
-----
 
 Class Reference
 ---------------
@@ -59,46 +58,40 @@ Class Reference
     :param params: Configuration parameters for causality analysis.
     :type params: ``CausalityParams``
 
-----
+    .. py:method:: compute()
 
-Methods
--------
+    Computes Granger causality results for all selected columns.
 
-.. py:method:: compute()
+    :returns: A dictionary with keys:
+        - ``causality_test_results``: List of result dictionaries for each feature.
+        - ``error_threshold``: The MAPE error threshold used for determining causality.
+    :rtype: ``dict``
 
-   Computes Granger causality results for all selected columns.
+    .. py:method:: granger_causality(column)
 
-   :returns: A dictionary with keys:
-     - ``causality_test_results``: List of result dictionaries for each feature.
-     - ``error_threshold``: The MAPE error threshold used for determining causality.
-   :rtype: ``dict``
+    Perform Granger causality test for a given feature column.
 
-.. py:method:: granger_causality(column)
+    :param column: Feature column name.
+    :type column: ``str``
+    :returns: Result dictionary for the feature.
+    :rtype: ``dict``
 
-   Perform Granger causality test for a given feature column.
+    .. py:method:: print_results_json(results=None, indent=2)
 
-   :param column: Feature column name.
-   :type column: ``str``
-   :returns: Result dictionary for the feature.
-   :rtype: ``dict``
+    Prints the results in JSON format.
 
-.. py:method:: print_results_json(results=None, indent=2)
+    :param results: The results to print. If None, uses the computed results.
+    :type results: ``Optional[dict]``
+    :param indent: Indentation level for pretty-printing the JSON.
+    :type indent: ``int``
 
-   Prints the results in JSON format.
+    .. py:method:: print_results(results=None)
 
-   :param results: The results to print. If None, uses the computed results.
-   :type results: ``Optional[dict]``
-   :param indent: Indentation level for pretty-printing the JSON.
-   :type indent: ``int``
+    Prints the results in a human-readable tabular format.
 
-.. py:method:: print_results(results=None)
+    :param results: The results to print. If None, uses the computed results.
+    :type results: ``Optional[dict]``
 
-   Prints the results in a human-readable tabular format.
-
-   :param results: The results to print. If None, uses the computed results.
-   :type results: ``Optional[dict]``
-
-----
 
 Usage Example
 -------------
@@ -208,7 +201,6 @@ Result Output - analyzer.print_results(results)
     radio_imp               1       0.25         24.41    75.42  False     negative
     inflation               2       0.69         25.19    65.97  False     negative
 
-----
 
 Notes
 -----
