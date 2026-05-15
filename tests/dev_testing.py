@@ -58,6 +58,12 @@ def test_report_generation():
             # "columns": ["sales", "tv_spend"],
             "n_lags": 8,
             "precision": 5
+        },
+        box_plot={
+            "columns": ["sales", "tv_spend", "digital_spend"],
+            "n_plot_per_row": 5,
+            # "method": "zscore",
+            # "threshold": 3
         }
     )
 
@@ -72,4 +78,4 @@ def test_report_generation():
 
 if __name__ == "__main__":
     test_report_generation()
-    test_render_html_report_from_json()
+    # test_render_html_report_from_json()

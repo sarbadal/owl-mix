@@ -2,10 +2,12 @@ from typing import Callable, Dict, Any, Optional
 from ..analysis.base import BaseAnalyzer
 from ..plotting.base import BasePlotter
 from ..analysis.acf_pacf import AcfPacfAnalyzer, AcfPacfParams
-from ..analysis.vif import VIFAnalyzer, VIFParams
+from ..analysis.box_plot import BoxPlotAnalyzer, BoxParams
 from ..analysis.causality import CausalityAnalyzer, CausalityParams
+from ..analysis.vif import VIFAnalyzer, VIFParams
 from ..analysis.correlation import CorrelationAnalyzer, CorrelationParams
 from ..plotting.acf_pacf import AcfPacfPlotter, AcfPacfPlotParams
+from ..plotting.box_plot import BoxPlotter, BoxPlotParams
 from ..plotting.vif import VIFPlotter, VIFPlotParams
 from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
 
@@ -15,6 +17,7 @@ ANALYZERS_REGISTRY: dict[str, dict[str, type[BaseAnalyzer] | type]] = {
     "acf_pacf": {"analyzer": AcfPacfAnalyzer, "params": AcfPacfParams},
     "vif": {"analyzer": VIFAnalyzer, "params": VIFParams},
     "correlation": {"analyzer": CorrelationAnalyzer, "params": CorrelationParams},
+    "box_plot": {"analyzer": BoxPlotAnalyzer, "params": BoxParams},
     "causality": {"analyzer": CausalityAnalyzer, "params": CausalityParams},
 }
 
@@ -22,6 +25,7 @@ PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
     "acf_pacf": {"plotter": AcfPacfPlotter, "params": AcfPacfPlotParams},
     "vif": {"plotter": VIFPlotter, "params": VIFPlotParams},
     "correlation": {"plotter": CorrelationPlotter, "params": CorrPlotParams},
+    "box_plot": {"plotter": BoxPlotter, "params": BoxPlotParams},
     # No plotter for causality analysis as of now, but can be added in the future
 }
 

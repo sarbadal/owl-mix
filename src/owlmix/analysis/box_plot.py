@@ -9,7 +9,7 @@ from ..utils.mixin import ColumnMixin
 
 
 @dataclass
-class BoxPlotParams:
+class BoxParams:
     """
     Parameters for Box Plot analysis.
 
@@ -28,7 +28,7 @@ class BoxPlotParams:
     """
     columns: Optional[List[str]] = None
     method: str = 'iqr'
-    threshold: float | None = None
+    threshold: float | None = 1.5
     precision: int = 2
 
     def __post_init__(self):
@@ -36,8 +36,8 @@ class BoxPlotParams:
             raise ValueError(f"Unsupported method: {self.method}. Supported methods are 'iqr' and 'zscore'.")
         if self.precision < 0:
             raise ValueError("Precision must be a non-negative integer.")
-        if self.threshold is None:
-            self.threshold = 1.5 if self.method == 'iqr' else 3.0
+        # if self.threshold is None:
+        #     self.threshold = 1.5 if self.method == 'iqr' else 3.0
 
 
 class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
@@ -49,7 +49,7 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
     Parameters:
         df : pd.DataFrame
             The input DataFrame containing the data.
-        params : BoxPlotParams
+        params : BoxParams
             The parameters for box plot analysis.
     Attributes:
         columns : List[str]
@@ -66,7 +66,7 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
             A dictionary where keys are column names and values are dictionaries 
             containing box plot statistics (min, Q1, median, Q3, max, outliers).
     """
-    def __init__(self, df: pd.DataFrame, params: BoxPlotParams):
+    def __init__(self, df: pd.DataFrame, params: BoxParams):
         super().__init__(df, params)
         self.columns = self._get_numeric_columns(params.columns)
 
@@ -113,6 +113,7 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
                     'outliers': outliers
                 }
                 results.append(stats)
+        print(f"Threshold for outlier detection: {self.params.threshold} using method: {self.params.method}")
         return results
 
     def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
