@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import numpy as np
 import warnings
-from typing import Any, List, Dict, Optional, TypedDict, Unpack
+from typing import Any, List, Dict, Optional, TypedDict, Unpack, Tuple
 from dataclasses import dataclass
 from statsmodels.tsa.stattools import grangercausalitytests
 from sklearn.linear_model import LinearRegression
