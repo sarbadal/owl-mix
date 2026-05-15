@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from dataclasses import dataclass
+from typing import Any, Dict, Optional, Tuple
 
 from .base import BasePlotter
 
@@ -17,7 +18,7 @@ class CorrelationPlotter(BasePlotter):
     def __init__(self, data: Dict[str, Dict[str, Any]], params: CorrPlotParams = CorrPlotParams):
         super().__init__(data, params)
 
-    def generate(self, output_dir: str = "outputs/charts") -> tuple[str, str]:
+    def generate(self, output_dir: str = "outputs/charts") -> Tuple[str, str]:
         self.output_dir = output_dir
         corr_file_path = self.plot_correlation_matrix(self.data.get("correlation_matrix", {}))
         lagged_corr_file_path = self.plot_lagged_correlation_matrix(self.data.get("lagged_correlation_matrix", {}))
