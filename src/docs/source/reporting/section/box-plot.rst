@@ -83,4 +83,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.plotting.box_plot`
+- :mod:`owlmix.reporting.sections.box_plot`

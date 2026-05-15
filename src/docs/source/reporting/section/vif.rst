@@ -80,4 +80,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.plotting.vif`
+- :mod:`owlmix.reporting.sections.vif`

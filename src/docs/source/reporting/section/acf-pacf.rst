@@ -84,4 +84,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.plotting.acf_pacf`
+- :mod:`owlmix.reporting.sections.acf_pacf`

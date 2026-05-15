@@ -72,4 +72,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.eda.causality`
+- :mod:`owlmix.reporting.sections.causality`

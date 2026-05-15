@@ -85,4 +85,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.plotting.correlation`
+- :mod:`owlmix.reporting.sections.correlation`
