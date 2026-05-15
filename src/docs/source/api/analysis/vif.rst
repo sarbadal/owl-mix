@@ -1,7 +1,7 @@
 .. _vif:
 
-VIF Module - Analysis
-=====================
+analysis.vif
+============
 
 .. currentmodule:: owlmix.analysis.vif
 
@@ -9,7 +9,7 @@ Variance Inflation Factor (VIF) is a key diagnostic tool in regression analysis,
 multicollinearity among explanatory variables. High VIF values indicate that a feature is highly 
 collinear with other features, which can adversely affect model interpretability and stability.
 
-The ``VIFAnalyzer`` class provides a convenient interface to compute VIF values for selected columns 
+The :class:`VIFAnalyzer` class provides a convenient interface to compute VIF values for selected columns 
 in a pandas DataFrame. It supports configurable precision and optional color-coding for visualization, 
 making it easy to identify problematic features.
 
@@ -29,105 +29,82 @@ The module exposes:
 Class Reference
 ---------------
 
-.. toggle:: click to expand
+.. py:class:: VIFParams
 
-    .. autoclass:: owlmix.analysis.vif.VIFParams
-       :members:
-       :show-inheritance:
+    Dataclass for specifying VIF analysis parameters.
 
-       Dataclass for specifying VIF analysis parameters.
+    :param target_column: The name of the target column to exclude from VIF calculation.
+    :type target_column: str
+    :param features: List of feature column names to include in the analysis. If None, all numeric columns are used.
+    :type features: Optional[List[str]]
+    :param precision: Number of decimal places to round VIF values.
+    :type precision: int
+    :param color_thresholds: List of (threshold, color) tuples for color-coding VIF values. If None, no color-coding is applied.
+    :type color_thresholds: Optional[List[Tuple[float, str]]]
 
-       :param target_column: The name of the target column to exclude from VIF calculation.
-       :type target_column: str
-       :param features: List of feature column names to include in the analysis. If None, all numeric columns are used.
-       :type features: Optional[List[str]]
-       :param precision: Number of decimal places to round VIF values.
-       :type precision: int
-       :param color_thresholds: List of (threshold, color) tuples for color-coding VIF values. If None, no color-coding is applied.
-       :type color_thresholds: Optional[List[Tuple[float, str]]]
+.. py:class:: VIFAnalyzer(df, params)
 
-    .. autoclass:: owlmix.analysis.vif.VIFAnalyzer(df, params)
-       :members:
-       :show-inheritance:
+    Calculates the Variance Inflation Factor (VIF) for specified features in a pandas DataFrame.
 
-       Calculates the Variance Inflation Factor (VIF) for specified features in a pandas DataFrame.
+    :param df: Input DataFrame containing the data.
+    :type df: pandas.DataFrame
+    :param params: Configuration parameters for VIF analysis.
+    :type params: VIFParams
 
-       :param df: Input DataFrame containing the data.
-       :type df: pandas.DataFrame
-       :param params: Configuration parameters for VIF analysis.
-       :type params: VIFParams
+    .. py:method:: compute()
 
-----
+        Calculates VIF values for each specified feature.
 
-Methods
--------
+        :returns: A dictionary with keys:
+            - ``feature``: List of feature names analyzed.
+            - ``vif``: List of VIF values (rounded to specified precision).
+            - ``color``: List of color codes for each VIF value (if color_thresholds provided).
+        :rtype: dict[str, list]
 
-.. py:method:: compute()
+    .. py:method:: add_colors(vif_values)
 
-   Calculates VIF values for each specified feature.
+        Assigns colors to VIF values based on the defined color thresholds.
 
-   :returns: A dictionary with keys:
-     - ``feature``: List of feature names analyzed.
-     - ``vif``: List of VIF values (rounded to specified precision).
-     - ``color``: List of color codes for each VIF value (if color_thresholds provided).
-   :rtype: dict[str, list]
+        :param vif_values: List of VIF values.
+        :type vif_values: List[float]
+        :returns: List of color strings corresponding to each VIF value.
+        :rtype: List[str]
 
-.. py:method:: add_colors(vif_values)
+    .. py:method:: compute()
 
-   Assigns colors to VIF values based on the defined color thresholds.
+        Calculates VIF values for each specified feature.
 
-   :param vif_values: List of VIF values.
-   :type vif_values: List[float]
-   :returns: List of color strings corresponding to each VIF value.
-   :rtype: List[str]
+        :returns: A dictionary with keys:
+            - ``feature``: List of feature names analyzed.
+            - ``vif``: List of VIF values (rounded to specified precision).
+            - ``color``: List of color codes for each VIF value (if color_thresholds provided).
+        :rtype: dict[str, list]
 
-**Example:**
+    .. py:method:: add_colors(vif_values)
 
-.. code-block:: python
+        Assigns colors to VIF values based on the defined color thresholds.
 
-    import pandas as pd
-    from owlmix.analysis.vif import VIFAnalyzer, VIFParams
+        :param vif_values: List of VIF values.
+        :type vif_values: List[float]
+        :returns: List of color strings corresponding to each VIF value.
+        :rtype: List[str]
 
-    # Example DataFrame
-    df = pd.DataFrame({
-        "y": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        "x1": [2, 3, 2, 5, 7, 8, 6, 5, 4, 3],
-        "x2": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-        "x3": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
-    })
+    .. py:method:: print_results_json(results=None, indent=2)
 
-    vif_params = VIFParams(
-        target_column="y",
-        features=["x1", "x2", "x3"],
-        precision=2,
-        color_thresholds=[(5, "orange"), (10, "red")]
-    )
+        Prints the results in JSON format.
 
-    analyzer = VIFAnalyzer(df=df, params=vif_params)
-    result = analyzer.compute()
-    print(result)
+        :param results: The results to print. If None, uses the computed results.
+        :type results: ``list[dict], optional``
+        :param indent: Indentation level for pretty-printing the JSON.
+        :type indent: ``int``
 
-Methods
--------
+    .. py:method:: print_results(results=None)
 
-.. py:method:: compute()
+        Prints the results in a human-readable tabular format.
 
-   Calculates VIF values for each specified feature.
+        :param results: The results to print. If None, uses the computed results.
+        :type results: ``list[dict], optional``
 
-   :returns: A dictionary with keys:
-     - ``feature``: List of feature names analyzed.
-     - ``vif``: List of VIF values (rounded to specified precision).
-     - ``color``: List of color codes for each VIF value (if color_thresholds provided).
-   :rtype: dict[str, list]
-
-.. py:method:: add_colors(vif_values)
-
-   Assigns colors to VIF values based on the defined color thresholds.
-
-   :param vif_values: List of VIF values.
-   :type vif_values: List[float]
-   :returns: List of color strings corresponding to each VIF value.
-   :rtype: List[str]
 
 Usage Example
 -------------

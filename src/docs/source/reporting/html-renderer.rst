@@ -11,7 +11,7 @@ This module provides the :class:`ReportHTMLRenderer` class for rendering HTML re
 It supports rendering from both Python dictionaries and JSON files, and saving the resulting HTML to disk.
 
 Key Features
-~~~~~~~~~~~~
+------------
 
 - Configurable template path for custom report layouts
 - Rendering from in-memory data or JSON files
@@ -27,9 +27,9 @@ Classes
 -------
 
 ReportHTMLRenderer
-~~~~~~~~~~~~~~~~~
+------------------
 
-.. class:: ReportHTMLRenderer(template_path: str | Path = DEFAULT_TEMPLATE_PATH)
+.. py:class:: ReportHTMLRenderer(template_path: str | Path = DEFAULT_TEMPLATE_PATH)
 
    Renders HTML reports from structured data using Jinja2 templates.
 
@@ -38,20 +38,7 @@ ReportHTMLRenderer
    pipelines where reports need to be generated programmatically.
 
    :param template_path: Path to the directory containing Jinja2 templates. Defaults to the internal '_templates' directory.
-
-   **Attributes**
-
-   .. attribute:: env
-
-      The Jinja2 environment for template rendering.
-
-   .. attribute:: template
-
-      The loaded Jinja2 template used for rendering.
-
-   .. attribute:: _html_str
-
-      The most recently rendered HTML string, or None if not rendered yet.
+   :type template_path: str or Path, optional
 
    **Methods**
 

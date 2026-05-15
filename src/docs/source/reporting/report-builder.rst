@@ -10,7 +10,7 @@ Classes and Data Structures
 ---------------------------
 
 SectionContent
-~~~~~~~~~~~~~
+--------------
 
 .. py:class:: SectionContent
 
@@ -21,15 +21,15 @@ SectionContent
    :param chart: The chart information for the section, which can include the chart type, data for plotting, and any relevant metadata.
    :type chart: Dict[str, Any]
 
-   .. code-block:: python
+.. code-block:: python
 
-      @dataclass
-      class SectionContent:
-          data: Dict[str, Any]
-          chart: Dict[str, Any]
+   @dataclass
+   class SectionContent:
+         data: Dict[str, Any]
+         chart: Dict[str, Any]
 
 ReportBuilder
-~~~~~~~~~~~~~
+-------------
 
 .. py:class:: ReportBuilder(df: pd.DataFrame, target_col: str, date_col: str, config: ConfigBuilder = ConfigBuilder)
 

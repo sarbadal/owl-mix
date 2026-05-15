@@ -1,11 +1,11 @@
 .. _correlation:
 
-Correlation Module - Plotting
-=============================
+plotting.correlation
+====================
 
 .. currentmodule:: owlmix.plotting.correlation
 
-The ``CorrelationPlotter`` class provides functionality to visualize correlation matrices and lagged correlation matrices for tabular data. This module helps users understand the relationships between variables by generating informative heatmaps.
+The :class:`CorrelationPlotter` class provides functionality to visualize correlation matrices and lagged correlation matrices for tabular data. This module helps users understand the relationships between variables by generating informative heatmaps.
 
 Overview
 --------
@@ -20,62 +20,28 @@ The module exposes a plotter class that:
 Class Reference
 ---------------
 
-.. toggle:: click to expand
+.. py:class:: CorrPlotParams
 
-   .. autoclass:: owlmix.plotting.correlation.CorrPlotParams
-      :members:
-      :show-inheritance:
+   Dataclass for specifying correlation plotting parameters.
 
-      Dataclass for specifying correlation plotting parameters.
+.. py:class:: CorrelationPlotter(data, params)
 
-   .. autoclass:: owlmix.plotting.correlation.CorrelationPlotter
-      :members:
-      :show-inheritance:
+   Plots the correlation matrix and lagged correlation matrix for the provided data.
 
-      Plots the correlation matrix and lagged correlation matrix for the provided data.
+   :param data: Dictionary containing correlation matrices (e.g., "correlation_matrix", "lagged_correlation_matrix").
+   :type data: ``dict``
+   :param params: Configuration parameters for correlation plotting.
+   :type params: ``CorrPlotParams``
 
-      :param data: Dictionary containing correlation matrices (e.g., "correlation_matrix", "lagged_correlation_matrix").
-      :type data: dict
-      :param params: Configuration parameters for correlation plotting.
-      :type params: CorrPlotParams
+   .. py:method:: generate(output_dir: str = "outputs/charts") -> tuple[str, str]
 
-**Example:**
+      Generates and saves the correlation matrix and lagged correlation matrix heatmaps.
 
-.. code-block:: python
+      :param output_dir: Directory to save the generated plots.
+      :type output_dir: ``str``
+      :returns: Tuple of file paths to the saved correlation matrix and lagged correlation matrix images.
+      :rtype: ``tuple[str, str]``
 
-   import pandas as pd
-   from owlmix.utils.sample_data_generator import create_sample_data
-   from owlmix.analysis.correlation import CorrelationAnalyzer, CorrelationParams
-   from owlmix.plotting.correlation import CorrelationPlotter, CorrPlotParams
-
-   # Generate sample data
-   df = create_sample_data(n=100)
-
-   # Define parameters for CorrelationAnalyzer
-   params = CorrelationParams(
-      columns=None,  # Use all numeric columns
-      n_lags=25,
-      precision=4
-   )
-
-   # Create and compute the analyzer
-   analyzer = CorrelationAnalyzer(df, params)
-   result = analyzer.compute()
-
-   # Create and generate the plotter
-   plotter = CorrelationPlotter(result)
-   corr_file_path, lagged_corr_file_path = plotter.generate(output_dir="outputs/charts")
-
-Methods
--------
-
-.. py:method:: generate(output_dir: str = "outputs/charts") -> tuple[str, str]
-
-   Generates and saves the correlation matrix and lagged correlation matrix heatmaps.
-
-   :param output_dir: Directory to save the generated plots.
-   :type output_dir: str
-   :returns: Tuple of file paths to the saved correlation matrix and lagged correlation matrix images.
 
 Sample Output
 -------------

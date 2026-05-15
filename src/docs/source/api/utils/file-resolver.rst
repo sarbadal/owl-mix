@@ -1,5 +1,5 @@
-File Resolver API
-=================
+utils.file_resolver
+===================
 
 .. module:: owlmix.utils.file_resolver
    :synopsis: A utility for resolving file references in JSON configurations.
@@ -19,6 +19,34 @@ Key Features
 - **Flexible Input**: Accepts a dictionary, a path to a JSON file, or a string path as input.
 - **Formatting Utilities**: Includes methods for pretty-printing the resolved configuration and exporting it back to JSON.
 - **Supports Any File Type**: Works with HTML, TXT, MD, and other text-based files.
+
+API Reference
+-------------
+
+.. py:class:: ConfigFileResolver
+
+    A class to resolve file references in a configuration dictionary or JSON file.
+    
+    :param config: Input configuration as a dictionary or path to a JSON file.
+    :type config: ``dict`` or ``str``
+    
+    .. py:method:: resolve() -> dict
+    
+        Resolves all ``*_file`` keys in the configuration and returns the updated dictionary.
+    
+        :returns: Resolved configuration with file contents injected.
+        :rtype: ``dict``
+    
+    .. py:method:: pretty_print()
+    
+        Prints the resolved configuration in a human-readable format.
+    
+    .. py:method:: to_json(file_path: str)
+    
+        Exports the resolved configuration to a JSON file.
+    
+        :param file_path: Path to save the resolved configuration as JSON.
+        :type file_path: ``str``
 
 Example
 -------
@@ -48,14 +76,6 @@ Example
     #     }
     # }
 
-API Reference
--------------
-
-.. autoclass:: ConfigFileResolver
-    :no-index:
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 How It Works
 ------------

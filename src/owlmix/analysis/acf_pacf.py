@@ -103,4 +103,4 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
             for lag, acf_val, pacf_val in zip(res['lags'], res['acf'], res['pacf']):
                 table.append([lag, acf_val, pacf_val])
             headers = ["Lag", "ACF", "PACF"]
-            print(tabulate(table, headers=headers, tablefmt='fancy_grid', floatfmt=f".{self.precision}f"))
+            print(tabulate(table, headers=headers, tablefmt='simple', floatfmt=f".{self.precision}f"))

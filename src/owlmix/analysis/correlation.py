@@ -107,7 +107,7 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
                 lag_corr[col][lag] = round(corr, self.precision)
         return lag_corr
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2):
+    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 

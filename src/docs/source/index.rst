@@ -60,12 +60,13 @@ including lag analysis, correlation insights, and automated reporting.
    :caption: API Reference
 
    api/analysis/acf-pacf
-   api/plotter/acf-pacf
-   api/analysis/vif
-   api/plotter/vif
-   api/analysis/correlation
-   api/plotter/correlation
    api/analysis/causality
+   api/analysis/correlation
+   api/analysis/box-plot
+   api/analysis/vif
+   api/plotter/acf-pacf
+   api/plotter/vif
+   api/plotter/correlation
    api/utils/file-resolver
 
 .. toctree::

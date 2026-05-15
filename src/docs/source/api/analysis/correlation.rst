@@ -1,7 +1,7 @@
 .. _correlation:
 
-Correlation Module - Analysis
-=============================
+analysis.correlation
+====================
 
 .. currentmodule:: owlmix.analysis.correlation
 
@@ -9,7 +9,7 @@ Correlation analysis is a fundamental tool in data analysis, used to measure the
 and direction of relationships between variables. This module provides functionality to 
 compute both the correlation matrix and lagged correlations for selected columns in a pandas DataFrame.
 
-The ``CorrelationAnalyzer`` class offers a convenient interface for correlation analysis, 
+The :class:`CorrelationAnalyzer` class offers a convenient interface for correlation analysis, 
 supporting configurable lag values and precision, and is suitable for time series and general data exploration.
 
 Overview
@@ -31,75 +31,64 @@ The module exposes:
 Class Reference
 ---------------
 
-.. toggle:: click to expand
+.. py:class:: CorrelationParams(columns=None, n_lags=10, precision=4)
 
-    .. autoclass:: owlmix.analysis.correlation.CorrelationParams
-       :members:
-       :show-inheritance:
+    Dataclass for specifying correlation analysis parameters.
 
-       Dataclass for specifying correlation analysis parameters.
+    :param columns: List of column names to include in the analysis. If None, all numeric columns are used.
+    :type columns: ``Optional[List[str]]``
+    :param n_lags: Number of lag values to compute for lagged correlation.
+    :type n_lags: ``int``
+    :param precision: Number of decimal places to round correlation values.
+    :type precision: ``int``
 
-       :param columns: List of column names to include in the analysis. If None, all numeric columns are used.
-       :type columns: Optional[List[str]]
-       :param n_lags: Number of lag values to compute for lagged correlation.
-       :type n_lags: int
-       :param precision: Number of decimal places to round correlation values.
-       :type precision: int
+.. py:class:: CorrelationAnalyzer(df, params)
 
-    .. autoclass:: owlmix.analysis.correlation.CorrelationAnalyzer(df, params)
-       :members:
-       :show-inheritance:
+    Computes the correlation matrix and lagged correlations for specified features in a pandas DataFrame.
 
-       Computes the correlation matrix and lagged correlations for specified features in a pandas DataFrame.
+    :param df: Input DataFrame containing the data.
+    :type df: ``pandas.DataFrame``
+    :param params: Configuration parameters for correlation analysis.
+    :type params: ``CorrelationParams``
 
-       :param df: Input DataFrame containing the data.
-       :type df: pandas.DataFrame
-       :param params: Configuration parameters for correlation analysis.
-       :type params: CorrelationParams
+    .. py:method:: compute()
 
-----
+        Computes both the correlation matrix and lagged correlations.
 
-Methods
--------
+        :returns: A dictionary with keys:
+          - ``correlation_matrix``: Nested dictionary representing the correlation matrix.
+          - ``lagged_correlation_matrix``: Dictionary mapping each column to its lagged correlations.
+        :rtype: ``dict[str, dict]``
 
-.. py:method:: compute()
+    .. py:method:: compute_correlation_matrix()
 
-   Computes both the correlation matrix and lagged correlations.
+        Computes the correlation matrix for the selected columns.
 
-   :returns: A dictionary with keys:
-     - ``correlation_matrix``: Nested dictionary representing the correlation matrix.
-     - ``lagged_correlation_matrix``: Dictionary mapping each column to its lagged correlations.
-   :rtype: dict[str, dict]
+        :returns: Nested dictionary representing the correlation matrix.
+        :rtype: ``dict[str, dict[str, float]]``
 
-.. py:method:: compute_correlation_matrix()
+    .. py:method:: compute_lag_correlation()
 
-   Computes the correlation matrix for the selected columns.
+        Computes the correlation between a lagged version of a column and the original column for specified lags.
 
-   :returns: Nested dictionary representing the correlation matrix.
-   :rtype: dict[str, dict[str, float]]
+        :returns: Dictionary mapping each column to its lagged correlations.
+        :rtype: ``dict[str, dict[int, float]]``
 
-.. py:method:: compute_lag_correlation()
+    .. py:method:: print_results_json(results=None, indent=2)
 
-   Computes the correlation between a lagged version of a column and the original column for specified lags.
+        Prints the results in JSON format.
 
-   :returns: Dictionary mapping each column to its lagged correlations.
-   :rtype: dict[str, dict[int, float]]
+        :param results: The results to print. If None, uses the computed results.
+        :type results: ``Optional[dict]``
+        :param indent: Indentation level for pretty-printing the JSON.
+        :type indent: ``int``
 
-.. py:method:: print_results_json(results=None, indent=2)
+    .. py:method:: print_results(results=None)
 
-   Prints the results in JSON format.
+        Prints the results in a human-readable tabular format.
 
-   :param results: The results to print. If None, uses the computed results.
-   :type results: dict, optional
-   :param indent: Indentation level for pretty-printing the JSON.
-   :type indent: int
-
-.. py:method:: print_results(results=None)
-
-   Prints the results in a human-readable tabular format.
-
-   :param results: The results to print. If None, uses the computed results.
-   :type results: dict, optional
+        :param results: The results to print. If None, uses the computed results.
+        :type results: ``Optional[dict]``
 
 ----
 
@@ -133,66 +122,62 @@ Below is a simple example of how to use the analyzer:
 
 Result Output - analyzer.print_results_json(result) 
 
-.. toggle:: click to expand
+.. code-block:: json
 
-    .. code-block:: json
-
-        {
-            "correlation_matrix": {
-                "a": {
-                    "a": 1.0,
-                    "b": 0.31,
-                    "c": 1.0
-                },
-                "b": {
-                    "a": 0.31,
-                    "b": 1.0,
-                    "c": 0.31
-                },
-                "c": {
-                    "a": 1.0,
-                    "b": 0.31,
-                    "c": 1.0
-                }
+    {
+        "correlation_matrix": {
+            "a": {
+                "a": 1.0,
+                "b": 0.31,
+                "c": 1.0
             },
-            "lagged_correlation_matrix": {
-                "a": {
-                    "0": 1.0,
-                    "1": 1.0,
-                    "2": 1.0
-                },
-                "b": {
-                    "0": 1.0,
-                    "1": 0.66,
-                    "2": 0.13
-                },
-                "c": {
-                    "0": 1.0,
-                    "1": 1.0,
-                    "2": 1.0
-                }
+            "b": {
+                "a": 0.31,
+                "b": 1.0,
+                "c": 0.31
+            },
+            "c": {
+                "a": 1.0,
+                "b": 0.31,
+                "c": 1.0
+            }
+        },
+        "lagged_correlation_matrix": {
+            "a": {
+                "0": 1.0,
+                "1": 1.0,
+                "2": 1.0
+            },
+            "b": {
+                "0": 1.0,
+                "1": 0.66,
+                "2": 0.13
+            },
+            "c": {
+                "0": 1.0,
+                "1": 1.0,
+                "2": 1.0
             }
         }
+    }
 
 Result Output - analyzer.print_results(result) 
 
-.. toggle:: click to expand
+.. code-block:: text
 
-    .. code-block:: text
+    Correlation Matrix:
+        a     b     c
+    --  ----  ----  ----
+    a   1.00  0.31  1.00
+    b   0.31  1.00  0.31
+    c   1.00  0.31  1.00
 
-        Correlation Matrix:
-            a     b     c
-        --  ----  ----  ----
-        a   1.00  0.31  1.00
-        b   0.31  1.00  0.31
-        c   1.00  0.31  1.00
-
-        Lagged Correlation Matrix:
-        Column      Lag 0    Lag 1    Lag 2
-        --------  -------  -------  -------
-        a            1.00     1.00     1.00
-        b            1.00     0.66     0.13
-        c            1.00     1.00     1.00
+    Lagged Correlation Matrix:
+    Column      Lag 0    Lag 1    Lag 2
+    --------  -------  -------  -------
+    a            1.00     1.00     1.00
+    b            1.00     0.66     0.13
+    c            1.00     1.00     1.00
 
 ----
 

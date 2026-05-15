@@ -1,11 +1,11 @@
 .. _acf-pacf:
 
-ACF and PACF Module - Plotting
-==============================
+plotting.acf_pacf
+=================
 
 .. currentmodule:: owlmix.plotting.acf_pacf
 
-The ``AcfPacfPlotter`` class provides functionality to visualize the Auto-Correlation Function (ACF) 
+The :class:`AcfPacfPlotter` class provides functionality to visualize the Auto-Correlation Function (ACF) 
 and Partial Auto-Correlation Function (PACF) for time series data. This module is designed to 
 help users understand the correlation structure of their time series data by generating informative plots.
 
@@ -22,57 +22,28 @@ The module exposes a plotter class that:
 Class Reference
 ---------------
 
-.. toggle:: click to expand
+.. py:class:: AcfPacfPlotParams(columns=None, n_lags=10, precision=4)
 
-   .. autoclass:: owlmix.plotting.acf_pacf.AcfPacfPlotParams
-      :members:
-      :show-inheritance:
+   Dataclass for specifying ACF/PACF plotting parameters.
 
-      Dataclass for specifying ACF/PACF plotting parameters.
+.. py:class:: AcfPacfPlotter(data, params)
 
-   .. autoclass:: owlmix.plotting.acf_pacf.AcfPacfPlotter
-      :members:
-      :show-inheritance:
+   Plots the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
+   for specified columns in a pandas DataFrame or a single Series.
 
-      Plots the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF)
-      for specified columns in a pandas DataFrame or a single Series.
+   :param data: Input DataFrame or Series containing time series data.
+   :type data: ``pandas.DataFrame`` or ``pandas.Series``
+   :param params: Configuration parameters for ACF/PACF plotting.
+   :type params: ``AcfPacfPlotParams``
 
-      :param data: Input DataFrame or Series containing time series data.
-      :type data: pandas.DataFrame or pandas.Series
-      :param params: Configuration parameters for ACF/PACF plotting.
-      :type params: AcfPacfPlotParams
+   .. py:method:: generate(output_dir: str = "outputs/charts") -> str
 
-**Example:**
+      Generates and saves ACF and PACF plots for each specified column or series.
 
-.. code-block:: python
-
-   import pandas as pd
-   from owlmix.plotting.acf_pacf import AcfPacfPlotter
-
-   data = [
-         {
-            "column": "sales",
-            "n_obs": 500,
-            "lags": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            "acf": [1.0, -0.0145, -0.0466, 0.0489, -0.0108, 0.0131, -0.031, 0.0764, 0.0464, -0.0455, -0.051],
-            "pacf": [1.0, -0.0146, -0.047, 0.0479, -0.0118, 0.0176, -0.0346, 0.0797, 0.0446, -0.0346, -0.0586]
-         }
-   ]
-
-   plotter = AcfPacfPlotter(data=data)
-   plotter.generate(output_dir="outputs/charts")
-
-
-Methods
--------
-
-.. py:method:: generate(output_dir: str = "outputs/charts") -> str
-
-   Generates and saves ACF and PACF plots for each specified column or series.
-
-   :param output_dir: Directory to save the generated plots.
-   :type output_dir: str
-   :returns: File path to the saved ACF and PACF chart image.
+      :param output_dir: Directory to save the generated plots.
+      :type output_dir: ``str``
+      :returns: File path to the saved ACF and PACF chart image.
+      :rtype: ``str``
 
 
 Sample Output

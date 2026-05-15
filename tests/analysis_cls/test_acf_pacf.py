@@ -23,7 +23,6 @@ def test_acf_pacf_analyzer():
     )
     analyzer = AcfPacfAnalyzer(df, params)
     result = analyzer.compute()
-    # print(result)
 
     analyzer.print_results_json(result)
     analyzer.print_results(result)
