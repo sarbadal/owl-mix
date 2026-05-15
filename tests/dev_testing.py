@@ -60,10 +60,10 @@ def test_report_generation():
             "precision": 5
         },
         box_plot={
-            "columns": ["sales", "tv_spend", "digital_spend"],
-            "n_plot_per_row": 5,
-            # "method": "zscore",
-            # "threshold": 3
+            "columns": ["sales", "tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+            "n_plot_per_row": 3,
+            "method": "zscore",
+            "threshold": 1.5  # default is 3 for method "zscore" and 1.5 for method "iqr"
         }
     )
 

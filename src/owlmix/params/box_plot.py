@@ -20,13 +20,15 @@ class BoxPlot:
     precision: int = 2
     n_plot_per_row: int = 4
 
+    def set_default_threshold(self):
+        if self.threshold is None:
+            self.threshold = 1.5 if self.method == 'iqr' else 3.0
+
     def __post_init__(self):
         if self.method not in ['iqr', 'zscore']:
             raise ValueError(f"Unsupported method: {self.method}. Supported methods are 'iqr' and 'zscore'.")
         if self.precision < 0:
             raise ValueError("Precision must be a non-negative integer.")
-        # if self.threshold is None:
-        #     self.threshold = 1.5 if self.method == 'iqr' else 3.0
 
 
 def build(**values: Unpack[BoxPlotConfigArgs]) -> BoxPlot:

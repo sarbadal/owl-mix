@@ -31,13 +31,15 @@ class BoxParams:
     threshold: float | None = 1.5
     precision: int = 2
 
+    def set_default_threshold(self):
+        if self.threshold is None:
+            self.threshold = 1.5 if self.method == 'iqr' else 3.0
+
     def __post_init__(self):
         if self.method not in ['iqr', 'zscore']:
             raise ValueError(f"Unsupported method: {self.method}. Supported methods are 'iqr' and 'zscore'.")
         if self.precision < 0:
             raise ValueError("Precision must be a non-negative integer.")
-        # if self.threshold is None:
-        #     self.threshold = 1.5 if self.method == 'iqr' else 3.0
 
 
 class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
@@ -113,7 +115,6 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
                     'outliers': outliers
                 }
                 results.append(stats)
-        print(f"Threshold for outlier detection: {self.params.threshold} using method: {self.params.method}")
         return results
 
     def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:

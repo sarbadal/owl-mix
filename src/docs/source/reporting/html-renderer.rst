@@ -1,14 +1,19 @@
-Report HTML Renderer
-====================
+.. _reporting_html:
 
-.. module:: html
-   :synopsis: Provides the ReportHTMLRenderer class for rendering HTML reports from data using Jinja2 templates.
+reporting.html
+==============
+
+.. currentmodule:: owlmix.reporting.html
+
+Provides the :class:`ReportHTMLRenderer` class, which is responsible for rendering 
+HTML reports from structured data using Jinja2 templates.
 
 Overview
 --------
 
-This module provides the :class:`ReportHTMLRenderer` class for rendering HTML reports from structured data using Jinja2 templates. 
-It supports rendering from both Python dictionaries and JSON files, and saving the resulting HTML to disk.
+This module provides the :class:`ReportHTMLRenderer` class for rendering HTML 
+reports from structured data using Jinja2 templates. It supports rendering from 
+both Python dictionaries and JSON files, and saving the resulting HTML to disk.
 
 Key Features
 ------------
@@ -19,9 +24,10 @@ Key Features
 
 Typical usage example::
 
-    renderer = ReportHTMLRenderer()
-    html = renderer.render(report_data)
-    renderer.save_html(html, output_path="outputs/report.html")
+   renderer = ReportHTMLRenderer()
+   html = renderer.render(report_data) # Render from a Python dictionary
+   html_from_json = renderer.render_from_json("report_data.json")  # Render from JSON file
+   renderer.save_html(html, output_path="outputs/report.html")
 
 Classes
 -------
@@ -38,7 +44,7 @@ ReportHTMLRenderer
    pipelines where reports need to be generated programmatically.
 
    :param template_path: Path to the directory containing Jinja2 templates. Defaults to the internal '_templates' directory.
-   :type template_path: str or Path, optional
+   :type template_path: ``Optional[Union[str, Path]]``
 
    **Methods**
 
@@ -47,27 +53,27 @@ ReportHTMLRenderer
       Render HTML from a dictionary of report data.
 
       :param report_data: The report data to render. Should contain a "sections" key with section data.
-      :type report_data: dict
+      :type report_data: ``dict``
       :returns: The rendered HTML as a string.
-      :rtype: str
+      :rtype: ``str``
 
    .. method:: render_from_json(json_path: str | Path) -> str
 
       Render HTML from a JSON file containing report data.
 
       :param json_path: Path to the JSON file with report data.
-      :type json_path: str or Path
+      :type json_path: ``str`` or ``Path``
       :returns: The rendered HTML as a string.
-      :rtype: str
+      :rtype: ``str``
 
    .. method:: save_html(html_str: str = None, output_path: str | Path = None)
 
       Save the rendered HTML to a file.
 
       :param html_str: The HTML string to save. If None, uses the last rendered HTML.
-      :type html_str: str, optional
+      :type html_str: ``Optional[str]``
       :param output_path: The file path to save the HTML to.
-      :type output_path: str or Path, optional
+      :type output_path: ``Optional[Union[str, Path]]``
       :raises ValueError: If no HTML has been rendered or output_path is not specified.
 
    .. attribute:: html_str
@@ -75,7 +81,7 @@ ReportHTMLRenderer
       Get the most recently rendered HTML string.
 
       :returns: The last rendered HTML string, or None if not rendered yet.
-      :rtype: str or None
+      :rtype: ``Optional[str]``
 
 Module Attributes
 -----------------

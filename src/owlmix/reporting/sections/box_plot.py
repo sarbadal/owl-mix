@@ -33,6 +33,7 @@ def build_box_plot_section(report_builder: ReportBuilderProtocol) -> Dict[str, A
         threshold=config.threshold,
         precision=config.precision,
     )
+    analyzer_params.set_default_threshold()
     plotter_params = plotter_params_cls(
         n_plot_per_row=config.n_plot_per_row
     )

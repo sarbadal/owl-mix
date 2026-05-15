@@ -1,7 +1,9 @@
 Reporting System Overview
 =========================
 
-This document provides an overview of the reporting system in the ``owlmix`` package, focusing on the classes and workflow for generating and rendering Exploratory Data Analysis (EDA) reports.
+This document provides an overview of the reporting system in the ``owlmix`` 
+package, focusing on the classes and workflow for generating and rendering 
+Exploratory Data Analysis (EDA) reports.
 
 Modules Covered
 ---------------

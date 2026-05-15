@@ -1,5 +1,9 @@
-Report Builder
-==============
+.. _report_builder:
+
+reporting.report_builder
+========================
+
+.. currentmodule:: owlmix.reporting.report_builder
 
 This module defines the ``ReportBuilder`` class, which orchestrates the generation of
 Exploratory Data Analysis (EDA) reports, including both textual and chart-based sections.
@@ -17,9 +21,9 @@ SectionContent
    Data class to represent the content of a report section.
 
    :param data: The data associated with the section, which can include analysis results, metrics, etc.
-   :type data: Dict[str, Any]
+   :type data: ``Dict[str, Any]``
    :param chart: The chart information for the section, which can include the chart type, data for plotting, and any relevant metadata.
-   :type chart: Dict[str, Any]
+   :type chart: ``Dict[str, Any]``
 
 .. code-block:: python
 
@@ -36,18 +40,18 @@ ReportBuilder
    Class to build a comprehensive EDA report with multiple sections, including both textual data and charts.
 
    :param df: The input DataFrame containing the data to be analyzed.
-   :type df: pd.DataFrame
+   :type df: ``pd.DataFrame``
    :param target_col: The name of the target column in the DataFrame for analysis.
-   :type target_col: str
+   :type target_col: ``str``
    :param date_col: The name of the date column in the DataFrame for time series analysis.
-   :type date_col: str
+   :type date_col: ``str``
    :param config: An instance of ConfigBuilder to manage configuration settings for the report.
-   :type config: ConfigBuilder
+   :type config: ``ConfigBuilder``
 
    **Attributes:**
 
-   - **sections** (OrderedDict[str, SectionContent]): Stores the sections of the report, where keys are section names and values are SectionContent instances.
-   - **_report_data** (Optional[Dict[str, Any]]): Cached report data after building.
+   - **sections** ``(OrderedDict[str, SectionContent])``: Stores the sections of the report, where keys are section names and values are SectionContent instances.
+   - **_report_data** ``(Optional[Dict[str, Any]])``: Cached report data after building.
 
    **Methods:**
 
@@ -56,16 +60,21 @@ ReportBuilder
       Adds a section to the report with the given name, data, and optional chart information.
 
       :param name: The name of the section to add.
+      :type name: ``str``
       :param data: The data associated with the section.
+      :type data: ``Dict[str, Any]``
       :param chart: The chart information for the section (optional).
-      :return: The current instance of the ReportBuilder.
+      :type chart: ``Optional[Dict[str, Any]]``
+      :return: The current instance of the ``ReportBuilder``.
 
    .. py:method:: add_section_by_name(name: str) -> Self
 
       Adds a section to the report by looking up a registered section builder function by name and executing it.
 
       :param name: The name of the section to add.
-      :return: The current instance of the ReportBuilder.
+      :type name: ``str``
+      :return: The current instance of the ``ReportBuilder``.
+      :rtype: ``ReportBuilder``
       :raises ValueError: If no section builder is registered for the given name.
 
    .. py:method:: add_all_sections(verbose: bool = False) -> None
@@ -79,19 +88,23 @@ ReportBuilder
       Keep only the specified sections in the report.
 
       :param section_names: List of section names or SectionEnum members to include.
+      :type section_names: ``list[Union[str, SectionEnum]]``
 
    .. py:method:: exclude_sections(section_names: list[Union[str, SectionEnum]]) -> None
 
       Excludes specified sections from the report by removing them from the sections dictionary.
 
       :param section_names: List of section names or SectionEnum members to be excluded from the report.
+      :type section_names: ``list[Union[str, SectionEnum]]``
 
    .. py:method:: build(output_path: Optional[str] = None) -> Dict[str, Any]
 
       Builds the report data structure, which can be output as JSON or used for further processing.
 
       :param output_path: The path where the report should be saved as a JSON file. If None, the report is not saved to a file.
+      :type output_path: ``Optional[str]``
       :return: A dictionary representing the report data, including sections and their associated data and charts.
+      :rtype: ``Dict[str, Any]``
 
       **Example Output:**
 
@@ -112,13 +125,18 @@ ReportBuilder
       Convert an image file to a base64 string for embedding in HTML.
 
       :param image_path: Path to the image file.
+      :type image_path: ``str``
       :return: Base64-encoded image string with MIME type, or empty string if not found.
+      :rtype: ``str``
 
    .. py:method:: save(outfile_name: Optional[str] = None) -> None
 
       Save the generated report as a JSON file.
 
       :param outfile_name: The name of the output JSON file. If None, defaults to "report.json".
+      :type outfile_name: ``Optional[str]``
+      :return: None
+      :rtype: ``None``
 
 Usage Example
 -------------
@@ -149,4 +167,4 @@ Dependencies
 - dataclasses
 - collections
 - typing
-- ConfigBuilder from owlmix.config.config_builder
+- ConfigBuilder from ``owlmix.config.config_builder``

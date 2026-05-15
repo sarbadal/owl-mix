@@ -36,7 +36,7 @@ Functions
             - ``images``: Dictionary with base64-encoded images for:
                 - ``correlation_matrix``: Correlation matrix plot.
                 - ``lagged_correlation_matrix``: Lagged correlation matrix plot.
-    :rtype: dict
+    :rtype: ``dict``
 
 **Workflow:**
 
@@ -85,5 +85,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.eda.correlation`
 - :mod:`owlmix.plotting.correlation`

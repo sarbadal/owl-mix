@@ -35,7 +35,7 @@ Functions
                     - ``description``: Description of the chart.
                     - ``alt_text``: Alternative text for the image.
                     - ``image``: Base64-encoded image of the plot.
-    :rtype: dict
+    :rtype: ``dict``
 
 **Workflow:**
 
@@ -84,5 +84,4 @@ See Also
 
 - :mod:`owlmix.registry.registry`
 - :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.eda.acf_pacf`
 - :mod:`owlmix.plotting.acf_pacf`

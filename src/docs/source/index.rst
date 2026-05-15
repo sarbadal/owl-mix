@@ -45,8 +45,8 @@ including lag analysis, correlation insights, and automated reporting.
    :maxdepth: 2
    :caption: Getting Started
  
-   getting-started/installation
    getting-started/quickstart
+   getting-started/installation
 
 
 .. toctree::
@@ -65,6 +65,7 @@ including lag analysis, correlation insights, and automated reporting.
    api/analysis/box-plot
    api/analysis/vif
    api/plotter/acf-pacf
+   api/plotter/box-plot
    api/plotter/vif
    api/plotter/correlation
    api/utils/file-resolver
@@ -74,12 +75,13 @@ including lag analysis, correlation insights, and automated reporting.
    :caption: Reporting
 
    reporting/overview
-   reporting/html-renderer
    reporting/report-builder
+   reporting/html-renderer
    reporting/section/acf-pacf
    reporting/section/causality
    reporting/section/correlation
    reporting/section/vif
+   reporting/section/box-plot
    reporting/section/protocol-cls
 
 .. toctree::

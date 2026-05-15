@@ -26,7 +26,7 @@ Functions
 
                 - ``data``: The computed causality results.
                 - ``chart``: Metadata and image for the generated plot (currently ``None``).
-    :rtype: dict
+    :rtype: ``dict``
 
 **Workflow:**
 
