@@ -76,15 +76,16 @@ class ReportBuilder:
             date_col=self.date_col,
         )
 
-    def add_all_sections(self, verbose: bool = False) -> None:
+    def add_all_sections(self, verbose: bool = False) -> Self:
         """Adds all registered sections to the report by iterating through the 
         SECTION_BUILDERS registry and adding each section by name."""
         for section_name in SECTION_BUILDERS.keys():
             self.add_section_by_name(section_name)
             if verbose:
                 print(f"Added section: {section_name}")
+        return self
 
-    def include_sections(self, section_names: list[Union[str, SectionEnum]]) -> None:
+    def include_sections(self, section_names: list[Union[str, SectionEnum]]) -> Self:
         """
         Keep only the specified sections in the report.
         Args:
@@ -97,8 +98,9 @@ class ReportBuilder:
             if name in self.sections
         )
         self._report_data = None  # Invalidate cache if needed
+        return self
 
-    def exclude_sections(self, section_names: list[Union[str, SectionEnum]]) -> None:
+    def exclude_sections(self, section_names: list[Union[str, SectionEnum]]) -> Self:
         """
         Excludes specified sections from the report by removing them from the sections dictionary.
         Args:
@@ -108,6 +110,7 @@ class ReportBuilder:
         for name in names:
             self.sections.pop(name, None)
         self._report_data = None  # Invalidate cache if needed
+        return self
 
     def add_section(self, name: str, data: Dict[str, Any], chart: Optional[Dict[str, Any]] = None) -> Self:
         """

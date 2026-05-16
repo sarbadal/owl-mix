@@ -18,7 +18,9 @@ Report Building
 
 **Class:** ``ReportBuilder``
 
-The ``ReportBuilder`` class is responsible for constructing a comprehensive EDA report from a pandas DataFrame. It manages the inclusion, exclusion, and ordering of report sections, and supports outputting the report as a JSON file.
+The ``ReportBuilder`` class is responsible for constructing a comprehensive EDA 
+report from a pandas DataFrame. It manages the inclusion, exclusion, and ordering 
+of report sections, and supports outputting the report as a JSON file.
 
 **Key Attributes:**
 
@@ -77,7 +79,8 @@ HTML Rendering
 
 **Class:** ``ReportHTMLRenderer``
 
-The ``ReportHTMLRenderer`` class is responsible for rendering the report data (as a dictionary or JSON file) into HTML using Jinja2 templates.
+The ``ReportHTMLRenderer`` class is responsible for rendering the report data 
+(as a dictionary or JSON file) into HTML using Jinja2 templates.
 
 **Key Attributes:**
 

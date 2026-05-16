@@ -1,7 +1,4 @@
 """
-html.py
---------
-
 This module provides the ReportHTMLRenderer class for rendering HTML reports from data using Jinja2 templates.
 It supports rendering from both Python dictionaries and JSON files, and saving the resulting HTML to disk.
 

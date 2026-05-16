@@ -77,25 +77,32 @@ ReportBuilder
       :rtype: ``ReportBuilder``
       :raises ValueError: If no section builder is registered for the given name.
 
-   .. py:method:: add_all_sections(verbose: bool = False) -> None
+   .. py:method:: add_all_sections(verbose: bool = False) -> Self
 
       Adds all registered sections to the report by iterating through the SECTION_BUILDERS registry and adding each section by name.
       
       :param verbose: If True, prints the name of each section as it is added to the report. Default is False.
+      :type verbose: ``bool``
+      :return: The current instance of the ``ReportBuilder``.
+      :rtype: ``ReportBuilder``
 
-   .. py:method:: include_sections(section_names: list[Union[str, SectionEnum]]) -> None
+   .. py:method:: include_sections(section_names: list[Union[str, SectionEnum]]) -> Self
 
       Keep only the specified sections in the report.
 
       :param section_names: List of section names or SectionEnum members to include.
       :type section_names: ``list[Union[str, SectionEnum]]``
+      :return: The current instance of the ``ReportBuilder``.
+      :rtype: ``ReportBuilder``
 
-   .. py:method:: exclude_sections(section_names: list[Union[str, SectionEnum]]) -> None
+   .. py:method:: exclude_sections(section_names: list[Union[str, SectionEnum]]) -> Self
 
       Excludes specified sections from the report by removing them from the sections dictionary.
 
       :param section_names: List of section names or SectionEnum members to be excluded from the report.
       :type section_names: ``list[Union[str, SectionEnum]]``
+      :return: The current instance of the ``ReportBuilder``.
+      :rtype: ``ReportBuilder``
 
    .. py:method:: build(output_path: Optional[str] = None) -> Dict[str, Any]
 

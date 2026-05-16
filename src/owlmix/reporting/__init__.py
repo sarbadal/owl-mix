@@ -1,5 +1,5 @@
 from .report_builder import ReportBuilder
-from .html import ReportHTMLRenderer
+from .html_renderer import ReportHTMLRenderer
 
 __all__ = [
     "ReportBuilder",
