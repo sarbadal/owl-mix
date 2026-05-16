@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.causality
 
-➡️ sections.causality
+📁 sections.causality
 =====================
 
 **Builds the causality analysis section for the report.**

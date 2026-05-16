@@ -1,7 +1,7 @@
 .. _installation:
 
-Installation
-============
+📥 Installation
+===============
 
 To install **owl-mix**, simply run:
 

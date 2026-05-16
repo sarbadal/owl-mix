@@ -1,7 +1,7 @@
 .. _api.overview:
 
-API Overview
-============
+📊 API Overview
+===============
 
 This document provides an overview of the API documentation for the ``owlmix`` package, 
 focusing on the main analytical, plotting, utility, and typing modules.

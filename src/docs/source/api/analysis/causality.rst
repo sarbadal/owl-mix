@@ -1,6 +1,6 @@
 .. _api.analysis.causality:
 
-➡️ analysis.causality
+🔬 analysis.causality
 =====================
 
 .. currentmodule:: owlmix.analysis.causality
@@ -220,6 +220,20 @@ Dependencies
 - statsmodels
 - scikit-learn
 - tabulate
+
+References
+----------
+
+- :ref:`ACF and PACF Analysis <api.analysis.acf-pacf>`
+- :ref:`Box Plot Analysis <api.analysis.box-plot>`
+- :ref:`Causality Analysis <api.analysis.causality>`
+- :ref:`Cross-Correlation Function Analysis <api.analysis.ccf>`
+- :ref:`Correlation Analysis <api.analysis.correlation>`
+- :ref:`Variance Inflation Factor Analysis <api.analysis.vif>`
+- :ref:`ACF and PACF Plotting <api.plotter.acf-pacf>`
+- :ref:`Box Plotting <api.plotter.box-plot>`
+- :ref:`Correlation Heatmap Plotting <api.plotter.correlation>`
+- :ref:`Variance Inflation Factor Plotting <api.plotter.vif>`
 
 See Also
 --------

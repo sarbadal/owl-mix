@@ -1,7 +1,7 @@
 .. _reporting.overview:
 
-Reporting System Overview
-=========================
+📊 Reporting System Overview
+============================
 
 This document provides an overview of the reporting system in the ``owlmix`` 
 package, focusing on the classes and workflow for generating and rendering 

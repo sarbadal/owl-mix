@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.vif
 
-➡️ sections.vif
+📁 sections.vif
 ===============
 
 **Builds the VIF section for the report.**

@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.box_plot
 
-➡️ sections.box_plot
+📁 sections.box_plot
 ====================
 
 **Builds the Box Plot section for the report.**

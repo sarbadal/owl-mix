@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.report_builder
 
-➡️ report_builder
+🛠️ report_builder
 =================
 
 This module defines the ``ReportBuilder`` class, which orchestrates the generation of

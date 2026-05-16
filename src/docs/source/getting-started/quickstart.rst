@@ -1,7 +1,7 @@
 .. _quickstart:
 
-Quickstart
-==========
+🚀 Quickstart
+=============
 
 This guide shows how to quickly generate an EDA report using the `owlmix` package.
 

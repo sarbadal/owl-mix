@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.correlation
 
-➡️ sections.correlation
+📁 sections.correlation
 =======================
 
 **Builds the correlation analysis section for the report.**

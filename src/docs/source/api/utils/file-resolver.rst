@@ -1,6 +1,6 @@
 .. _api.utils.file-resolver:
 
-➡️ utils.file_resolver
+🧩 utils.file_resolver
 ======================
 
 .. module:: owlmix.utils.file_resolver

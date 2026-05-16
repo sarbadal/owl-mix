@@ -1,6 +1,6 @@
 .. _owlmix.typing:
 
-➡️ typing.package
+⌨️ typing.package
 =================
 
 This package provides type definitions, enumerations, normalization utilities, and 

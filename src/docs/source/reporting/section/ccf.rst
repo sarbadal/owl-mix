@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.ccf
 
-➡️ sections.ccf
+📁 sections.ccf
 ===============
 
 **Builds the Cross-Correlation Function (CCF) analysis section for the report.**

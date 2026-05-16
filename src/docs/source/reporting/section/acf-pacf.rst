@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.acf_pacf
 
-➡️ sections.acf_pacf
+📁 sections.acf_pacf
 ====================
 
 **Builds the ACF and PACF section for the report.**

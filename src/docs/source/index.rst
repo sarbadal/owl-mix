@@ -1,7 +1,7 @@
 .. _home:
 
 Welcome to OwlMix's documentation!
-=======================================
+==================================
  
 OwlMix is a Python library for performing advanced exploratory data analysis (EDA),
 including lag analysis, correlation insights, and automated reporting.
@@ -50,8 +50,8 @@ including lag analysis, correlation insights, and automated reporting.
    getting-started/quickstart
    getting-started/installation
 
-Get Started
------------
+🚀 Get Started
+--------------
 
 :doc:`Quick Start Guide <getting-started/quickstart>`
 
@@ -69,8 +69,8 @@ Detailed instructions for installing OwlMix.
  
    user-guide/overview
 
-User Guide
-----------
+📖 User Guide
+-------------
 
 :doc:`User Guide Overview <user-guide/overview>`
 
@@ -96,8 +96,8 @@ effectively in your data analysis workflow.
    api/plotter/vif
    api/utils/file-resolver
 
-API Reference
--------------
+🧾 API Reference
+----------------
 
 :doc:`API Overview <api/overview>`
 
@@ -136,8 +136,8 @@ focusing on the main analytical, plotting, utility, and typing modules.
    reporting/section/vif
    reporting/section/protocol-cls
 
-Reporting Sections
--------------------
+📁 Reporting Sections
+---------------------
 
 :doc:`Reporting Sections <reporting/overview>` 
 
@@ -186,8 +186,8 @@ embedding the charts and insights in a visually appealing manner.
 
    api/typing
 
-Type Annotations and Conventions
---------------------------------
+❛ ❜ Type Annotations and Conventions
+------------------------------------
 
 :doc:`Type Annotations and Conventions <api/typing>`
 

@@ -1,7 +1,7 @@
 .. _user-guide.overview:
 
-Overview
-========
+📖 Overview
+===========
  
 OwlMix EDA is a specialized exploratory data analysis (EDA) toolkit designed
 for pre-modeling analysis in Market Mix Modeling (MMM) workflows.

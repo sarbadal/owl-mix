@@ -2,7 +2,7 @@
 
 .. currentmodule:: owlmix.reporting.sections.protocol_cls
 
-➡️ sections.protocol_cls
+📑 sections.protocol_cls
 ========================
 
 **Protocol for report builder classes.**
