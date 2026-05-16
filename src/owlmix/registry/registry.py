@@ -10,6 +10,7 @@ from ..plotting.acf_pacf import AcfPacfPlotter, AcfPacfPlotParams
 from ..plotting.box_plot import BoxPlotter, BoxPlotParams
 from ..plotting.vif import VIFPlotter, VIFPlotParams
 from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
+from ..analysis.ccf import CCFAnalyzer, CCFParams
 
 SectionBuilder = Callable[..., Dict[str, Any]]
 
@@ -19,6 +20,7 @@ ANALYZERS_REGISTRY: dict[str, dict[str, type[BaseAnalyzer] | type]] = {
     "correlation": {"analyzer": CorrelationAnalyzer, "params": CorrelationParams},
     "box_plot": {"analyzer": BoxPlotAnalyzer, "params": BoxParams},
     "causality": {"analyzer": CausalityAnalyzer, "params": CausalityParams},
+    "ccf": {"analyzer": CCFAnalyzer, "params": CCFParams},
 }
 
 PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {

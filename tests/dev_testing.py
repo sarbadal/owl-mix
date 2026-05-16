@@ -64,6 +64,10 @@ def test_report_generation():
             "n_plot_per_row": 3,
             "method": "zscore",
             "threshold": 1.5  # default is 3 for method "zscore" and 1.5 for method "iqr"
+        },
+        ccf={
+            "feature_columns": ['tv_spend'],
+            "max_lag": 3
         }
     )
 

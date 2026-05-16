@@ -2,12 +2,14 @@ from . import acf_pacf
 from . import box_plot
 from . import causality
 from . import correlation
+from . import ccf
 from . import vif
 
 from .acf_pacf import AcfPacfConfigArgs, AcfPacf
 from .box_plot import BoxPlotConfigArgs, BoxPlot
 from .causality import CausalityConfigArgs, Causality
 from .correlation import CorrelationConfigArgs, Correlation
+from .ccf import CCFConfigArgs, CCF
 from .vif import VifConfigArgs, Vif
 
 
@@ -16,6 +18,7 @@ class Args:
     box_plot = box_plot
     causality = causality
     correlation = correlation
+    ccf = ccf
     vif = vif
 
 
@@ -29,6 +32,8 @@ __all__ = [
     "Causality",
     "CorrelationConfigArgs",
     "Correlation",
+    "CCFConfigArgs",
+    "CCF",
     "VifConfigArgs",
     "Vif",
 ]

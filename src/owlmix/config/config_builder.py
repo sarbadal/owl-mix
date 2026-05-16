@@ -8,6 +8,7 @@ from ..params import AcfPacfConfigArgs
 from ..params import BoxPlotConfigArgs
 from ..params import CausalityConfigArgs
 from ..params import CorrelationConfigArgs
+from ..params import CCFConfigArgs
 from ..params import VifConfigArgs
 
 OUTPUT_DIR = "output"
@@ -31,6 +32,7 @@ class ConfigBuilder:
         self.vif_config = Args.vif.build(target_column=self.target_col)
         self.causality_config = Args.causality.build(target_column=self.target_col)
         self.correlation_config = Args.correlation.build()
+        self.ccf_config = Args.ccf.build(time_column=self.date_col, target_column=self.target_col)
 
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
@@ -51,7 +53,7 @@ class ConfigBuilder:
             "correlation": self.update_correlation_config,
             "causality": self.update_causality_config,
             "box_plot": self.update_box_plot_config,
-            # Add other config update methods here as needed
+            "ccf": self.update_ccf_config,
         }
 
         for key, value in kwargs.items():
@@ -112,4 +114,15 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.causality_config = replace(self.causality_config, **kwargs)
+        return self
+
+    def update_ccf_config(self, **kwargs: Unpack[CCFConfigArgs]) -> Self:
+        """
+        Update the CCF configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the CCF configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.ccf_config = replace(self.ccf_config, **kwargs)
         return self
