@@ -1,4 +1,4 @@
-.. _vif:
+.. _api.analysis.vif:
 
 analysis.vif
 ============
@@ -59,35 +59,16 @@ Class Reference
             - ``feature``: List of feature names analyzed.
             - ``vif``: List of VIF values (rounded to specified precision).
             - ``color``: List of color codes for each VIF value (if color_thresholds provided).
-        :rtype: dict[str, list]
+        :rtype: ``dict[str, list]``
 
     .. py:method:: add_colors(vif_values)
 
         Assigns colors to VIF values based on the defined color thresholds.
 
         :param vif_values: List of VIF values.
-        :type vif_values: List[float]
+        :type vif_values: ``List[float]``
         :returns: List of color strings corresponding to each VIF value.
-        :rtype: List[str]
-
-    .. py:method:: compute()
-
-        Calculates VIF values for each specified feature.
-
-        :returns: A dictionary with keys:
-            - ``feature``: List of feature names analyzed.
-            - ``vif``: List of VIF values (rounded to specified precision).
-            - ``color``: List of color codes for each VIF value (if color_thresholds provided).
-        :rtype: dict[str, list]
-
-    .. py:method:: add_colors(vif_values)
-
-        Assigns colors to VIF values based on the defined color thresholds.
-
-        :param vif_values: List of VIF values.
-        :type vif_values: List[float]
-        :returns: List of color strings corresponding to each VIF value.
-        :rtype: List[str]
+        :rtype: ``List[str]``
 
     .. py:method:: print_results_json(results=None, indent=2)
 
@@ -164,3 +145,5 @@ See Also
 
 - `statsmodels documentation <https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html>`_
 - `Variance Inflation Factor (Wikipedia) <https://en.wikipedia.org/wiki/Variance_inflation_factor>`_
+
+:ref:`Back to Home <home>`

@@ -1,17 +1,16 @@
-.. _section.acf-pacf:
+.. _reporting.sections.acf-pacf:
 
-reporting.sections.acf_pacf
-===========================
+.. currentmodule:: owlmix.reporting.sections.acf_pacf
 
-.. automodule:: owlmix.reporting.sections.acf_pacf
-    :members: build_acf_pacf_section
-    :undoc-members:
-    :show-inheritance:
+sections.acf_pacf
+=================
 
-This function provides the implementation for building the ACF (Autocorrelation Function) 
-and PACF (Partial Autocorrelation Function) section in a report. It integrates with the 
-report builder framework and utilizes registered analyzers and plotters to compute a
-nd visualize ACF/PACF for specified columns in a DataFrame.
+**Builds the ACF and PACF section for the report.**
+
+This function retrieves configuration for ACF/PACF analysis from the report builder,
+initializes the appropriate analyzer and plotter classes with their parameters,
+computes the ACF/PACF data, generates the corresponding plots, and returns a dictionary
+containing both the computed data and chart metadata (including a base64-encoded image).
 
 
 Functions
@@ -19,15 +18,8 @@ Functions
 
 .. py:function:: build_acf_pacf_section(report_builder)
 
-    Builds the ACF and PACF section for the report.
-
-    This function retrieves configuration for ACF/PACF analysis from the report builder,
-    initializes the appropriate analyzer and plotter classes with their parameters,
-    computes the ACF/PACF data, generates the corresponding plots, and returns a dictionary
-    containing both the computed data and chart metadata (including a base64-encoded image).
-
     :param report_builder: The report builder instance containing the dataframe and configuration.
-    :type report_builder: ReportBuilderProtocol
+    :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
@@ -92,3 +84,5 @@ See Also
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`

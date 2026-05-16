@@ -1,4 +1,4 @@
-.. _box-plot:
+.. _api.plotter.box-plot:
 
 plotting.box_plot
 =================
@@ -58,3 +58,5 @@ and outliers (if any). Outliers are highlighted in red.
    :alt: Sample Box Plot Grid
    :width: 800px
    :align: center
+
+:ref:`Back to Home <home>`

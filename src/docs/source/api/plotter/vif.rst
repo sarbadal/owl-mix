@@ -1,4 +1,4 @@
-.. _vif:
+.. _api.plotter.vif:
 
 plotting.vif
 ============
@@ -55,3 +55,5 @@ VIF values are annotated on each bar for clarity.
    :alt: Sample VIF Plot
    :width: 800px
    :align: center
+
+:ref:`Back to Home <home>`

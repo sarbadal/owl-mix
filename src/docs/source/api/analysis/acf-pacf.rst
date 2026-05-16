@@ -1,4 +1,4 @@
-.. _acf-pacf:
+.. _api.analysis.acf-pacf:
 
 analysis.acf_pacf
 =================
@@ -252,3 +252,5 @@ See Also
 
 - `statsmodels documentation <https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.acf.html>`_
 - `Partial Autocorrelation <https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.pacf.html>`_
+
+:ref:`Back to Home <home>`

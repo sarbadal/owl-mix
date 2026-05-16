@@ -1,3 +1,5 @@
+.. _reporting.overview:
+
 Reporting System Overview
 =========================
 
@@ -126,3 +128,5 @@ Extensibility
 - Templates can be customized for different report layouts.
 
 ``owlmix`` thus provides a modular and extensible framework for automated EDA report generation and rendering.
+
+:ref:`Back to Home <home>`

@@ -1,32 +1,25 @@
-.. _section.box-plot:
+.. _reporting.sections.box-plot:
 
-reporting.sections.box_plot
-===========================
+.. currentmodule:: owlmix.reporting.sections.box_plot
 
-.. automodule:: owlmix.reporting.sections.box_plot
-    :members: build_box_plot_section
-    :undoc-members:
-    :show-inheritance:
+sections.box_plot
+=================
 
-This function provides the implementation for building the Box Plot section in a 
-report. It integrates with the report builder framework and utilizes registered 
-analyzers and plotters to compute and visualize box plots for specified columns 
-in a DataFrame.
+**Builds the Box Plot section for the report.**
+
+This function retrieves configuration for box plot analysis from the report builder,
+initializes the appropriate analyzer and plotter classes with their parameters,
+computes the necessary data for box plots, generates the corresponding plots,
+and returns a dictionary containing both the computed data and chart metadata (including a base64-encoded image).
+
 
 Functions
 ---------
 
 .. py:function:: build_box_plot_section(report_builder)
 
-    Builds the Box Plot section for the report.
-
-    This function retrieves configuration for box plot analysis from the report builder,
-    initializes the appropriate analyzer and plotter classes with their parameters,
-    computes the necessary data for box plots, generates the corresponding plots,
-    and returns a dictionary containing both the computed data and chart metadata (including a base64-encoded image).
-
     :param report_builder: The report builder instance containing the dataframe and configuration.
-    :type report_builder: ReportBuilderProtocol
+    :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
@@ -91,3 +84,5 @@ See Also
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`

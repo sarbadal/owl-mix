@@ -51,3 +51,5 @@ The :mod:`owlmix.typing` package is organized into several submodules:
     This module declares custom type aliases and type definitions to enhance code readability
     and static analysis within the owlmix library. It includes type definitions for data structures,
     function signatures, and other commonly used types to improve code clarity and maintainability.
+
+:ref:`Back to Home <home>`

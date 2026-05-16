@@ -1,4 +1,4 @@
-.. _correlation:
+.. _api.plotter.correlation:
 
 plotting.correlation
 ====================
@@ -57,3 +57,5 @@ Sample Output
    :alt: Sample Lagged Correlation Matrix Plot
    :width: 1000px
    :align: center
+
+:ref:`Back to Home <home>`

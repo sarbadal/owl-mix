@@ -1,29 +1,25 @@
 .. _section.vif:
 
-reporting.sections.vif
-======================
+.. currentmodule:: owlmix.reporting.sections.vif
 
-This function provides the implementation for building the VIF (Variance Inflation Factor) section in a report. It integrates with the report builder framework and utilizes registered analyzers and plotters to compute and visualize VIF for specified features in a DataFrame.
+sections.vif
+============
 
-.. automodule:: owlmix.reporting.sections.vif
-    :members: build_vif_section
-    :undoc-members:
-    :show-inheritance:
+**Builds the VIF section for the report.**
+
+This function retrieves configuration for VIF analysis from the report builder,
+initializes the appropriate analyzer and plotter classes with their parameters,
+computes the VIF data, generates the corresponding plot, and returns a dictionary
+containing both the computed data and chart metadata (including a base64-encoded image).
+
 
 Functions
 ---------
 
 .. py:function:: build_vif_section(report_builder)
 
-    Builds the VIF section for the report.
-
-    This function retrieves configuration for VIF analysis from the report builder,
-    initializes the appropriate analyzer and plotter classes with their parameters,
-    computes the VIF data, generates the corresponding plot, and returns a dictionary
-    containing both the computed data and chart metadata (including a base64-encoded image).
-
     :param report_builder: The report builder instance containing the dataframe and configuration.
-    :type report_builder: ReportBuilderProtocol
+    :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
@@ -88,3 +84,5 @@ See Also
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`

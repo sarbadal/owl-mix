@@ -10,3 +10,5 @@ To install **owl-mix**, simply run:
     pip install owl-mix
 
 This will install the latest version of the package from PyPI.
+
+:ref:`Back to Home <home>`

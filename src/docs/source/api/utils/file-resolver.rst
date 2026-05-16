@@ -1,3 +1,5 @@
+.. _api.utils.file-resolver:
+
 utils.file_resolver
 ===================
 
@@ -94,3 +96,5 @@ Error Handling
 ----
 
 For more advanced usage and examples, see the user guide and API documentation.
+
+:ref:`Back to Home <home>`

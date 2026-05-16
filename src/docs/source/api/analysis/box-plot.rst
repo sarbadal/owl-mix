@@ -1,4 +1,4 @@
-.. _box_plot:
+.. _api.analysis.box-plot:
 
 analysis.box_plot
 =================
@@ -185,3 +185,5 @@ See Also
 
 - `Box plot (Wikipedia) <https://en.wikipedia.org/wiki/Box_plot>`_
 - `pandas.DataFrame.quantile <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.quantile.html>`_
+
+:ref:`Back to Home <home>`

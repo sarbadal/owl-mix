@@ -1,4 +1,4 @@
-.. _correlation:
+.. _api.analysis.correlation:
 
 analysis.correlation
 ====================
@@ -201,3 +201,5 @@ See Also
 
 - `pandas.DataFrame.corr <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html>`_
 - `Correlation and dependence (Wikipedia) <https://en.wikipedia.org/wiki/Correlation_and_dependence>`_
+
+:ref:`Back to Home <home>`

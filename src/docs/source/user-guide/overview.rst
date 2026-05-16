@@ -1,3 +1,5 @@
+.. _user-guide.overview:
+
 Overview
 ========
  
@@ -68,7 +70,7 @@ How It Fits in Your Workflow
 OwlMix EDA is intended to be used as the **first step** in your modeling pipeline:
  
 1. Load and prepare your dataset
-2. Run OwlMaze EDA analysis
+2. Run OwlMix EDA analysis
 3. Identify important features and patterns
 4. Use insights to guide feature engineering and modeling
  
@@ -78,7 +80,7 @@ data foundation.
 Design Philosophy
 -----------------
  
-OwlMaze EDA is built with the following principles:
+OwlMix EDA is built with the following principles:
  
 - **Clarity over complexity** — simple, interpretable outputs
 - **MMM-focused** — tailored for marketing and time-series data
@@ -92,3 +94,5 @@ To get started, continue to:
  
 - :doc:`../getting-started/quickstart`
 - :doc:`../user-guide/overview`
+
+:ref:`Back to Home <home>`

@@ -1,4 +1,4 @@
-.. _causality:
+.. _api.analysis.causality:
 
 analysis.causality
 ==================
@@ -226,3 +226,5 @@ See Also
 
 - `Granger causality (Wikipedia) <https://en.wikipedia.org/wiki/Granger_causality>`_
 - `statsmodels.tsa.stattools.grangercausalitytests <https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.grangercausalitytests.html>`_
+
+:ref:`Back to Home <home>`

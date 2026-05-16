@@ -1,4 +1,4 @@
-.. _acf-pacf:
+.. _api.plotter.acf-pacf:
 
 plotting.acf_pacf
 =================
@@ -58,3 +58,5 @@ suggest potential patterns in the time series data.
    :alt: Sample ACF and PACF Plot
    :width: 800px
    :align: center
+
+:ref:`Back to Home <home>`

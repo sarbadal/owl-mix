@@ -1,9 +1,9 @@
-.. _report_builder:
-
-reporting.report_builder
-========================
+.. _reporting.report-builder:
 
 .. currentmodule:: owlmix.reporting.report_builder
+
+report_builder
+==============
 
 This module defines the ``ReportBuilder`` class, which orchestrates the generation of
 Exploratory Data Analysis (EDA) reports, including both textual and chart-based sections.
@@ -168,3 +168,5 @@ Dependencies
 - collections
 - typing
 - ConfigBuilder from ``owlmix.config.config_builder``
+
+:ref:`Back to Home <home>`

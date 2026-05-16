@@ -1,29 +1,24 @@
-.. _section.causality:
+.. _reporting.sections.causality:
 
-reporting.sections.causality
-============================
+.. currentmodule:: owlmix.reporting.sections.causality
 
-This function provides the implementation for building the causality analysis section in a report. It integrates with the report builder framework and utilizes registered analyzers to compute causality results for specified features in a DataFrame.
+sections.causality
+==================
 
-.. automodule:: owlmix.reporting.sections.causality
-    :members: build_causality_section
-    :undoc-members:
-    :show-inheritance:
+**Builds the causality analysis section for the report.**
+
+This function retrieves configuration for causality analysis from the report builder,
+initializes the appropriate analyzer class with its parameters,
+computes the causality results, and returns a dictionary
+containing both the computed data and chart metadata (currently set to ``None``).
 
 Functions
 ---------
 
 .. py:function:: build_causality_section(report_builder)
 
-    Builds the causality analysis section for the report.
-
-    This function retrieves configuration for causality analysis from the report builder,
-    initializes the appropriate analyzer class with its parameters,
-    computes the causality results, and returns a dictionary
-    containing both the computed data and chart metadata (currently set to ``None``).
-
     :param report_builder: The report builder instance containing the dataframe and configuration.
-    :type report_builder: ReportBuilderProtocol
+    :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
@@ -80,3 +75,5 @@ See Also
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`

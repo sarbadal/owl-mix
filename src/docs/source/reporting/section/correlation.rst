@@ -1,32 +1,24 @@
-.. _section.correlation:
+.. _reporting.sections.correlation:
 
-reporting.sections.correlation
-==============================
+.. currentmodule:: owlmix.reporting.sections.correlation
 
-This function provides the implementation for building the correlation analysis 
-section in a report. It integrates with the report builder framework and utilizes 
-registered analyzers and plotters to compute and visualize correlation matrices 
-and lagged correlations for specified features in a DataFrame.
+sections.correlation
+====================
 
-.. automodule:: owlmix.reporting.sections.correlation
-    :members: build_correlation_section
-    :undoc-members:
-    :show-inheritance:
+**Builds the correlation analysis section for the report.**
+
+This function retrieves configuration for correlation analysis from the report builder,
+initializes the appropriate analyzer and plotter classes with their parameters,
+computes the correlation matrix and lagged correlations, generates the corresponding plots,
+and returns a dictionary containing both the computed data and chart metadata (including base64-encoded images).
 
 Functions
 ---------
 
 .. py:function:: build_correlation_section(report_builder)
 
-    Builds the correlation analysis section for the report.
-
-    This function retrieves configuration for correlation analysis from the report builder,
-    initializes the appropriate analyzer and plotter classes with their parameters,
-    computes the correlation matrix and lagged correlations, generates the corresponding plots,
-    and returns a dictionary containing both the computed data and chart metadata (including base64-encoded images).
-
     :param report_builder: The report builder instance containing the dataframe and configuration.
-    :type report_builder: ReportBuilderProtocol
+    :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
@@ -93,3 +85,5 @@ See Also
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`

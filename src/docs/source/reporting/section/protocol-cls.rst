@@ -1,25 +1,20 @@
-.. _protocol_cls:
+.. _reporting.sections.protocol_cls:
 
-Class ReportBuilderProtocol
-===========================
+.. currentmodule:: owlmix.reporting.sections.protocol_cls
 
-**owlmix.reporting.sections.protocol_cls**
+sections.protocol_cls
+=====================
 
-This module defines the protocol for report builder classes used in the OwlMix reporting framework. The protocol specifies the required attributes and methods that any report builder implementation must provide.
+**Protocol for report builder classes.**
 
-.. automodule:: owlmix.reporting.sections.protocol_cls
-    :members:
-    :undoc-members:
-    :show-inheritance:
+Any class implementing this protocol must provide the following attributes 
+and methods, which are used for constructing and managing report sections, 
+handling data, and exporting results.
 
 Classes
 -------
 
 .. py:class:: ReportBuilderProtocol
-
-    Protocol for report builder classes.
-
-    Any class implementing this protocol must provide the following attributes and methods, which are used for constructing and managing report sections, handling data, and exporting results.
 
     **Attributes:**
 
@@ -41,7 +36,7 @@ Classes
         Include only the specified sections in the report.
 
         :param sections: List of section names to include.
-        :type sections: list[str]
+        :type sections: ``list[str]``
 
     .. py:method:: exclude_sections(sections)
         :abstractmethod:
@@ -49,7 +44,7 @@ Classes
         Exclude the specified sections from the report.
 
         :param sections: List of section names to exclude.
-        :type sections: list[str]
+        :type sections: ``list[str]``
 
     .. py:method:: add_section(name, data, chart)
         :abstractmethod:
@@ -57,11 +52,11 @@ Classes
         Add a section to the report with the given name, data, and chart.
 
         :param name: Name of the section.
-        :type name: str
+        :type name: ``str``
         :param data: Data dictionary for the section.
-        :type data: dict
+        :type data: ``dict``
         :param chart: Chart dictionary for the section.
-        :type chart: dict
+        :type chart: ``dict``
         :returns: Self (the report builder instance).
 
     .. py:method:: add_section_by_name(name)
@@ -70,7 +65,7 @@ Classes
         Add a section to the report by its name.
 
         :param name: Name of the section.
-        :type name: str
+        :type name: ``str``
         :returns: Self (the report builder instance).
 
     .. py:method:: build(output_path)
@@ -79,7 +74,7 @@ Classes
         Build the report and output it to the specified path.
 
         :param output_path: Path to save the report.
-        :type output_path: str or pathlib.Path
+        :type output_path: ``str`` or ``pathlib.Path``
         :returns: Dictionary containing the report data.
 
     .. py:method:: image_to_base64(path)
@@ -88,7 +83,7 @@ Classes
         Convert an image at the given path to a base64-encoded string.
 
         :param path: Path to the image file.
-        :type path: str or pathlib.Path
+        :type path: ``str`` or ``pathlib.Path``
         :returns: Base64-encoded string of the image.
 
     .. py:method:: save(path)
@@ -97,7 +92,7 @@ Classes
         Save the report to the specified path.
 
         :param path: Path to save the report.
-        :type path: str or pathlib.Path
+        :type path: ``str`` or ``pathlib.Path``
 
 Dependencies
 ------------
@@ -115,3 +110,5 @@ See Also
 - :mod:`owlmix.reporting.sections.correlation`
 - :mod:`owlmix.reporting.sections.causality`
 - :mod:`owlmix.reporting.sections.vif`
+
+:ref:`Back to Home <home>`
