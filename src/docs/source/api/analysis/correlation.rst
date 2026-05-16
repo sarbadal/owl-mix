@@ -1,7 +1,7 @@
 .. _api.analysis.correlation:
 
-analysis.correlation
-====================
+➡️ analysis.correlation
+=======================
 
 .. currentmodule:: owlmix.analysis.correlation
 

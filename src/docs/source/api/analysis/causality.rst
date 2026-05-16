@@ -1,7 +1,7 @@
 .. _api.analysis.causality:
 
-analysis.causality
-==================
+➡️ analysis.causality
+=====================
 
 .. currentmodule:: owlmix.analysis.causality
 

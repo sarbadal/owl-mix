@@ -1,7 +1,7 @@
 .. _api.plotter.acf-pacf:
 
-plotting.acf_pacf
-=================
+➡️ plotting.acf_pacf
+====================
 
 .. currentmodule:: owlmix.plotting.acf_pacf
 

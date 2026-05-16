@@ -2,8 +2,8 @@
 
 .. currentmodule:: owlmix.reporting.html
 
-html
-====
+➡️ html
+=======
 
 Provides the :class:`ReportHTMLRenderer` class, which is responsible for rendering 
 HTML reports from structured data using Jinja2 templates.

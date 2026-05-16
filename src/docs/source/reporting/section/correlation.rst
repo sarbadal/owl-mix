@@ -2,8 +2,8 @@
 
 .. currentmodule:: owlmix.reporting.sections.correlation
 
-sections.correlation
-====================
+➡️ sections.correlation
+=======================
 
 **Builds the correlation analysis section for the report.**
 
@@ -78,12 +78,12 @@ The function is registered as a report section under the name ``"correlation"`` 
 See Also
 --------
 
-- :mod:`owlmix.registry.registry`
-- :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.reporting.sections.acf_pacf`
-- :mod:`owlmix.reporting.sections.box_plot`
-- :mod:`owlmix.reporting.sections.correlation`
-- :mod:`owlmix.reporting.sections.causality`
-- :mod:`owlmix.reporting.sections.vif`
+- :ref:`ACF/PACF <reporting.sections.acf-pacf>`
+- :ref:`Box Plot <reporting.sections.box-plot>`
+- :ref:`Causality <reporting.sections.causality>`
+- :ref:`Correlation <reporting.sections.correlation>`
+- :ref:`Cross-Correlation Function (CCF) <reporting.sections.ccf>`
+- :ref:`VIF <reporting.sections.vif>`
+- :ref:`Protocol <reporting.sections.protocol-cls>`
 
 :ref:`Back to Home <home>`

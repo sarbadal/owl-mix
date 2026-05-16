@@ -2,8 +2,8 @@
 
 .. currentmodule:: owlmix.reporting.report_builder
 
-report_builder
-==============
+➡️ report_builder
+=================
 
 This module defines the ``ReportBuilder`` class, which orchestrates the generation of
 Exploratory Data Analysis (EDA) reports, including both textual and chart-based sections.

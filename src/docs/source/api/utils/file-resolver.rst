@@ -1,7 +1,7 @@
 .. _api.utils.file-resolver:
 
-utils.file_resolver
-===================
+➡️ utils.file_resolver
+======================
 
 .. module:: owlmix.utils.file_resolver
    :synopsis: A utility for resolving file references in JSON configurations.

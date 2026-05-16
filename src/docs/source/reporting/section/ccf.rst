@@ -1,44 +1,44 @@
-.. _reporting.sections.causality:
+.. _reporting.sections.ccf:
 
-.. currentmodule:: owlmix.reporting.sections.causality
+.. currentmodule:: owlmix.reporting.sections.ccf
 
-➡️ sections.causality
-=====================
+➡️ sections.ccf
+===============
 
-**Builds the causality analysis section for the report.**
+**Builds the Cross-Correlation Function (CCF) analysis section for the report.**
 
-This function retrieves configuration for causality analysis from the report builder,
+This function retrieves configuration for CCF analysis from the report builder,
 initializes the appropriate analyzer class with its parameters,
-computes the causality results, and returns a dictionary
+computes the CCF results, and returns a dictionary
 containing both the computed data and chart metadata (currently set to ``None``).
 
 Functions
 ---------
 
-.. py:function:: build_causality_section(report_builder)
+.. py:function:: build_ccf_section(report_builder)
 
     :param report_builder: The report builder instance containing the dataframe and configuration.
     :type report_builder: ``ReportBuilderProtocol``
 
     :returns: A dictionary with keys:
 
-                - ``data``: The computed causality results.
+                - ``data``: The computed CCF results.
                 - ``chart``: Metadata and image for the generated plot (currently ``None``).
     :rtype: ``dict``
 
 **Workflow:**
 
-1. Retrieves the causality configuration from the report builder.
+1. Retrieves the CCF configuration from the report builder.
 2. Fetches the analyzer class and its parameter class from the registry.
 3. Initializes the analyzer parameter object using the configuration.
-4. Instantiates the analyzer with the DataFrame and parameters, then computes the causality results.
+4. Instantiates the analyzer with the DataFrame and parameters, then computes the CCF results.
 5. Returns a dictionary containing both the computed data and chart metadata (currently ``None``).
 
 **Example Usage:**
 
 .. code-block:: python
 
-    section = build_causality_section(report_builder)
+    section = build_ccf_section(report_builder)
     data = section["data"]
     chart = section["chart"]
 
@@ -52,17 +52,17 @@ Dependencies
 Registries
 ----------
 
-- ``ANALYZERS_REGISTRY["causality"]``: Provides the analyzer class and its parameter class for causality.
+- ``ANALYZERS_REGISTRY["ccf"]``: Provides the analyzer class and its parameter class for CCF.
 
 Section Registration
 --------------------
 
-The function is registered as a report section under the name ``"causality"`` using the ``@register_section`` decorator.
+The function is registered as a report section under the name ``"ccf"`` using the ``@register_section`` decorator.
 
 .. code-block:: python
 
-    @register_section("causality")
-    def build_causality_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
+    @register_section("ccf")
+    def build_ccf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
         ...
 
 See Also

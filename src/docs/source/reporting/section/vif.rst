@@ -1,9 +1,9 @@
-.. _section.vif:
+.. _reporting.sections.vif:
 
 .. currentmodule:: owlmix.reporting.sections.vif
 
-sections.vif
-============
+➡️ sections.vif
+===============
 
 **Builds the VIF section for the report.**
 
@@ -77,12 +77,12 @@ The function is registered as a report section under the name ``"vif"`` using th
 See Also
 --------
 
-- :mod:`owlmix.registry.registry`
-- :mod:`owlmix.reporting.sections.protocol_cls`
-- :mod:`owlmix.reporting.sections.acf_pacf`
-- :mod:`owlmix.reporting.sections.box_plot`
-- :mod:`owlmix.reporting.sections.correlation`
-- :mod:`owlmix.reporting.sections.causality`
-- :mod:`owlmix.reporting.sections.vif`
+- :ref:`ACF/PACF <reporting.sections.acf-pacf>`
+- :ref:`Box Plot <reporting.sections.box-plot>`
+- :ref:`Causality <reporting.sections.causality>`
+- :ref:`Correlation <reporting.sections.correlation>`
+- :ref:`Cross-Correlation Function (CCF) <reporting.sections.ccf>`
+- :ref:`VIF <reporting.sections.vif>`
+- :ref:`Protocol <reporting.sections.protocol-cls>`
 
 :ref:`Back to Home <home>`

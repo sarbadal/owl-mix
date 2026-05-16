@@ -1,11 +1,13 @@
 .. _api.plotter.correlation:
 
-plotting.correlation
-====================
-
 .. currentmodule:: owlmix.plotting.correlation
 
-The :class:`CorrelationPlotter` class provides functionality to visualize correlation matrices and lagged correlation matrices for tabular data. This module helps users understand the relationships between variables by generating informative heatmaps.
+➡️ plotting.correlation
+=======================
+
+The :class:`CorrelationPlotter` class provides functionality to visualize correlation 
+matrices and lagged correlation matrices for tabular data. This module helps users 
+understand the relationships between variables by generating informative heatmaps.
 
 Overview
 --------

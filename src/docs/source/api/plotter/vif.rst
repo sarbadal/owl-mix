@@ -1,7 +1,7 @@
 .. _api.plotter.vif:
 
-plotting.vif
-============
+➡️ plotting.vif
+===============
 
 .. currentmodule:: owlmix.plotting.vif
 

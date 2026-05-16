@@ -1,7 +1,7 @@
 .. _api.analysis.box-plot:
 
-analysis.box_plot
-=================
+➡️ analysis.box_plot
+====================
 
 .. currentmodule:: owlmix.analysis.box_plot
 

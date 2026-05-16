@@ -1,7 +1,7 @@
 .. _api.analysis.vif:
 
-analysis.vif
-============
+➡️ analysis.vif
+===============
 
 .. currentmodule:: owlmix.analysis.vif
 

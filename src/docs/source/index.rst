@@ -85,14 +85,15 @@ effectively in your data analysis workflow.
 
    api/overview
    api/analysis/acf-pacf
-   api/analysis/causality
-   api/analysis/correlation
    api/analysis/box-plot
+   api/analysis/causality
+   api/analysis/ccf
+   api/analysis/correlation
    api/analysis/vif
    api/plotter/acf-pacf
    api/plotter/box-plot
-   api/plotter/vif
    api/plotter/correlation
+   api/plotter/vif
    api/utils/file-resolver
 
 API Reference
@@ -106,18 +107,18 @@ focusing on the main analytical, plotting, utility, and typing modules.
 **Analysis Modules** 
 
 - :doc:`ACF/PACF Analysis <api/analysis/acf-pacf>` Documentation for the ACF/PACF analysis module, including the main classes, functions, and usage examples.
-- :doc:`Causality Analysis <api/analysis/causality>` Documentation for the causality analysis module, including the main classes, functions, and usage examples.
-- :doc:`Correlation Analysis <api/analysis/correlation>` Documentation for the correlation analysis module, including the main classes, functions, and usage examples.
 - :doc:`Box Plot Analysis <api/analysis/box-plot>` Documentation for the box plot analysis module, including the main classes, functions, and usage examples.
+- :doc:`Causality Analysis <api/analysis/causality>` Documentation for the causality analysis module, including the main classes, functions, and usage examples.
+- :doc:`CCF Analysis <api/analysis/ccf>` Documentation for the CCF analysis module, including the main classes, functions, and usage examples.
+- :doc:`Correlation Analysis <api/analysis/correlation>` Documentation for the correlation analysis module, including the main classes, functions, and usage examples.
 - :doc:`VIF Analysis <api/analysis/vif>` Documentation for the VIF analysis module, including the main classes, functions, and usage examples.
 
 **Plotter Modules** 
 
 - :doc:`ACF/PACF Plotting <api/plotter/acf-pacf>` Documentation for the ACF/PACF plotting module, including the main classes, functions, and usage examples.
 - :doc:`Box Plot Plotting <api/plotter/box-plot>` Documentation for the box plot plotting module, including the main classes, functions, and usage examples.
-- :doc:`VIF Plotting <api/plotter/vif>` Documentation for the VIF plotting module, including the main classes, functions, and usage examples.
 - :doc:`Correlation Plotting <api/plotter/correlation>` Documentation for the correlation plotting module, including the main classes, functions, and usage examples.
-
+- :doc:`VIF Plotting <api/plotter/vif>` Documentation for the VIF plotting module, including the main classes, functions, and usage examples.
 
 .. toctree::
    :maxdepth: 2
@@ -125,13 +126,14 @@ focusing on the main analytical, plotting, utility, and typing modules.
    :hidden:
 
    reporting/overview
-   reporting/report-builder
    reporting/html-renderer
+   reporting/report-builder
    reporting/section/acf-pacf
+   reporting/section/box-plot
    reporting/section/causality
+   reporting/section/ccf
    reporting/section/correlation
    reporting/section/vif
-   reporting/section/box-plot
    reporting/section/protocol-cls
 
 Reporting Sections
@@ -141,7 +143,7 @@ Reporting Sections
 
 This section provides detailed documentation on the individual sections that 
 can be included in the generated reports, such as ACF/PACF analysis, 
-causality analysis, correlation analysis, VIF analysis, and box plots. 
+causality analysis, correlation analysis, CCF analysis, VIF analysis, and box plots. 
 Each section is implemented as a function that integrates with the report 
 builder framework and utilizes registered analyzers and plotters to 
 compute and visualize insights from the data.
@@ -170,10 +172,12 @@ embedding the charts and insights in a visually appealing manner.
 **Additional Resources:**
 
 - :doc:`ACF/PACF Section <reporting/section/acf-pacf>`
+- :doc:`Box Plot Section <reporting/section/box-plot>`
 - :doc:`Causality Section <reporting/section/causality>`
+- :doc:`CCF Section <reporting/section/ccf>`
 - :doc:`Correlation Section <reporting/section/correlation>`
 - :doc:`VIF Section <reporting/section/vif>`
-- :doc:`Box Plot Section <reporting/section/box-plot>`
+- :doc:`Protocol Classes <reporting/section/protocol-cls>`
 
 .. toctree::
    :maxdepth: 2

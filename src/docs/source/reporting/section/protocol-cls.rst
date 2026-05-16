@@ -1,9 +1,9 @@
-.. _reporting.sections.protocol_cls:
+.. _reporting.sections.protocol-cls:
 
 .. currentmodule:: owlmix.reporting.sections.protocol_cls
 
-sections.protocol_cls
-=====================
+➡️ sections.protocol_cls
+========================
 
 **Protocol for report builder classes.**
 
@@ -105,10 +105,12 @@ Dependencies
 See Also
 --------
 
-- :mod:`owlmix.reporting.sections.acf_pacf`
-- :mod:`owlmix.reporting.sections.box_plot`
-- :mod:`owlmix.reporting.sections.correlation`
-- :mod:`owlmix.reporting.sections.causality`
-- :mod:`owlmix.reporting.sections.vif`
+- :ref:`ACF/PACF <reporting.sections.acf-pacf>`
+- :ref:`Box Plot <reporting.sections.box-plot>`
+- :ref:`Causality <reporting.sections.causality>`
+- :ref:`Correlation <reporting.sections.correlation>`
+- :ref:`Cross-Correlation Function (CCF) <reporting.sections.ccf>`
+- :ref:`VIF <reporting.sections.vif>`
+- :ref:`Protocol <reporting.sections.protocol-cls>`
 
 :ref:`Back to Home <home>`
