@@ -1,0 +1,81 @@
+seed: 42
+ 
+dataset:
+  frequency: weekly
+  periods: 130
+ 
+target:
+  name: weekly_new_subscribers
+  base_sales: 3000
+  noise_std: 150
+ 
+media_channels:
+  tv_grps:
+    distribution: normal
+    mean: 150
+    std: 40
+ 
+  digital_video_views:
+    distribution: lognormal
+    mean: 12
+    sigma: 0.4
+ 
+  paid_search_clicks:
+    distribution: lognormal
+    mean: 10
+    sigma: 0.3
+ 
+  sms_campaign_volume:
+    distribution: normal
+    mean: 50000
+    std: 10000
+ 
+  call_center_outreach:
+    distribution: normal
+    mean: 20000
+    std: 5000
+ 
+control_variables:
+  pricing_index:
+    distribution: normal
+    mean: 100
+    std: 4
+ 
+  network_quality_index:
+    distribution: normal
+    mean: 85
+    std: 5
+ 
+  competitor_offer_index:
+    distribution: normal
+    mean: 90
+    std: 10
+ 
+transformations:
+  tv_grps:
+    adstock: 0.6
+    saturation: hill
+ 
+  digital_video_views:
+    adstock: 0.4
+    saturation: log
+ 
+  paid_search_clicks:
+    adstock: 0.3
+    saturation: sqrt
+ 
+channel_coefs:
+  tv_grps: 0.07
+  digital_video_views: 0.00002
+  paid_search_clicks: 0.003
+  sms_campaign_volume: 0.0005
+  call_center_outreach: 0.0007
+ 
+multicollinearity:
+  - base: digital_video_views
+    correlated_with: paid_search_clicks
+    strength: 0.75
+
+noise:
+  type: gaussian
+  std: 150

@@ -1,0 +1,174 @@
+seed: 42
+ 
+dataset:
+  start_date: "2022-01-01"
+  end_date: "2023-12-31"
+  frequency: "weekly"
+ 
+target:
+  name: "sales_units"
+  base_level: 50000
+  trend: 0.01
+  seasonality:
+    yearly_amplitude: 0.2
+    weekly_amplitude: 0.05
+ 
+noise:
+  type: "gaussian"
+  std: 0.08
+ 
+ 
+# ✅ MEDIA INPUTS ONLY (no effects here)
+media_channels:
+ 
+  - name: "tv_grps"
+    type: "grps"
+    distribution: "gamma"
+    params:
+      shape: 2.5
+      scale: 120
+ 
+  - name: "digital_impressions"
+    type: "impressions"
+    distribution: "lognormal"
+    params:
+      mean: 12
+      sigma: 0.4
+ 
+  - name: "social_media_spend"
+    type: "spend"
+    distribution: "normal"
+    params:
+      mean: 20000
+      std: 5000
+ 
+  - name: "search_spend"
+    type: "spend"
+    distribution: "normal"
+    params:
+      mean: 15000
+      std: 4000
+ 
+  - name: "ooh_impressions"
+    type: "impressions"
+    distribution: "gamma"
+    params:
+      shape: 3
+      scale: 8000
+ 
+  - name: "radio_grps"
+    type: "grps"
+    distribution: "gamma"
+    params:
+      shape: 2
+      scale: 60
+ 
+  - name: "print_spend"
+    type: "spend"
+    distribution: "normal"
+    params:
+      mean: 10000
+      std: 3000
+ 
+  - name: "influencer_spend"
+    type: "spend"
+    distribution: "lognormal"
+    params:
+      mean: 9
+      sigma: 0.6
+ 
+ 
+# ✅ EFFECTS SEPARATED (THIS FIXES YOUR ERROR)
+channel_coefs:
+ 
+  tv_grps:
+    coefficient: 0.04
+    adstock: 0.6
+    saturation: 0.7
+ 
+  digital_impressions:
+    coefficient: 0.03
+    adstock: 0.4
+    saturation: 0.6
+ 
+  social_media_spend:
+    coefficient: 0.025
+    adstock: 0.5
+    saturation: 0.65
+ 
+  search_spend:
+    coefficient: 0.035
+    adstock: 0.3
+    saturation: 0.75
+ 
+  ooh_impressions:
+    coefficient: 0.02
+    adstock: 0.7
+    saturation: 0.5
+ 
+  radio_grps:
+    coefficient: 0.018
+    adstock: 0.6
+    saturation: 0.55
+ 
+  print_spend:
+    coefficient: 0.015
+    adstock: 0.8
+    saturation: 0.4
+ 
+  influencer_spend:
+    coefficient: 0.028
+    adstock: 0.4
+    saturation: 0.7
+ 
+ 
+# ✅ MULTICOLLINEARITY
+channel_correlations:
+ 
+  - channels: ["tv_grps", "ooh_impressions"]
+    correlation: 0.75
+ 
+  - channels: ["digital_impressions", "social_media_spend"]
+    correlation: 0.8
+ 
+  - channels: ["search_spend", "digital_impressions"]
+    correlation: 0.7
+ 
+ 
+# ✅ EXTERNAL FACTORS
+external_factors:
+ 
+  - name: "price_index"
+    distribution: "normal"
+    params:
+      mean: 1.0
+      std: 0.05
+    effect:
+      coefficient: -0.3
+ 
+  - name: "promotion_flag"
+    distribution: "bernoulli"
+    params:
+      p: 0.25
+    effect:
+      coefficient: 0.2
+
+business_drivers:
+
+  - name: "promotion"
+    column_name: "promotion_active"
+    type: "bernoulli"
+    mean: 0.3
+    std: 0.45
+
+  - name: "price"
+    column_name: "price_per_unit"
+    type: "continuous"
+    mean: 1.0
+    std: 0.05
+
+  - name: "distribution"
+    column_name: "store_coverage_pct"
+    type: "continuous"
+    mean: 0.8
+    std: 0.1

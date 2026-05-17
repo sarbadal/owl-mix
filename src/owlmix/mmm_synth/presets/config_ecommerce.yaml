@@ -1,0 +1,81 @@
+seed: 42
+ 
+dataset:
+  frequency: daily
+  periods: 365
+ 
+target:
+  name: daily_orders
+  base_sales: 5000
+  noise_std: 200
+ 
+media_channels:
+  facebook_ads_spend:
+    distribution: gamma
+    shape: 3
+    scale: 500
+ 
+  google_search_clicks:
+    distribution: lognormal
+    mean: 11
+    sigma: 0.3
+ 
+  display_impressions:
+    distribution: lognormal
+    mean: 13
+    sigma: 0.5
+ 
+  influencer_spend:
+    distribution: gamma
+    shape: 2
+    scale: 300
+ 
+  affiliate_clicks:
+    distribution: lognormal
+    mean: 9
+    sigma: 0.4
+ 
+control_variables:
+  discount_rate:
+    distribution: uniform
+    low: 0
+    high: 0.5
+ 
+  website_traffic:
+    distribution: lognormal
+    mean: 12
+    sigma: 0.3
+ 
+  competitor_price_index:
+    distribution: normal
+    mean: 100
+    std: 5
+ 
+transformations:
+  facebook_ads_spend:
+    adstock: 0.5
+    saturation: hill
+ 
+  google_search_clicks:
+    adstock: 0.2
+    saturation: log
+ 
+  display_impressions:
+    adstock: 0.4
+    saturation: sqrt
+ 
+channel_coefs:
+  facebook_ads_spend: 0.01
+  google_search_clicks: 0.005
+  display_impressions: 0.00001
+  influencer_spend: 0.02
+  affiliate_clicks: 0.004
+ 
+multicollinearity:
+  - base: facebook_ads_spend
+    correlated_with: display_impressions
+    strength: 0.8
+
+noise:
+  type: gaussian
+  std: 200

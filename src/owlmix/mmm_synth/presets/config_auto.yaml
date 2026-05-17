@@ -1,0 +1,91 @@
+seed: 42
+ 
+dataset:
+  frequency: weekly
+  periods: 156   # 3 years
+ 
+target:
+  name: weekly_vehicle_sales
+  base_sales: 800
+  noise_std: 40
+ 
+media_channels:
+  tv_grps:
+    distribution: normal
+    mean: 120
+    std: 30
+ 
+  digital_video_impressions:
+    distribution: lognormal
+    mean: 12
+    sigma: 0.4
+ 
+  paid_search_clicks:
+    distribution: lognormal
+    mean: 10
+    sigma: 0.5
+ 
+  radio_spend:
+    distribution: gamma
+    shape: 2
+    scale: 200
+ 
+  ooh_impressions:
+    distribution: normal
+    mean: 50000
+    std: 10000
+ 
+  print_newspaper_circulation:
+    distribution: normal
+    mean: 200000
+    std: 40000
+ 
+control_variables:
+  price_index:
+    distribution: normal
+    mean: 100
+    std: 5
+ 
+  dealer_count:
+    distribution: normal
+    mean: 150
+    std: 10
+ 
+  competitor_spend_index:
+    distribution: normal
+    mean: 80
+    std: 15
+ 
+transformations:
+  tv_grps:
+    adstock: 0.6
+    saturation: hill
+ 
+  digital_video_impressions:
+    adstock: 0.4
+    saturation: log
+ 
+  paid_search_clicks:
+    adstock: 0.3
+    saturation: sqrt
+ 
+  radio_spend:
+    adstock: 0.5
+    saturation: log
+ 
+channel_coefs:
+  tv_grps: 0.08
+  digital_video_impressions: 0.00002
+  paid_search_clicks: 0.002
+  radio_spend: 0.015
+  ooh_impressions: 0.00001
+  print_newspaper_circulation: 0.000005
+ 
+multicollinearity:
+  - base: tv_grps
+    correlated_with: digital_video_impressions
+    strength: 0.7
+
+noise:
+  type: gaussian
+  std: 100
