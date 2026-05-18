@@ -1,0 +1,22 @@
+<svg width="100%" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+ 
+  {% set kpi_points = row_lines.kpi.points %}
+  {% set feature_points = row_lines.feature.points %}
+  <!-- KPI -->
+  <polyline
+    fill="none"
+    stroke="blue"
+    stroke-width="3"
+    points="{{ kpi_points }}"
+  />
+ 
+  <!-- Feature -->
+  <polyline
+    fill="none"
+    stroke="red"
+    stroke-width="3"
+    stroke-dasharray="4,2"
+    points="{{ feature_points }}"
+  />
+ 
+</svg>

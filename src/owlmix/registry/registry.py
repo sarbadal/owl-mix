@@ -8,6 +8,7 @@ from ..analysis.vif import VIFAnalyzer, VIFParams
 from ..analysis.correlation import CorrelationAnalyzer, CorrelationParams
 from ..plotting.acf_pacf import AcfPacfPlotter, AcfPacfPlotParams
 from ..plotting.box_plot import BoxPlotter, BoxPlotParams
+from ..plotting.dual_axis_line import DualAxisLinePreparer, DualAxisLineDataConfig
 from ..plotting.vif import VIFPlotter, VIFPlotParams
 from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
 from ..analysis.ccf import CCFAnalyzer, CCFParams
@@ -28,6 +29,7 @@ PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
     "vif": {"plotter": VIFPlotter, "params": VIFPlotParams},
     "correlation": {"plotter": CorrelationPlotter, "params": CorrPlotParams},
     "box_plot": {"plotter": BoxPlotter, "params": BoxPlotParams},
+    "dual_axis_line": {"plotter": DualAxisLinePreparer, "params": DualAxisLineDataConfig},
     # No plotter for causality analysis as of now, but can be added in the future
 }
 

@@ -1,0 +1,73 @@
+{% if sections.box_plot is defined %}
+<section>
+    <h2>📦 Box Plot Analysis</h2>
+    <p class="section-desc">
+        The box plot table presents the summary statistics (min, Q1, median, Q3, max, outliers) for each variable. This helps visualize the distribution and identify potential outliers.
+    </p>
+
+    {% set box_data = sections.box_plot.data.original %}
+    {% set scaler_data = sections.box_plot.data.scaler_data %}
+    
+    {% if box_data|length > 0 %}
+        <div style="overflow-x: auto; margin-bottom: 32px;">
+            <table class="box-plot-table" style="font-size: 0.85rem; width: 100%; min-width: 500px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">Column</th>
+                        <th style="border-right: 1px solid #eee;">Min</th>
+                        <th style="border-right: 1px solid #eee;">Q1</th>
+                        <th style="border-right: 1px solid #eee;">Median</th>
+                        <th style="border-right: 1px solid #eee;">Q3</th>
+                        <th style="border-right: 2px solid #ccc;">Max</th>
+                        <th style="border-right: 2px solid #ccc;">Outlier Count</th>
+                        <th style="border-right: 2px solid #ccc; display: none;">Outliers</th>
+                        <th style="border-right: 2px solid #ccc; text-align: center;">Box Plot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in box_data %}
+                    {% set item_scaler = scaler_data[loop.index0] %}
+                    <tr>
+                        <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">{{ item.column }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.min) if item.min is number else item.min }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.q1) if item.q1 is number else item.q1 }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.median) if item.median is number else item.median }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.q3) if item.q3 is number else item.q3 }}</td>
+                        <td style="border-right: 2px solid #ccc;">{{ "%.3f"|format(item.max) if item.max is number else item.max }}</td>
+                        <td style="border-right: 2px solid #ccc;">{{ item.outliers_count }}</td>
+                        <td style="border-right: 2px solid #ccc; display: none;">
+                            {% if item.outliers is defined and item.outliers|length > 0 %}
+                                {{ item.outliers|join(', ') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td style="border-right: 2px solid #ccc; text-align: center;">
+                            {% if item_scaler is defined %}
+                                {% with item_scaler=item_scaler %}
+                                    {% include "sections/charts/box_plot.html" %}
+                                {% endwith %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No box plot data available.</p>
+    {% endif %}
+
+    <!-- Chart row (always below table) -->
+    {% if sections.box_plot.chart and sections.box_plot.chart.images %}
+        <div style="width: 100%; display: flex; justify-content: center; margin-top: 32px; display: none;">
+            <div class="chart-card" style="padding: 16px; width: 100%; max-width: 1200px;">
+                <img src="{{ sections.box_plot.chart.images.box_plot }}" alt="Box Plot Chart"
+                    style="width: 100%; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block;">
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endif %}

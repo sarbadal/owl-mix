@@ -7,10 +7,23 @@ from tabulate import tabulate
 
 from .base import BaseAnalyzer
 from ..utils.mixin import ColumnMixin
+from .transformer.difference import DifferenceTransformer
+from .transformer.lag import LagTransformer
 from .transformer.adstock import AdstockTransformer
+from .transformer.base import BaseTransformer
 
 
-default_transformer = AdstockTransformer(decay_rate=0.5)
+adstock_transformer = AdstockTransformer(decay_rate=0.5)
+diff_transformer = DifferenceTransformer(period=1)
+lag_transformer = LagTransformer(lag=1)
+
+TRANSFORMER_MAPPING = {
+    "adstock": adstock_transformer,
+    "difference": diff_transformer,
+    "lag": lag_transformer
+}
+
+TRANSFORMERS = ["adstock", "difference", "lag"]
 
 
 @dataclass
@@ -49,13 +62,14 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
         params : CCFParams
             The parameters for CCF analysis.
     """
-    def __init__(self, df: pd.DataFrame, params: CCFParams, transformer: Optional[AdstockTransformer] = default_transformer):
+    def __init__(self, df: pd.DataFrame, params: CCFParams, transformer: List[BaseTransformer] = None):
         super().__init__(df, params)
         self.feature_columns = self._get_numeric_columns(params.feature_columns)
         self.feature_columns = [
             col for col in self.feature_columns if col != self.params.target_column
         ]
-        self.transformer = transformer
+        self.transformer = transformer if transformer is not None else TRANSFORMERS
+        self.transformer = [self.transformer] if isinstance(self.transformer, str) else self.transformer
         self.ccf_results = {}
         self.summary_table = None
 
@@ -72,9 +86,11 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
         versions = {
             "original": self.df[feature]
         }
-        if self.transformer:
-            versions["adstocked"] = self.transformer.transform(self.df[feature])
-        versions["differenced"] = self.df[feature].diff()
+        for transformer_name in self.transformer:
+            transformer = TRANSFORMER_MAPPING.get(transformer_name)
+            if transformer:
+                transformed_series = transformer.transform(self.df[feature])
+                versions[transformer_name] = transformed_series
         return versions
 
     def compute(self) -> Dict[str, Dict[int, float]]:

@@ -2,6 +2,7 @@ import os
 from typing import Any, Dict
 from ...registry.registry import register_section, ANALYZERS_REGISTRY, PLOTTERS_REGISTRY
 from .protocol_cls import ReportBuilderProtocol
+from ...analysis.box_plot import box_plot_scaler
 
 
 @register_section("box_plot")
@@ -56,4 +57,12 @@ def build_box_plot_section(report_builder: ReportBuilderProtocol) -> Dict[str, A
         }
     }
 
-    return {"data": data, "chart": chart_item}
+    box_plot_scaler_data = box_plot_scaler(data=data)
+
+    return {
+        "data": {
+            "original": data, 
+            "scaler_data": box_plot_scaler_data
+        }, 
+        "chart": chart_item
+    }

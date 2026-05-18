@@ -26,7 +26,7 @@ def test_render_html_report_from_json():
 
 
 def test_report_generation():
-    df = create_sample_data(n=500)
+    df = create_sample_data(n=250)
     report_builder = ReportBuilder(
         df=df,
         target_col="sales",
@@ -60,13 +60,19 @@ def test_report_generation():
             "precision": 5
         },
         box_plot={
-            "columns": ["sales", "tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
-            "n_plot_per_row": 3,
+            "columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+            "n_plot_per_row": 5,
             "method": "zscore",
-            "threshold": 1.5  # default is 3 for method "zscore" and 1.5 for method "iqr"
+            "threshold": 1.7 # default is 3 for method "zscore" and 1.5 for method "iqr"
         },
         ccf={
-            "feature_columns": ['tv_spend'],
+            "feature_columns": [
+                "tv_spend",
+                "digital_spend",
+                # "radio_spend",
+                # "tv_grp",
+                # "digital_imp"
+            ],
             "max_lag": 3
         }
     )
@@ -82,4 +88,4 @@ def test_report_generation():
 
 if __name__ == "__main__":
     test_report_generation()
-    # test_render_html_report_from_json()
+    test_render_html_report_from_json()

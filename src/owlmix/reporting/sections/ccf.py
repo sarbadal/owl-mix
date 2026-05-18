@@ -2,6 +2,7 @@ import os
 from typing import Any, Dict
 from ...registry.registry import register_section, ANALYZERS_REGISTRY, PLOTTERS_REGISTRY
 from .protocol_cls import ReportBuilderProtocol
+from ...plotting.dual_axis_line import apply_transformation
 
 
 @register_section("ccf")
@@ -24,9 +25,9 @@ def build_ccf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
     """
     config = report_builder.config.ccf_config
     analyzer_cls = ANALYZERS_REGISTRY["ccf"]["analyzer"]
-    # plotter_cls = PLOTTERS_REGISTRY["ccf"]["plotter"]
+    plotter_cls = PLOTTERS_REGISTRY["dual_axis_line"]["plotter"]
     analyzer_params_cls = ANALYZERS_REGISTRY["ccf"]["params"]
-    # plotter_params_cls = PLOTTERS_REGISTRY["ccf"]["params"]
+    plotter_params_cls = PLOTTERS_REGISTRY["dual_axis_line"]["params"]
 
     analyzer_params = analyzer_params_cls(
         time_column=config.time_column,
@@ -34,13 +35,28 @@ def build_ccf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
         feature_columns=config.feature_columns,
         max_lag=config.max_lag
     )
-    # plotter_params = plotter_params_cls()
 
     analyzer = analyzer_cls(
         df=report_builder.df,
         params=analyzer_params
     )
     data = analyzer.compute()
+
+    # features = config.feature_columns
+    lines_data = {}
+    for item in data["summary_table"]:
+        feature = item["feature"]
+        lag_at_max = item["lag_at_max"]
+        plotter_params = plotter_params_cls(
+            time_column=config.time_column,
+            target_column=config.target_column,
+            feature_column=feature,
+            normalize=True
+        )
+        line_preparer = plotter_cls(report_builder.df, plotter_params)
+        line_preparer.apply_transformation("difference", lag=lag_at_max)
+        line_data = line_preparer.prepare()
+        lines_data[feature] = line_data
 
     # plotter = plotter_cls(data=data, params=plotter_params)
     # path = plotter.generate(os.path.join(report_builder.config.output_dir, "charts"))
@@ -51,4 +67,10 @@ def build_ccf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
     #     "image": report_builder.image_to_base64(path)
     # }
 
-    return {"data": data, "chart": None}
+    return {
+        "data": {
+            "ccf": data,
+            "lines": lines_data
+        }, 
+        "chart": None
+    }

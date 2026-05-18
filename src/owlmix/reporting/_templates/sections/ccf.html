@@ -1,0 +1,75 @@
+{% if sections.ccf is defined and sections.ccf.data is defined and sections.ccf.data.ccf.summary_table is defined %}
+<section>
+    <h2>🔗 Cross-Correlation Function (CCF) Summary Table</h2>
+    <p class="section-desc">
+        The CCF summary table presents cross-correlation statistics between variable pairs, helping to identify lagged relationships.
+    </p>
+
+    {% set summary_data = sections.ccf.data.ccf.summary_table %}
+    {% set lines = sections.ccf.data.lines %}
+
+    {% if summary_data|length > 0 %}
+        <div style="overflow-x: auto; margin-bottom: 32px;">
+            <table class="ccf-summary-table" style="font-size: 0.85rem; width: 100%; min-width: 500px; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">Target</th>
+                        <th style="border-right: 1px solid #eee; border-right: 2px solid #ccc;">Feature</th>
+                        <th style="border-right: 1px solid #eee; border-right: 2px solid #ccc;">Version</th>
+                        <th style="border-right: 1px solid #eee; text-align: right;">Max-Corr</th>
+                        <th style="border-right: 1px solid #eee; text-align: right;">Max-Corr Lag</th>
+                        <th style="border-right: 2px solid #ccc; text-align: right;">Corr@Lag0</th>
+
+                        <!-- Line Chart column. -->
+                        <th style="border-right: 2px solid #ccc; display: none;">Line Chart (Dummy)</th>
+                        <th style="border-right: 2px solid #ccc; text-align: center;">Lines (Original)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in summary_data %}
+                    {% set row_lines = lines[row.feature] %}
+                    <tr>
+                        <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">{{ row.target_column }}</td>
+                        <td style="border-right: 1px solid #eee; border-right: 2px solid #ccc;">{{ row.feature }}</td>
+                        <td style="border-right: 1px solid #eee; border-right: 2px solid #ccc;">{{ row.version }}</td>
+                        <td style="border-right: 1px solid #eee; text-align: right;">{{ row.max_correlation }}</td>
+                        <td style="border-right: 1px solid #eee; text-align: right;">{{ row.lag_at_max }}</td>
+                        <td style="border-right: 2px solid #ccc; text-align: right;">{{ "%.3f"|format(row.correlation_at_lag_0) if row.correlation_at_lag_0 is number else row.correlation_at_lag_0 }}</td>
+
+                        <!-- Dummay line chart for now. Points will be updated later. -->
+                        <td style="border-right: 2px solid #ccc; text-align: center; display: none;">
+                            <!-- Dummy mini line chart as SVG -->
+                            <svg width="60" height="20" viewBox="0 0 60 20" style="display: block;">
+                                <!-- First line (blue) -->
+                                <polyline 
+                                    fill="none" 
+                                    stroke="#0074d9" 
+                                    stroke-width="2" 
+                                    points="0,15 10,10 20,12 30,5 40,10 50,8 60,15 70,12 80,7 90,14" />
+                                <!-- Second line (orange) -->
+                                <polyline 
+                                    fill="none" 
+                                    stroke="#ff851b" 
+                                    stroke-width="2" 
+                                    points="0,10 10,12 20,8 30,15 40,12 50,14 60,10 70,6 80,13 90,9" />
+                            </svg>
+                        </td>
+                        <td style="border-right: 2px solid #ccc; text-align: center;">
+                            {% if row_lines is defined %}
+                                {% with row_lines=row_lines %}
+                                    {% include "sections/charts/line_charts.html" %}
+                                {% endwith %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No CCF summary data available.</p>
+    {% endif %}
+</section>
+{% endif %}

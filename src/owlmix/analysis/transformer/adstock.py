@@ -2,17 +2,21 @@ import pandas as pd
 import numpy as np
 from enum import Enum
 
+from .base import BaseTransformer
+
 
 class AdstockMethod(str, Enum):
     GEOMETRIC = "geometric"
 
 
-class AdstockTransformer:
-    def __init__(self, method: AdstockMethod = AdstockMethod.GEOMETRIC, decay_rate: float = 0.5):
+class AdstockTransformer(BaseTransformer):
+    def __init__(self, lag: int = 0, method: AdstockMethod = AdstockMethod.GEOMETRIC, decay_rate: float = 0.5):
+        self.lag = lag
         self.method = method
         self.decay_rate = decay_rate
 
     def transform(self, series: pd.Series) -> pd.Series:
+        series = series.shift(self.lag)
         if self.method == AdstockMethod.GEOMETRIC:
             return self._geometric(series)
         raise ValueError(f"Unknown adstock method: {self.method}")

@@ -11,11 +11,11 @@ sys.path.append(str(SRC_DIR))
 #===============================================================================
 import pandas as pd
 from owlmix.utils.sample_data_generator import create_sample_data
-from owlmix.analysis.box_plot import BoxPlotAnalyzer, BoxPlotParams
+from owlmix.analysis.box_plot import BoxPlotAnalyzer, BoxParams
 
 def test_box_plot_analyzer():
     df = create_sample_data(n=100)
-    params = BoxPlotParams(
+    params = BoxParams(
         # columns=["sales", "radio_spend", "digital_spend"],
         method="zscore",  # "iqr", "zscore"
         # threshold=1.5,
