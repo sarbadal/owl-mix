@@ -1,0 +1,46 @@
+{% macro smooth_path_d(points_str) -%}
+  {%- set pts = points_str.split() -%}
+  {%- if pts|length < 2 -%}
+    {{ "" }}
+  {%- else -%}
+    {%- set first = pts[0].split(",") -%}
+    {%- set ns = namespace(d = "M " ~ first[0] ~ "," ~ first[1]) -%}
+    {%- for i in range(0, pts|length - 2) -%}
+      {%- set a = pts[i].split(",") -%}
+      {%- set b = pts[i + 1].split(",") -%}
+      {%- set mx = (a[0]|float + b[0]|float) / 2 -%}
+      {%- set my = (a[1]|float + b[1]|float) / 2 -%}
+      {%- set ns.d = ns.d ~ " Q " ~ a[0] ~ "," ~ a[1] ~ " " ~ mx ~ "," ~ my -%}
+    {%- endfor -%}
+    {%- set prev = pts[pts|length - 2].split(",") -%}
+    {%- set last = pts[pts|length - 1].split(",") -%}
+    {%- set ns.d = ns.d ~ " Q " ~ prev[0] ~ "," ~ prev[1] ~ " " ~ last[0] ~ "," ~ last[1] -%}
+    {{ ns.d }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% set kpi_points = row_lines.kpi.points %}
+{% set feature_points = row_lines.feature.points %}
+{% set kpi_d = smooth_path_d(kpi_points) %}
+{% set feature_d = smooth_path_d(feature_points) %}
+
+<svg width="100%" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- KPI -->
+  <path
+    d="{{ kpi_d }}"
+    fill="none"
+    stroke="blue"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+
+  <!-- Feature -->
+  <path
+    d="{{ feature_d }}"
+    fill="none"
+    stroke="red"
+    stroke-width="2.5"
+    stroke-dasharray="4,2"
+    stroke-linecap="round"
+  />
+</svg>

@@ -87,3 +87,15 @@ h1 {
 .copyright {
     color: var(--color-foreground-primary) !important;
 }
+
+.last-updated {
+    color: var(--color-foreground-primary) !important;
+    font-size: 0.9em !important;
+    margin-top: 1em !important;
+}
+
+/* Target the specific "Last Updated" span */
+footer .last-updated {
+    margin-left: auto;
+    text-align: right;
+}

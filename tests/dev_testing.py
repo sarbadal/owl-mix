@@ -42,9 +42,9 @@ def test_report_generation():
 
     report_builder.config.update_config(
         acf_pacf={
-            "columns": ["sales", "tv_spend"],
-            "n_lags": 5,
-            "precision": 3
+            "columns": ["sales", "tv_spend", "digital_imp", "radio_spend"],
+            "n_lags": 15,
+            "precision": 2
         },
         vif={
             # "features": [
@@ -87,5 +87,5 @@ def test_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    test_report_generation()
+    # test_report_generation()
     test_render_html_report_from_json()

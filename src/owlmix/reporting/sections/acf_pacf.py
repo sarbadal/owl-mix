@@ -49,13 +49,15 @@ def build_acf_pacf_section(report_builder: ReportBuilderProtocol) -> Dict[str, A
     data = analyzer.compute()
 
     plotter = plotter_cls(data=data, params=plotter_params)
+    all_charts = plotter.generate_chart_for_all(os.path.join(report_builder.config.output_dir, "charts"))
     path = plotter.generate(os.path.join(report_builder.config.output_dir, "charts"))
     columns_str = ", ".join(config.columns) if config.columns else "all columns"
     chart_item = {
         "title": "ACF and PACF Plots",
         "description": f"ACF and PACF plots for columns: {columns_str} with {config.n_lags} lags.",
         "alt_text": "ACF and PACF plots",
-        "image": report_builder.image_to_base64(path)
+        "image": report_builder.image_to_base64(path),
+        "images": {col: report_builder.image_to_base64(chart_path) for col, chart_path in all_charts.items()}
     }
 
     return {"data": data, "chart": chart_item}

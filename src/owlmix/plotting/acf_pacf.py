@@ -53,6 +53,124 @@ class AcfPacfPlotter(BasePlotter):
         """Return the minimum value for lags > 0."""
         return min([v for v, lag in zip(values, lags) if lag > 0], default=0)
 
+    def generate_chart_for_all(self, output_dir: str = "outputs/charts") -> str:
+        os.makedirs(output_dir, exist_ok=True)
+        charts = {}
+
+        for item in self.data:
+            col_name = item["column"]
+            lags = item["lags"]
+            acf_vals = item["acf"]
+            pacf_vals = item["pacf"]
+            n_obs = item["n_obs"]
+
+            conf = 1.96 / np.sqrt(n_obs)
+
+            acf_max_pos = self._get_max_positive_lag_value(acf_vals, lags)
+            acf_min_pos = self._get_min_positive_lag_value(acf_vals, lags)
+            pacf_max_pos = self._get_max_positive_lag_value(pacf_vals, lags)
+            pacf_min_pos = self._get_min_positive_lag_value(pacf_vals, lags)
+
+            fig, axes = plt.subplots(
+                nrows=2,
+                ncols=2,
+                figsize=(28, 7),
+                gridspec_kw={"height_ratios": [1, 4]},
+            )
+
+            # ACF broken axis
+            ax_acf_top = axes[0, 0]
+            ax_acf_bottom = axes[1, 0]
+
+            ax_acf_top.stem(
+                lags, acf_vals, basefmt=" ",
+                linefmt=self.params.acf_stem, markerfmt=self.params.acf_marker
+            )
+            ax_acf_top.axhspan(-conf, conf, alpha=0.15, color=self.params.acf_conf)
+            ax_acf_top.set_ylim(self.y_pos_resume, self.y_max)
+            ax_acf_top.set_yticks(np.arange(self.y_pos_resume, self.y_max + 0.01, 0.1))
+            ax_acf_top.spines["bottom"].set_visible(False)
+            ax_acf_top.tick_params(labelbottom=False)
+            ax_acf_top.set_title(f"ACF - {col_name} (N={n_obs})", fontsize=20, fontweight="bold")
+
+            ax_acf_bottom.stem(
+                lags, acf_vals, basefmt=" ",
+                linefmt=self.params.acf_stem, markerfmt=self.params.acf_marker
+            )
+            ax_acf_bottom.axhspan(-conf, conf, alpha=0.15, color=self.params.acf_conf)
+            ax_acf_bottom.set_ylim(
+                min(self.y_neg_break, acf_min_pos),
+                max(self.y_pos_break, acf_max_pos)
+            )
+            ax_acf_bottom.set_yticks(np.arange(self.y_neg_break, self.y_pos_break + 0.01, 0.1))
+            ax_acf_bottom.spines["top"].set_visible(False)
+            ax_acf_bottom.set_xlabel("Lags", fontsize=24)
+            ax_acf_bottom.set_ylabel("ACF", fontsize=24)
+
+            # PACF broken axis
+            ax_pacf_top = axes[0, 1]
+            ax_pacf_bottom = axes[1, 1]
+
+            ax_pacf_top.stem(
+                lags, pacf_vals, basefmt=" ",
+                linefmt=self.params.pacf_stem, markerfmt=self.params.pacf_marker
+            )
+            ax_pacf_top.axhspan(-conf, conf, alpha=0.15, color=self.params.pacf_conf)
+            ax_pacf_top.set_ylim(self.y_pos_resume, self.y_max)
+            ax_pacf_top.set_yticks(np.arange(self.y_pos_resume, self.y_max + 0.01, 0.1))
+            ax_pacf_top.spines["bottom"].set_visible(False)
+            ax_pacf_top.tick_params(labelbottom=False)
+            ax_pacf_top.set_title(f"PACF - {col_name} (N={n_obs})", fontsize=20, fontweight="bold")
+
+            ax_pacf_bottom.stem(
+                lags, pacf_vals, basefmt=" ",
+                linefmt=self.params.pacf_stem, markerfmt=self.params.pacf_marker
+            )
+            ax_pacf_bottom.axhspan(-conf, conf, alpha=0.15, color=self.params.pacf_conf)
+            ax_pacf_bottom.set_ylim(
+                min(self.y_neg_break, pacf_min_pos),
+                max(self.y_pos_break, pacf_max_pos)
+            )
+            ax_pacf_bottom.set_yticks(np.arange(self.y_neg_break, self.y_pos_break + 0.01, 0.1))
+            ax_pacf_bottom.spines["top"].set_visible(False)
+            ax_pacf_bottom.set_xlabel("Lags", fontsize=24)
+            ax_pacf_bottom.set_ylabel("PACF", fontsize=24)
+
+            # Break marks
+            d = 0.015
+
+            kwargs = dict(transform=ax_acf_top.transAxes, color="k", clip_on=False)
+            ax_acf_top.plot((-d, +d), (-d, +d), **kwargs)
+            ax_acf_top.plot((1 - d, 1 + d), (-d, +d), **kwargs)
+            kwargs.update(transform=ax_acf_bottom.transAxes)
+            ax_acf_bottom.plot((-d, +d), (1 - d, 1 + d), **kwargs)
+            ax_acf_bottom.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)
+
+            kwargs = dict(transform=ax_pacf_top.transAxes, color="k", clip_on=False)
+            ax_pacf_top.plot((-d, +d), (-d, +d), **kwargs)
+            ax_pacf_top.plot((1 - d, 1 + d), (-d, +d), **kwargs)
+            kwargs.update(transform=ax_pacf_bottom.transAxes)
+            ax_pacf_bottom.plot((-d, +d), (1 - d, 1 + d), **kwargs)
+            ax_pacf_bottom.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)
+
+            for ax in [ax_acf_top, ax_acf_bottom, ax_pacf_top, ax_pacf_bottom]:
+                ax.set_xticks(lags)
+                ax.set_xlim(min(lags) - 0.5, max(lags) + 0.5)
+                ax.tick_params(axis="both", labelsize=16)
+
+            safe_col_name = "".join(
+                c if c.isalnum() or c in ("-", "_") else "_"
+                for c in str(col_name)
+            )
+            file_path = os.path.join(output_dir, f"acf_pacf_{safe_col_name}.png")
+            charts[col_name] = file_path
+
+            plt.tight_layout()
+            plt.savefig(file_path, dpi=300, bbox_inches="tight")
+            plt.close(fig)
+
+        return charts
+
     def generate(self, output_dir: str = "outputs/charts") -> str:
         n = len(self.data)
         fig_height = 7 * n

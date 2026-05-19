@@ -72,5 +72,6 @@ References
 - :ref:`Box Plotting <api.plotter.box-plot>`
 - :ref:`Correlation Heatmap Plotting <api.plotter.correlation>`
 - :ref:`Variance Inflation Factor Plotting <api.plotter.vif>`
+- :ref:`Dual Axis Line Plotting <api.plotter.dual-axis-line>`
 
 :ref:`Back to Home <home>`

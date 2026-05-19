@@ -1,6 +1,5 @@
 import os
 import sys
-# import sphinx_bootstrap_theme
  
 # Add your package root to PYTHONPATH
 sys.path.insert(0, os.path.abspath('../..'))
@@ -32,14 +31,8 @@ html_context = {
 }
  
 html_theme = 'furo'
-# html_theme = 'sphinx_rtd_theme'
-# html_theme = 'python_docs_theme'
-
-# html_theme = 'bootstrap'
-# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
-
-# html_permalinks_icon = '<span>#</span>'
-# html_theme = 'sphinxawesome_theme'
+html_last_updated_use_utc = True
+html_last_updated_fmt = "%Y-%m-%d %H:%M:%S"
  
 html_static_path = ['_static']
 html_css_files = [

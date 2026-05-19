@@ -92,6 +92,7 @@ effectively in your data analysis workflow.
    api/analysis/vif
    api/plotter/acf-pacf
    api/plotter/box-plot
+   api/plotter/dual-axis-line
    api/plotter/correlation
    api/plotter/vif
    api/utils/file-resolver
@@ -117,6 +118,7 @@ focusing on the main analytical, plotting, utility, and typing modules.
 
 - :doc:`ACF/PACF Plotting <api/plotter/acf-pacf>` Documentation for the ACF/PACF plotting module, including the main classes, functions, and usage examples.
 - :doc:`Box Plot Plotting <api/plotter/box-plot>` Documentation for the box plot plotting module, including the main classes, functions, and usage examples.
+- :doc:`Dual Axis Line Plotting <api/plotter/dual-axis-line>` Documentation for the dual axis line plotting module, including the main classes, functions, and usage examples.
 - :doc:`Correlation Plotting <api/plotter/correlation>` Documentation for the correlation plotting module, including the main classes, functions, and usage examples.
 - :doc:`VIF Plotting <api/plotter/vif>` Documentation for the VIF plotting module, including the main classes, functions, and usage examples.
 
@@ -194,3 +196,19 @@ embedding the charts and insights in a visually appealing manner.
 This section documents the type annotations, custom types, and conventions used 
 across the package to ensure code clarity and type safety.
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples
+   :hidden:
+
+   examples/example-eda
+
+Examples
+--------
+
+Here you can find the example html report generated from the EDA example in the documentation.
+
+:doc:`Example: Exploratory Data Analysis <examples/example-eda>`
+
+`Open Example <_static/report.html>`_

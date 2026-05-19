@@ -1,0 +1,68 @@
+{% if sections.acf_pacf is defined %}
+<section>
+    <h2>📊 ACF & PACF Analysis</h2>
+    <p class="section-desc">
+        The ACF and PACF tables present the numerical values of autocorrelation 
+        and partial autocorrelation coefficients for each variable across specified lags. 
+        These tabulated values enable precise identification of statistically 
+        significant lags and the strength of relationships over time.
+    </p>
+
+    {% set columns = sections.acf_pacf.data %}
+    {% set images = sections.acf_pacf.chart.images %}
+    <div style="overflow-x: auto; margin-bottom: 32px;">
+        <table class="acf-pacf-table" style="font-size: 0.95rem; width: 100%; min-width: 600px; border-collapse: collapse;">
+            <thead>
+                {% set max_lags = columns | map(attribute='lags') | map('length') | max %}
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="{{ max_lags }}" style="border-left: 2px solid #ccc;">Lag</th>
+                </tr>
+                <tr>
+                    <th>Columns</th>
+                    <th style="border-right: 2px solid #ccc;">Type</th>
+                    {% for lag in range(0, max_lags) %}
+                        <th>{{ lag }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for col in columns %}
+                    <tr>
+                        <td rowspan="2" style="font-weight: bold;">{{ col.column }}</td>
+                        <td style="border-right: 2px solid #ccc;">ACF</td>
+                        {% for val in col.acf %}
+                            <td>{{ "%.3f"|format(val) if val is number else val }}</td>
+                        {% endfor %}
+                        {% for _ in range(max_lags - (col.acf|length)) %}
+                            <td>-</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td style="border-right: 2px solid #ccc;">PACF</td>
+                        {% for val in col.pacf %}
+                            <td>{{ "%.3f"|format(val) if val is number else val }}</td>
+                        {% endfor %}
+                        {% for _ in range(max_lags - (col.pacf|length)) %}
+                            <td>-</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="{{ max_lags }}">
+                            <!-- IMAGE place holder -->
+                            {% set img = images[col.column] %}
+                            {% if img is defined %}
+                                <img src="{{ img }}" alt="Chart for {{ col.column }}" style="max-width: 100%; display: block; margin: 0 auto;">
+                            {% else %}
+                                IMAGE place holder
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr><td colspan="{{ 2 + max_lags }}"></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
