@@ -1,0 +1,44 @@
+{% if sections.response_curve is defined
+      and sections.response_curve.chart is defined
+      and sections.response_curve.chart.images is defined %}
+{% set images = sections.response_curve.chart.images %}
+
+<section>
+  <h2>Response Curve</h2>
+  <div style="overflow-x:auto; margin-bottom:24px;">
+    <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+      <colgroup>
+        <col style="width:220px;">
+        <col style="width:280px;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #ddd;">Feature</th>
+          <th style="text-align:center; padding:10px; border-bottom:1px solid #ddd;">Chart</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for feature, img in images|dictsort %}
+        <tr>
+          <td style="padding:10px; border-bottom:1px solid #eee; vertical-align:middle;">
+            {{ feature }}
+          </td>
+          <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+            {% if img %}
+            <a href="#" target="_blank"
+               style="display:inline-block; width:440px; height:260px; border:1px solid #ddd; border-radius:6px; overflow:hidden; background:#fafafa;">
+              <img src="{{ img }}"
+                   alt="Response curve for {{ feature }}"
+                   style="width:100%; height:100%; object-fit:contain; display:block;">
+            </a>
+            {% else %}
+            -
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}

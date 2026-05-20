@@ -26,7 +26,7 @@ def test_render_html_report_from_json():
 
 
 def test_report_generation():
-    df = create_sample_data(n=250)
+    df = create_sample_data(n=500, include_nan=False)
     report_builder = ReportBuilder(
         df=df,
         target_col="sales",
@@ -74,6 +74,10 @@ def test_report_generation():
                 # "digital_imp"
             ],
             "max_lag": 3
+        },
+        response_curve={
+            "feature_columns": ["tv_spend", "digital_spend", "radio_spend"],
+            "target_column": "sales",
         }
     )
 
@@ -87,5 +91,5 @@ def test_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    # test_report_generation()
+    test_report_generation()
     test_render_html_report_from_json()

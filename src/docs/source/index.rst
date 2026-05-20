@@ -211,4 +211,4 @@ Here you can find the example html report generated from the EDA example in the 
 
 :doc:`Example: Exploratory Data Analysis <examples/example-eda>`
 
-`Open Example <_static/report.html>`_
+`Open Example <_static/report/>`_

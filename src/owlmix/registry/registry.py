@@ -12,6 +12,8 @@ from ..plotting.dual_axis_line import DualAxisLinePreparer, DualAxisLineDataConf
 from ..plotting.vif import VIFPlotter, VIFPlotParams
 from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
 from ..analysis.ccf import CCFAnalyzer, CCFParams
+from ..mmm.analysis.response_curve import ResponseCurveAnalyzer, ResponseCurveParams
+from ..mmm.visualization.plotter import ResponsePlotter, ResponsePlotConfig
 
 SectionBuilder = Callable[..., Dict[str, Any]]
 
@@ -22,6 +24,7 @@ ANALYZERS_REGISTRY: dict[str, dict[str, type[BaseAnalyzer] | type]] = {
     "box_plot": {"analyzer": BoxPlotAnalyzer, "params": BoxParams},
     "causality": {"analyzer": CausalityAnalyzer, "params": CausalityParams},
     "ccf": {"analyzer": CCFAnalyzer, "params": CCFParams},
+    "response_curve": {"analyzer": ResponseCurveAnalyzer, "params": ResponseCurveParams},
 }
 
 PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
@@ -30,7 +33,7 @@ PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
     "correlation": {"plotter": CorrelationPlotter, "params": CorrPlotParams},
     "box_plot": {"plotter": BoxPlotter, "params": BoxPlotParams},
     "dual_axis_line": {"plotter": DualAxisLinePreparer, "params": DualAxisLineDataConfig},
-    # No plotter for causality analysis as of now, but can be added in the future
+    "response_curve": {"plotter": ResponsePlotter, "params": ResponsePlotConfig},
 }
 
 SECTION_BUILDERS: Dict[str, SectionBuilder] = {}

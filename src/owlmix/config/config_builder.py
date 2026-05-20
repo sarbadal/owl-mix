@@ -10,6 +10,7 @@ from ..params import CausalityConfigArgs
 from ..params import CorrelationConfigArgs
 from ..params import CCFConfigArgs
 from ..params import VifConfigArgs
+from ..params.response_curve import ResponseCurveConfigArgs
 
 OUTPUT_DIR = "output"
 
@@ -33,7 +34,8 @@ class ConfigBuilder:
         self.causality_config = Args.causality.build(target_column=self.target_col)
         self.correlation_config = Args.correlation.build()
         self.ccf_config = Args.ccf.build(time_column=self.date_col, target_column=self.target_col)
-
+        self.response_curve_config = Args.response_curve.build(target_column=self.target_col)
+    
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
         if value is not None and (not isinstance(value, int) or value < 1):
@@ -54,6 +56,7 @@ class ConfigBuilder:
             "causality": self.update_causality_config,
             "box_plot": self.update_box_plot_config,
             "ccf": self.update_ccf_config,
+            "response_curve": self.update_response_curve_config,
         }
 
         for key, value in kwargs.items():
@@ -125,4 +128,15 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.ccf_config = replace(self.ccf_config, **kwargs)
+        return self
+
+    def update_response_curve_config(self, **kwargs: Unpack[ResponseCurveConfigArgs]) -> Self:
+        """
+        Update the Response Curve configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Response Curve configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.response_curve_config = replace(self.response_curve_config, **kwargs)
         return self

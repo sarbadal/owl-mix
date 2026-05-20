@@ -1,0 +1,93 @@
+mmm:
+  __init__.py: ""
+ 
+  models:
+    __init__.py: ""
+    base.py: |
+      class BaseModel:
+          def fit(self, X, y):
+              raise NotImplementedError
+ 
+          def predict(self, X):
+              raise NotImplementedError
+    
+    liner.py: ""
+
+    sklearn.py: ""
+
+    simple_model.py: |
+      import numpy as np
+ 
+      class SimpleLinearModel:
+          def __init__(self, coefficients: dict, intercept: float = 0.0):
+              self.coefficients = coefficients
+              self.intercept = intercept
+ 
+          def predict(self, X):
+              preds = []
+              for _, row in X.iterrows():
+                  y = self.intercept
+                  for col, coef in self.coefficients.items():
+                      y += coef * row[col]
+                  preds.append(y)
+              return np.array(preds)
+ 
+  transformers:
+    __init__.py: ""
+ 
+    base.py: |
+      class BaseTransformer:
+          def fit(self, x):
+              return self
+ 
+          def transform(self, x):
+              raise NotImplementedError
+ 
+          def fit_transform(self, x):
+              self.fit(x)
+              return self.transform(x)
+ 
+    adstock.py: |
+      import numpy as np
+      from .base import BaseTransformer
+ 
+      class AdstockTransformer(BaseTransformer):
+          def __init__(self, decay=0.5):
+              self.decay = decay
+ 
+          def transform(self, x):
+              x = np.array(x)
+              result = np.zeros_like(x, dtype=float)
+              result[0] = x[0]
+              for t in range(1, len(x)):
+                  result[t] = x[t] + self.decay * result[t - 1]
+              return result
+ 
+    hill.py: ""
+    saturation.py: ""
+    scaler.py: ""
+    pipeline.py: ""
+
+  pipeline:
+    __init__.py: ""
+    model_pipeline.py: ""
+ 
+  analysis:
+    __init__.py: ""
+    response_curve.py: ""
+    classifier.py: ""
+    s_curve_filler.py: ""
+    metrics.py: ""
+
+  config:
+    __init__.py: ""
+    transform_config.py: ""
+ 
+  visualization:
+    __init__.py: ""
+    plotter.py: ""
+ 
+  utils:
+    __init__.py: ""
+    helpers.py: ""
+ 

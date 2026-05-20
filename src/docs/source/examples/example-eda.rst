@@ -5,4 +5,4 @@ Report Rendered HTML Example
 
 See the full example here:
 
-`Open Example <../../_static/report.html>`_
+`Open Example <../../_static/report/>`_

@@ -1,0 +1,46 @@
+{% if sections.vif is defined %}
+<section>
+    <h2>📈 Variance Inflation Factor (VIF) Analysis</h2>
+    <p class="section-desc">
+        The VIF table presents the variance inflation factors for each variable, helping to identify multicollinearity in your dataset.
+    </p>
+
+    {% set vif_data = sections.vif.data %}
+    {% if vif_data and vif_data|length > 0 %}
+        <div style="margin-bottom: 32px;">
+            <!-- Table -->
+            <div style="width: 100%; display: flex; flex-direction: column; max-height: 700px;">
+                <div style="flex: 1 1 auto; overflow-y: auto;">
+                    <table class="vif-table" style="font-size: 0.95rem; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">Feature Variable</th>
+                                <th style="border-right: 2px solid #ccc;">VIF Value</th>
+                                <th style="border-right: 2px solid #ccc; text-align: center;">Chart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for idx in range(vif_data.feature | length) %}
+                            <tr>
+                                <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">
+                                    {{ vif_data.feature[idx] }}
+                                </td>
+                                <td style="border-right: 2px solid #ccc;">
+                                    {{ "%.3f"|format(vif_data.vif[idx]) if vif_data.vif[idx] is number else vif_data.vif[idx] }}
+                                </td>
+                                {% if idx == 0 and sections.vif.chart and sections.vif.chart.image %}
+                                <td style="border-right: 2px solid #ccc;" rowspan="{{ vif_data.feature | length }}">
+                                    <img src="{{ sections.vif.chart.image }}" alt="Chart for VIF"
+                                        style="width: 100%; max-height: 500px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block;">
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endif %}
