@@ -9,4 +9,5 @@ class LagTransformer(BaseTransformer):
         self.lag = lag
 
     def transform(self, series: pd.Series) -> pd.Series:
+        series = series.copy()
         return series.shift(self.lag)

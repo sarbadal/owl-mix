@@ -7,7 +7,7 @@ class BaseAnalyzer:
     """
 
     def __init__(self, df, params):
-        self.df = df.copy()
+        self.df = df.copy(deep=True)
         self.params = params
 
     def compute(self):

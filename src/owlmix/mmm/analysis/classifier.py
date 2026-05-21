@@ -1,14 +1,17 @@
 import numpy as np
+from typing import Dict
  
  
 class ResponseCurveClassifier:
-    def __init__(self, low_ratio=0.3, high_ratio=0.7):
+    """Classifies response curve into zones based on marginal ROI thresholds"""
+    def __init__(self, curve: Dict, low_ratio: float = 0.3, high_ratio: float = 0.7):
+        self.curve = curve
         self.low_ratio = low_ratio
         self.high_ratio = high_ratio
  
-    def classify(self, curve):
-        x = np.array(curve["input_value"])
-        y = np.array(curve["predicted_target"])
+    def classify(self):
+        x = np.array(self.curve["input_value"])
+        y = np.array(self.curve["predicted_target"])
  
         marginal = np.gradient(y, x)
         max_m = np.max(marginal)

@@ -11,12 +11,14 @@ from .s_curve_filler import SCurveFitter
 from ..pipeline.pipeline import TransformerPipeline
 from ..transformers.adstock import AdstockTransformer
 from ..transformers.hill import HillTransformer
+from ..transformers.log import LogTransformer
 from ...utils.mixin import ColumnMixin
 
 default_transformers_ = TransformerPipeline(
     [
-        AdstockTransformer(0.6),
+        AdstockTransformer(0.1),
         HillTransformer(50, 1.8)
+        # LogTransformer()
     ]
 )
 
@@ -38,7 +40,7 @@ class ResponseCurveAnalyzer(ColumnMixin):
         self.model = self._params.model
         self.feature_cols = [
             col
-            for col in self._get_numeric_columns(params.feature_columns)
+            for col in  (params.feature_columns)
             if col != self._params.target_column
         ]
         self.target = self._params.target_column
@@ -82,7 +84,7 @@ class ResponseCurveAnalyzer(ColumnMixin):
             return self.transformers[feature].transform(values)
         return values
 
-    def fit(self, num_points: int = 50, generate_curves: bool = True, clip_negative_target: bool = True, return_raw_target: bool = True, return_uplift: bool = False):
+    def fit(self, num_points: int = 100, generate_curves: bool = True, clip_negative_target: bool = True, return_raw_target: bool = True, return_uplift: bool = False):
         """
         Fit S-curve for each feature.
         If generate_curves=True, also generate curve data using generate_curve().
@@ -99,15 +101,24 @@ class ResponseCurveAnalyzer(ColumnMixin):
             - dict[str, dict] of curves when generate_curves=True
             - self when generate_curves=False
         """
+        print(f"[ResponseCurveAnalyzer] Starting fit for features: {self.feature_cols} with curve type '{self.curve_type}'")
         self.fitted_models = {}
         self.curves = {}
 
         for feature in self.feature_cols:
             x_raw = pd.to_numeric(self.df[feature], errors="coerce").to_numpy()
             y_raw = pd.to_numeric(self.df[self.target], errors="coerce").to_numpy()
+            x_transformed = self._apply_transformer(feature, x_raw)
 
-            x_transformed = np.asarray(self._apply_transformer(feature, x_raw), dtype=float)
-            y = np.asarray(y_raw, dtype=float)
+            if min(x_transformed) < 0:
+                print(
+                    f"[ResponseCurveAnalyzer][WARN] Feature '{feature}': "
+                    f"transformed values contain negatives (min={min(x_transformed):.4f}); "
+                    "S-curve fit may fail or produce unreliable results."
+                )
+
+            x_transformed = np.asarray(x_transformed, dtype=float)
+            y = np.asarray(y_raw, dtype=float) 
 
             valid_mask = np.isfinite(x_transformed) & np.isfinite(y)
             dropped = int((~valid_mask).sum())
@@ -129,6 +140,7 @@ class ResponseCurveAnalyzer(ColumnMixin):
                 continue
 
             try:
+                print(f"[ResponseCurveAnalyzer] Fitting S-curve for feature '{feature}'")
                 fitter = SCurveFitter(func_type=self.curve_type)
                 fitter.fit(x_clean, y_clean)
             except Exception as exc:
@@ -230,6 +242,11 @@ class ResponseCurveAnalyzer(ColumnMixin):
             "feature": feature,
             "input_value": grid.tolist(),
             "predicted_target": final_arr.tolist(),
+            "contribution": {
+                "contribution": self.feature_contribution(feature).tolist(),
+                "total_contribution": self.total_contribution(feature),
+                "average_contribution": self.average_contribution(feature),
+            }
         }
 
         if return_raw_target or clip_negative_target:
@@ -244,9 +261,33 @@ class ResponseCurveAnalyzer(ColumnMixin):
 
         return curve
 
+    def feature_contribution(self, feature: str) -> np.ndarray:
+        if feature not in self.df.columns:
+            raise ValueError(f"Feature '{feature}' not found in df columns.")
+
+        temp = self.df.copy()
+        temp[feature] = 0
+
+        x_pred = self._prepare_prediction_input(temp)
+        reduced_pred = self.model.predict(x_pred)
+
+        full_x_pred = self._prepare_prediction_input(self.df)
+        full_pred = self.model.predict(full_x_pred)
+
+        contribution = full_pred - reduced_pred
+        return contribution
+
+    def total_contribution(self, feature: str) -> float:
+        contrib = self.feature_contribution(feature)
+        return float(np.sum(contrib))
+
+    def average_contribution(self, feature: str) -> float:
+        contrib = self.feature_contribution(feature)
+        return float(np.mean(contrib))
+
     def print_curve(self, curve):
-        table = zip(curve["input_value"], curve["predicted_target"])
-        print(tabulate(table, headers=[curve["feature"], "Predicted Target"], floatfmt=".4f"))
+        table = zip(curve["input_value"], curve["predicted_target"], curve["contribution"]["contribution"])
+        print(tabulate(table, headers=[curve["feature"], "Predicted Target", "Contribution"], floatfmt=".4f"))
 
     def print_curve_json(self, curve, indent=2):
         print(json.dumps(curve, indent=indent))

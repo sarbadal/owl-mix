@@ -8,5 +8,6 @@ class DifferenceTransformer(BaseTransformer):
         self.lag = lag
 
     def transform(self, series: pd.Series) -> pd.Series:
+        series = series.copy()
         series = series.shift(self.lag) if self.lag > 0 else series
         return series.diff(self.period).fillna(0)

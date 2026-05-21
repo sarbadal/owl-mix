@@ -61,7 +61,7 @@ class ReportBuilder:
     """
     def __init__(self, df: pd.DataFrame, target_col: str, date_col: str, config: ConfigBuilder = ConfigBuilder):
         """Initializes the ReportBuilder with the provided DataFrame, target column, date column, and configuration builder."""
-        self.df = df.copy()
+        self.df = df.copy(deep=True)
         self.target_col = target_col
         self.date_col = date_col
         self.config = self._config()
@@ -71,7 +71,7 @@ class ReportBuilder:
     def _config(self) -> ConfigBuilder:
         """Initializes and returns a ConfigBuilder instance based on the current DataFrame, target column, and date column."""
         return ConfigBuilder(
-            df=self.df.copy(),
+            df=self.df.copy(deep=True),
             target_col=self.target_col,
             date_col=self.date_col,
         )

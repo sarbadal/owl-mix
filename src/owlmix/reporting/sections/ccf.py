@@ -37,12 +37,11 @@ def build_ccf_section(report_builder: ReportBuilderProtocol) -> Dict[str, Any]:
     )
 
     analyzer = analyzer_cls(
-        df=report_builder.df,
+        df=report_builder.df.copy(deep=True),
         params=analyzer_params
     )
     data = analyzer.compute()
-
-    # features = config.feature_columns
+    
     lines_data = {}
     for item in data["summary_table"]:
         feature = item["feature"]

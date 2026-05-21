@@ -1,0 +1,59 @@
+{% if sections.response_summary is defined
+      and sections.response_summary.chart is defined
+      and sections.response_summary.chart.images is defined %}
+{% set images = sections.response_summary.chart.images %}
+{% set data = sections.response_summary.data %}
+
+<section>
+  <h2>Response Curve and Metrics</h2>
+  <div style="overflow-x:auto; margin-bottom:24px;">
+    <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+      <colgroup>
+        <col style="width:220px;">
+        <col style="width:280px;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #ddd;">Feature</th>
+          <th style="text-align:left; padding:10px; border-bottom:1px solid #ddd;">Metrics</th>
+          <th style="text-align:center; padding:10px; border-bottom:1px solid #ddd;">Response Curve</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for feature, img in images|dictsort %}
+        {% set metrics = data[feature].metrics %}
+        <tr>
+          <td style="padding:10px; border-bottom:1px solid #eee; vertical-align:top; font-size:18px; font-weight:400; color:#222;">
+            {{ feature }}
+          </td>
+          <td style="padding:10px; border-bottom:1px solid #eee; vertical-align:top; text-align:left; font-size:16px; line-height:1.5; color:#010146;">
+            {% if metrics is defined %}
+              <p>Current Spend: {{ "%.0f"|format(metrics.current_spend) if metrics.current_spend is number else metrics.current_spend }}</p>
+              <p>Average Spend: {{ "%.0f"|format(metrics.average_spend) if metrics.average_spend is number else metrics.average_spend }}</p>
+              <p>RoI: {{ "%.2f"|format(metrics.roi) if metrics.roi is number else metrics.roi }}</p>
+              <p>Saturation Point: {{ "%.2f"|format(metrics.saturation_point) if metrics.saturation_point is number else metrics.saturation_point }}</p>
+              <p>Efficiency Ratio: {{ "%.2f"|format(metrics.efficiency_ratio) if metrics.efficiency_ratio is number else metrics.efficiency_ratio }}</p>
+              <p>Status: {{ metrics.status }}</p>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+            {% if img %}
+            <a href="#" target="_blank"
+               style="display:inline-block; width:350px; height:150px; border:1px solid #ddd; border-radius:6px; overflow:hidden; background:#fafafa;">
+              <img src="{{ img }}"
+                   alt="Response curve for {{ feature }}"
+                   style="width:100%; height:100%; object-fit:contain; display:block;">
+            </a>
+            {% else %}
+            -
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}

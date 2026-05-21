@@ -12,19 +12,20 @@ adstock_transformer = AdstockTransformer(decay_rate=0.5)
 diff_transformer = DifferenceTransformer(period=1)
 lag_transformer = LagTransformer(lag=1)
 
-TRANSFORMER_MAPPING = {
-    "adstock": adstock_transformer,
-    "difference": diff_transformer,
-    "lag": lag_transformer
+TRANSFORMER_FACTORIES = {
+    "adstock": lambda: AdstockTransformer(decay_rate=0.5),
+    "difference": lambda: DifferenceTransformer(period=1),
+    "lag": lambda: LagTransformer(lag=1),
 }
 
 def apply_transformation(series: pd.Series, transformer_name: str, lag: int = 0) -> pd.Series:
-    transformer = TRANSFORMER_MAPPING.get(transformer_name)
-    if transformer is None:
+    factory = TRANSFORMER_FACTORIES.get(transformer_name)
+    if factory is None:
         return series
+    transformer = factory()
     if lag > 0:
         transformer.lag = lag
-    return transformer.transform(series)
+    return transformer.transform(series.copy(deep=True))
 
 
 @dataclass
@@ -46,7 +47,7 @@ class DualAxisLinePreparer:
     }
 
     def __init__(self, df: pd.DataFrame, config: DualAxisLineDataConfig):
-        self.df = df
+        self.df = df.copy(deep=True)
         self.config = config
 
     def _pick_resample_rule(self, n: int, max_points: int) -> str:
@@ -63,7 +64,7 @@ class DualAxisLinePreparer:
 
     def apply_transformation(self, transformer_name: str, lag: int = 0) -> Self:
         self.df[self.config.feature_column] = apply_transformation(
-            self.df[self.config.feature_column], 
+            self.df[self.config.feature_column].copy(deep=True), 
             transformer_name, 
             lag
         )

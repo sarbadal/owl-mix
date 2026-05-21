@@ -27,6 +27,8 @@ def test_render_html_report_from_json():
 
 def test_report_generation():
     df = create_sample_data(n=500, include_nan=False)
+    # print(df)
+
     report_builder = ReportBuilder(
         df=df,
         target_col="sales",
@@ -42,8 +44,8 @@ def test_report_generation():
 
     report_builder.config.update_config(
         acf_pacf={
-            "columns": ["sales", "tv_spend", "digital_imp", "radio_spend"],
-            "n_lags": 15,
+            "columns": ["sales"],  # , "tv_spend", "digital_imp", "radio_spend"],
+            "n_lags": 3,
             "precision": 2
         },
         vif={
@@ -76,9 +78,13 @@ def test_report_generation():
             "max_lag": 3
         },
         response_curve={
-            "feature_columns": ["tv_spend", "digital_spend", "radio_spend"],
+            "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
             "target_column": "sales",
-        }
+        },
+        response_summary={
+            "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+            "target_column": "sales",
+        },
     )
 
     report_builder.add_all_sections(verbose=True)
@@ -91,5 +97,5 @@ def test_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    test_report_generation()
+    # test_report_generation()
     test_render_html_report_from_json()

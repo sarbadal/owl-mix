@@ -18,16 +18,19 @@ from owlmix.mmm.transformers.hill import HillTransformer
 from owlmix.mmm.pipeline.pipeline import TransformerPipeline
 from owlmix.mmm.analysis.response_curve import ResponseCurveAnalyzer, ResponseCurveParams
 from owlmix.mmm.visualization.plotter import ResponsePlotter
+from owlmix.mmm.analysis.metrics import ResponseMetrics
 
 def test_response_curve_analyzer():
     # Sample data
-    df = create_sample_data(n=100)
+    df = create_sample_data(n=500, include_nan=False)
     # Model
-    model = SimpleLinearModel({"tv_spend": 0.5}, intercept=10)
+    model_ = SimpleLinearModel({"tv_spend": 0.5}, intercept=10)
     sklearn_model = SimpleLinearModelSK().fit(
         X=df[["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"]],
         y=df["sales"]
     )
+
+    feature_columns = ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"]
     
     # Transformers
     transformers = {
@@ -55,30 +58,25 @@ def test_response_curve_analyzer():
 
     params = ResponseCurveParams(
         # model=sklearn_model,
-        feature_columns=["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+        feature_columns=feature_columns,
         target_column="sales",
-        transformers=transformers,
+        # transformers=transformers,
         # add_default_transformers=False
     )
     
     # Analyzer
     analyzer = ResponseCurveAnalyzer(df=df, params=params)
     curves = analyzer.fit(num_points=100, generate_curves=True)
-    
-    curve_tv_spend = curves["tv_spend"]
-    curve_digital_spend = curves["digital_spend"]
-    curve_radio_spend = curves["radio_spend"]
-    curve_tv_grp = curves["tv_grp"]
-    curve_digital_imp = curves["digital_imp"]
+    analyzer.print_curve_json(curve=curves)
 
-
-    # Plotter
-    plotter = ResponsePlotter()
-    plotter.plot(curve_tv_spend)
-    plotter.plot(curve_digital_spend)
-    plotter.plot(curve_radio_spend)
-    plotter.plot(curve_tv_grp)
-    plotter.plot(curve_digital_imp)
+    # Summary and Plot
+    for feature in feature_columns:
+        metrics = ResponseMetrics(curve=curves[feature])
+        summary = metrics.summary()
+        print(summary)
+        print("========================================================================================================")
+        plotter = ResponsePlotter(curve=curves[feature])
+        plotter.plot()
 
 if __name__ == "__main__":
     test_response_curve_analyzer()

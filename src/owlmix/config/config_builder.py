@@ -11,6 +11,7 @@ from ..params import CorrelationConfigArgs
 from ..params import CCFConfigArgs
 from ..params import VifConfigArgs
 from ..params.response_curve import ResponseCurveConfigArgs
+from ..params.response_summary import SummaryConfigArgs
 
 OUTPUT_DIR = "output"
 
@@ -21,7 +22,7 @@ class ConfigBuilder:
     including settings for various analysis sections such as ACF/PACF, CORRELATION, etc.
     """
     def __init__(self, df: pd.DataFrame, target_col: str, date_col: str, output_dir: str = OUTPUT_DIR):
-        self.df = df.copy()
+        self.df = df.copy(deep=True)
         self.target_col = target_col
         self.date_col = date_col
         self.output_dir = output_dir
@@ -35,6 +36,7 @@ class ConfigBuilder:
         self.correlation_config = Args.correlation.build()
         self.ccf_config = Args.ccf.build(time_column=self.date_col, target_column=self.target_col)
         self.response_curve_config = Args.response_curve.build(target_column=self.target_col)
+        self.response_summary_config = Args.response_summary.build(target_column=self.target_col)
     
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
@@ -57,6 +59,7 @@ class ConfigBuilder:
             "box_plot": self.update_box_plot_config,
             "ccf": self.update_ccf_config,
             "response_curve": self.update_response_curve_config,
+            "response_summary": self.update_response_summary_config,
         }
 
         for key, value in kwargs.items():
@@ -139,4 +142,15 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.response_curve_config = replace(self.response_curve_config, **kwargs)
+        return self
+
+    def update_response_summary_config(self, **kwargs: Unpack[ResponseSummaryConfigArgs]) -> Self:
+        """
+        Update the Response Summary configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Response Summary configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.response_summary_config = replace(self.response_summary_config, **kwargs)
         return self

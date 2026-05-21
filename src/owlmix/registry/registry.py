@@ -14,6 +14,7 @@ from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
 from ..analysis.ccf import CCFAnalyzer, CCFParams
 from ..mmm.analysis.response_curve import ResponseCurveAnalyzer, ResponseCurveParams
 from ..mmm.visualization.plotter import ResponsePlotter, ResponsePlotConfig
+from ..mmm.analysis.summary import ResponseSummary, SummaryParams
 
 SectionBuilder = Callable[..., Dict[str, Any]]
 
@@ -25,6 +26,7 @@ ANALYZERS_REGISTRY: dict[str, dict[str, type[BaseAnalyzer] | type]] = {
     "causality": {"analyzer": CausalityAnalyzer, "params": CausalityParams},
     "ccf": {"analyzer": CCFAnalyzer, "params": CCFParams},
     "response_curve": {"analyzer": ResponseCurveAnalyzer, "params": ResponseCurveParams},
+    "response_summary": {"analyzer": ResponseSummary, "params": SummaryParams},
 }
 
 PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {

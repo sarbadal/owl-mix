@@ -16,12 +16,14 @@ class AdstockTransformer(BaseTransformer):
         self.decay_rate = decay_rate
 
     def transform(self, series: pd.Series) -> pd.Series:
+        series = series.copy()
         series = series.shift(self.lag)
         if self.method == AdstockMethod.GEOMETRIC:
             return self._geometric(series)
         raise ValueError(f"Unknown adstock method: {self.method}")
 
     def _geometric(self, series: pd.Series) -> pd.Series:
+        series = series.copy()
         result = np.zeros_like(series)
         result[0] = series.iloc[0]
         for t in range(1, len(series)):

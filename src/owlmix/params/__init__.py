@@ -5,6 +5,7 @@ from . import correlation
 from . import ccf
 from . import vif
 from . import response_curve
+from . import response_summary
 
 from .acf_pacf import AcfPacfConfigArgs, AcfPacf
 from .box_plot import BoxPlotConfigArgs, BoxPlot
@@ -13,6 +14,7 @@ from .correlation import CorrelationConfigArgs, Correlation
 from .ccf import CCFConfigArgs, CCF
 from .vif import VifConfigArgs, Vif
 from .response_curve import ResponseCurveConfigArgs, ResponseCurve
+from .response_summary import SummaryConfigArgs, ResponseSummary
 
 
 class Args:
@@ -23,6 +25,7 @@ class Args:
     ccf = ccf
     vif = vif
     response_curve = response_curve
+    response_summary = response_summary
 
 
 __all__ = [
@@ -41,4 +44,6 @@ __all__ = [
     "Vif",
     "ResponseCurveConfigArgs",
     "ResponseCurve",
+    "SummaryConfigArgs",
+    "ResponseSummary",
 ]

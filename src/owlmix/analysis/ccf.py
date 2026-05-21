@@ -17,10 +17,10 @@ adstock_transformer = AdstockTransformer(decay_rate=0.5)
 diff_transformer = DifferenceTransformer(period=1)
 lag_transformer = LagTransformer(lag=1)
 
-TRANSFORMER_MAPPING = {
-    "adstock": adstock_transformer,
-    "difference": diff_transformer,
-    "lag": lag_transformer
+TRANSFORMER_FACTORIES = {
+    "adstock": lambda: AdstockTransformer(decay_rate=0.5),
+    "difference": lambda: DifferenceTransformer(period=1),
+    "lag": lambda: LagTransformer(lag=1),
 }
 
 TRANSFORMERS = ["adstock", "difference", "lag"]
@@ -63,7 +63,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             The parameters for CCF analysis.
     """
     def __init__(self, df: pd.DataFrame, params: CCFParams, transformer: List[BaseTransformer] = None):
-        super().__init__(df, params)
+        super().__init__(df.copy(), params)
         self.feature_columns = self._get_numeric_columns(params.feature_columns)
         self.feature_columns = [
             col for col in self.feature_columns if col != self.params.target_column
@@ -84,12 +84,13 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             such as original, adstocked, and differenced versions.
         """
         versions = {
-            "original": self.df[feature]
+            "original": self.df[feature].copy()
         }
         for transformer_name in self.transformer:
-            transformer = TRANSFORMER_MAPPING.get(transformer_name)
-            if transformer:
-                transformed_series = transformer.transform(self.df[feature])
+            factory = TRANSFORMER_FACTORIES.get(transformer_name)
+            if factory:
+                transformer = factory()
+                transformed_series = transformer.transform(self.df[feature].copy())
                 versions[transformer_name] = transformed_series
         return versions
 
@@ -142,7 +143,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             The computed CCF value for the given lag.
         """
         results = []
-        target_series = self.df[self.params.target_column]
+        target_series = self.df[self.params.target_column].copy()
 
         for lag in range(0, self.params.max_lag + 1):
             shifted_feature = series.shift(lag)

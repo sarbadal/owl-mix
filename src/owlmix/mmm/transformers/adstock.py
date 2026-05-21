@@ -5,7 +5,7 @@ class AdstockTransformer(BaseTransformer):
     def __init__(self, decay=0.5):
         self.decay = decay
 
-    def transform(self, x):
+    def transform(self, x: np.ndarray) -> np.ndarray:
         x = np.array(x)
         result = np.zeros_like(x, dtype=float)
         result[0] = x[0]
