@@ -13,6 +13,30 @@ class MarginalROIPlotConfig:
     font_size: int = 16
 
 
+def _trim_num(s: str) -> str:
+    return s.rstrip("0").rstrip(".")
+
+def _fmt_pct(v: float, digits: int) -> str:
+    return f"{_trim_num(f'{v*100:.{digits}f}')}%"
+
+def y_formatter(v: float, _):
+    if v == 0:
+        return "0"
+    if abs(v) >= 1_000:
+        return _trim_num(f"{v/1_000:.1f}") + "K"
+    if abs(v) >= 1:
+        return _trim_num(f"{v:.2f}")
+    if abs(v) >= 0.1:
+        return _fmt_pct(v, 3)
+    if abs(v) >= 0.01:
+        return _fmt_pct(v, 4)
+    if abs(v) >= 0.001:        
+        return _fmt_pct(v, 5)
+    if abs(v) >= 0.0001:
+        return _fmt_pct(v, 6)
+    return _fmt_pct(v, 7)
+
+
 class MarginalROIPlotter:
     """Plots marginal ROI curve with optional fitted curve and saves the chart as a PNG file."""
     def __init__(self, curve: Dict, classification: Dict, params: MarginalROIPlotConfig = MarginalROIPlotConfig):
@@ -56,7 +80,7 @@ class MarginalROIPlotter:
 
         formatter = FuncFormatter(lambda x, _: f'{int(x/1000)}K' if abs(x) >= 1000 else f'{int(x)}')
         ax.xaxis.set_major_formatter(formatter)
-        ax.yaxis.set_major_formatter(formatter)
+        ax.yaxis.set_major_formatter(FuncFormatter(y_formatter))
 
         if output_dir:
             os.makedirs(output_dir, exist_ok=True)
