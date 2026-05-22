@@ -70,4 +70,10 @@ class ChartID(BaseEnum):
 
 class SectionEnum(BaseEnum):
     ACF_PACF = ("acf_pacf", "ACF and PACF Analysis")
+    BOX_PLOT = ("box_plot", "Box Plot Analysis")
+    CAUSALITY = ("causality", "Causality Analysis")
+    CCF = ("ccf", "Cross-Correlation Function Analysis")
+    CORRELATION = ("correlation", "Correlation Analysis")
+    RESPONSE_SUMMARY = ("response_summary", "Response Summary Analysis")
+    VIF = ("vif", "Variance Inflation Factor Analysis")
 

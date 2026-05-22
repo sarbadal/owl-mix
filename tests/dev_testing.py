@@ -15,8 +15,7 @@ sys.path.append(str(SRC_DIR))
 import pandas as pd
 from owlmix.utils.sample_data_generator import create_sample_data
 from owlmix.reporting import ReportBuilder, ReportHTMLRenderer
-# from owlmix.reporting.report_builder import ReportBuilder
-# import owlmix.reporting.sections
+from owlmix.typing.enums import SectionEnum
 
 
 def test_render_html_report_from_json():
@@ -26,7 +25,7 @@ def test_render_html_report_from_json():
 
 
 def test_report_generation():
-    df = create_sample_data(n=500, include_nan=False)
+    df = create_sample_data(n=300, include_nan=False)
     # print(df)
 
     report_builder = ReportBuilder(
@@ -87,15 +86,21 @@ def test_report_generation():
         },
     )
 
-    report_builder.add_all_sections(verbose=True)
+    # report_builder.add_all_sections(verbose=True)
+    # report_builder.exclude_sections([SectionEnum.CAUSALITY, "ccf"], verbose=True)
+    # report_builder.include_sections([SectionEnum.CAUSALITY, "ccf"], verbose=True)
 
-    # report_builder.add_section_by_name("acf_pacf")
+    # report_builder.add_section_by_name("acf_pacf", verbose=True)
+    # report_builder.add_section_by_name("vif", verbose=True)
 
-    report = report_builder.build()
+    report = report_builder.build(
+        with_all_sections=True,
+        verbose=True,
+    )
     # print(report)
 
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    # test_report_generation()
+    test_report_generation()
     test_render_html_report_from_json()

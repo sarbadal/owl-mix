@@ -9,7 +9,7 @@ import os
 import base64
 import pandas as pd
 import json
-from typing import Any, Self, Callable, Optional, Dict, List, Set
+from typing import Any, Self, Callable, Optional, Dict, List, Set, Union
 from collections import OrderedDict
 from dataclasses import dataclass, field
 
@@ -67,6 +67,7 @@ class ReportBuilder:
         self.config = self._config()
         self.sections: OrderedDict[str, SectionContent] = OrderedDict()
         self._report_data: Optional[Dict[str, Any]] = None
+        self._added_sections: List[str] = []  # To track which sections have been added to avoid duplicates
 
     def _config(self) -> ConfigBuilder:
         """Initializes and returns a ConfigBuilder instance based on the current DataFrame, target column, and date column."""
@@ -81,34 +82,45 @@ class ReportBuilder:
         SECTION_BUILDERS registry and adding each section by name."""
         for section_name in SECTION_BUILDERS.keys():
             self.add_section_by_name(section_name)
+            self._added_sections.append(section_name)
             if verbose:
                 print(f"Added section: {section_name}")
         return self
 
-    def include_sections(self, section_names: list[Union[str, SectionEnum]]) -> Self:
+    def include_sections(self, section_names: list[Union[str, SectionEnum]], verbose: bool = False) -> Self:
         """
         Keep only the specified sections in the report.
         Args:
             section_names (list[Union[str, SectionEnum]]): List of section names or SectionEnum members to include.
+            verbose (bool): If True, prints the names of the sections being included.
         """
-        names = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
-        self.sections = OrderedDict(
-            (name, self.sections[name])
-            for name in names
-            if name in self.sections
-        )
+        include_names = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
+        for section_name in SECTION_BUILDERS.keys():
+            if section_name in include_names:
+                self.add_section_by_name(section_name)
+                self._added_sections.append(section_name)
+                if verbose:
+                    print(f"Included section: {section_name}")
         self._report_data = None  # Invalidate cache if needed
         return self
 
-    def exclude_sections(self, section_names: list[Union[str, SectionEnum]]) -> Self:
+    def exclude_sections(self, section_names: list[Union[str, SectionEnum]], verbose: bool = False) -> Self:
         """
         Excludes specified sections from the report by removing them from the sections dictionary.
-        Args:
-            section_names (list[Union[str, SectionEnum]]): A list of section names or SectionEnum members to be excluded from the report.
+        Args:            
+            section_names (list[Union[str, SectionEnum]]): 
+                A list of section names or SectionEnum members to be excluded from the report.
+            verbose (bool): 
+                If True, prints the names of the sections being excluded.
         """
-        names = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
-        for name in names:
-            self.sections.pop(name, None)
+        exclude_sections = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
+        include_sections = [s for s in SECTION_BUILDERS.keys() if s not in exclude_sections]   
+        for section_name in SECTION_BUILDERS.keys():
+            if section_name in include_sections:
+                self.add_section_by_name(section_name)
+                self._added_sections.append(section_name)
+                if verbose:
+                    print(f"Included section: {section_name}")
         self._report_data = None  # Invalidate cache if needed
         return self
 
@@ -125,11 +137,12 @@ class ReportBuilder:
         self.sections[name] = SectionContent(data=data, chart=chart or {})
         return self
 
-    def add_section_by_name(self, name: str) -> Self:
+    def add_section_by_name(self, name: str, verbose: bool = False) -> Self:
         """
         Adds a section to the report by looking up a registered section builder function by name and executing it.
         Args:
             name (str): The name of the section to add.
+            verbose (bool): If True, prints the name of the section being added.
         Returns:
             Self: The current instance of the ReportBuilder.
         Raises:
@@ -140,16 +153,32 @@ class ReportBuilder:
             raise ValueError(f"No section builder registered for {name}")
         section = builder(self)
         self.add_section(name=name, data=section["data"], chart=section.get("chart"))
+        if verbose:
+            print(f"Added section: {name}")
+        self._added_sections.append(name)
         return self
 
-    def build(self, output_path: Optional[str] = None) -> Dict[str, Any]:
+    def build(self, output_path: Optional[str] = None, with_all_sections: bool = False, verbose: bool = False) -> Dict[str, Any]:
         """
         Builds the report data structure, which can be output as JSON or used for further processing.
         Args:
             output_path (Optional[str]): The path where the report should be saved as a JSON file. If None, the report is not saved to a file.
+            with_all_sections (bool): If True, includes all sections in the report, even if they were not explicitly added.
+            verbose (bool): If True, prints additional information during the build process.
         Returns:
             Dict[str, Any]: A dictionary representing the report data, including sections and their associated data and charts.
         """
+        if verbose:
+            print("Building report...")
+            if not with_all_sections and not self._added_sections:
+                print(
+                    "No sections have been added to the report. "
+                    "Use either add_all_sections(), include_sections(), or add_section_by_name() "
+                    "to add sections before building the report.\n"
+                    "Or set with_all_sections=True to include all registered sections in the report."
+                )
+        if with_all_sections and not self._added_sections:
+            self.add_all_sections(verbose=verbose)
         if self._report_data is not None:
             return self._report_data  # Return cached report data if already built
         report_data = {
@@ -198,7 +227,7 @@ class ReportBuilder:
         """
         # Check if the report data has already been built; if not, build it before saving
         if self._report_data is None:
-            self.build()
+            self.build(verbose=True)
         report_data = self._report_data
         outfile_name = outfile_name or DEFAULT_OUTJSON_FILENAME
         output_path = os.path.join(self.config.output_dir, outfile_name)

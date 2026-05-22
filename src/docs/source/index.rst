@@ -138,6 +138,27 @@ focusing on the main analytical, plotting, utility, and typing modules.
    reporting/section/vif
    reporting/section/protocol-cls
 
+LOGO MMM Module Overview
+---------------------------------------------------------------------
+
+- :doc:`MMM Overview <mmm/overview>`
+- :doc:`MMM Configuration Overview <mmm/config/overview>`
+- :doc:`MMM Analysis Overview <mmm/analysis/overview>`
+
+The MMM (Marketing Mix Modeling) module provides tools and utilities for building, 
+analyzing, and visualizing marketing mix models. It includes various submodules 
+for configuration, analysis, modeling, data transformation, and visualization.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: MMM Module
+   :hidden:
+
+   mmm/overview
+   mmm/config/overview
+   mmm/analysis/overview
+   mmm/analysis/classifier
+
 📁 Reporting Sections
 ---------------------
 

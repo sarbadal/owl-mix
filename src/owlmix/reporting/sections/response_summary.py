@@ -24,6 +24,8 @@ def build_response_summary_section(report_builder: ReportBuilderProtocol) -> Dic
     analyzer_params_cls = ANALYZERS_REGISTRY["response_summary"]["params"]
     plotter_cls = PLOTTERS_REGISTRY["response_curve"]["plotter"]
     plotter_params_cls = PLOTTERS_REGISTRY["response_curve"]["params"]
+    marginal_roi_plotter_cls = PLOTTERS_REGISTRY["marginal_roi"]["plotter"]
+    marginal_roi_plotter_params_cls = PLOTTERS_REGISTRY["marginal_roi"]["params"]
 
     analyzer_params = analyzer_params_cls(
         model=config.model,
@@ -47,15 +49,27 @@ def build_response_summary_section(report_builder: ReportBuilderProtocol) -> Dic
         "title": "Response Curves",
         "description": f"Response curves for target column: {config.target_column}.",
         "alt_text": "Response curves",
-        "images": {}
+        "images": {
+            "response_curve": {},
+            "marginal_roi": {}  
+        }
     }
 
     for feature in config.feature_columns:
         curve = data[feature]["curve"]
         plotter = plotter_cls(curve=curve, params=plotter_params)
+        marginal_roi_plotter = marginal_roi_plotter_cls(
+            curve=curve, 
+            classification=data[feature]["classification"], 
+            params=plotter_params
+        )
         response_curve_path = plotter.plot(
             output_dir=os.path.join(report_builder.config.output_dir, "charts")
         )
-        chart_item["images"][feature] = report_builder.image_to_base64(response_curve_path)
+        chart_item["images"]["response_curve"][feature] = report_builder.image_to_base64(response_curve_path)
+        marginal_roi_path = marginal_roi_plotter.plot(
+            output_dir=os.path.join(report_builder.config.output_dir, "charts")
+        )
+        chart_item["images"]["marginal_roi"][feature] = report_builder.image_to_base64(marginal_roi_path)
 
     return {"data": data, "chart": chart_item}

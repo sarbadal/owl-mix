@@ -14,6 +14,7 @@ from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
 from ..analysis.ccf import CCFAnalyzer, CCFParams
 from ..mmm.analysis.response_curve import ResponseCurveAnalyzer, ResponseCurveParams
 from ..mmm.visualization.plotter import ResponsePlotter, ResponsePlotConfig
+from ..mmm.visualization.marginal_roi import MarginalROIPlotter, MarginalROIPlotConfig
 from ..mmm.analysis.summary import ResponseSummary, SummaryParams
 
 SectionBuilder = Callable[..., Dict[str, Any]]
@@ -36,6 +37,7 @@ PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
     "box_plot": {"plotter": BoxPlotter, "params": BoxPlotParams},
     "dual_axis_line": {"plotter": DualAxisLinePreparer, "params": DualAxisLineDataConfig},
     "response_curve": {"plotter": ResponsePlotter, "params": ResponsePlotConfig},
+    "marginal_roi": {"plotter": MarginalROIPlotter, "params": MarginalROIPlotConfig},
 }
 
 SECTION_BUILDERS: Dict[str, SectionBuilder] = {}
