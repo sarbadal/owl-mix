@@ -34,7 +34,6 @@ def test_report_generation():
         date_col="time"
     )
 
-
     # report_builder.config.update_acf_pacf_config(
     #     columns=["sales"],
     #     n_lags=20,
@@ -43,8 +42,8 @@ def test_report_generation():
 
     report_builder.config.update_config(
         acf_pacf={
-            "columns": ["sales"],  # , "tv_spend", "digital_imp", "radio_spend"],
-            "n_lags": 3,
+            "columns": ["sales", "digital_imp", "radio_spend"],  # , "tv_spend", "digital_imp", "radio_spend"],
+            "n_lags": 10,
             "precision": 2
         },
         vif={
@@ -102,5 +101,5 @@ def test_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    test_report_generation()
+    # test_report_generation()
     test_render_html_report_from_json()

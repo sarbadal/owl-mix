@@ -4,9 +4,9 @@ Sample data generator for MMM testing and demonstrations.
 This module provides utilities to generate realistic sample datasets
 for Marketing Mix Modeling use cases.
 """
-
-import pandas as pd
+from scipy.stats import truncnorm
 import numpy as np
+import pandas as pd
 from owlmix.utils.distribution_data_generator import CategoryDistributionGenerator
 
 
@@ -105,13 +105,14 @@ POPULAR_LANGUAGES = [
     "VHDL"
 ]
 
+def bounded_normal(mean, std, low, high, size, seed=None):
+    rng = np.random.default_rng(seed)
+    a = (low - mean) / std
+    b = (high - mean) / std
+    return truncnorm.rvs(a, b, loc=mean, scale=std, size=size, random_state=rng)
 
-def create_sample_data(
-    n: int = 100,
-    start_date: str = "2021-01-01",
-    include_nan: bool = True,
-    seed: int = None
-) -> pd.DataFrame:
+
+def create_sample_data(n: int = 100, start_date: str = "2021-01-01", include_nan: bool = True, seed: int = None) -> pd.DataFrame:
     """
     Create a sample Marketing Mix Modeling (MMM) dataset.
     
@@ -187,14 +188,14 @@ def create_sample_data(
     # Create base dataframe
     df = pd.DataFrame({
         "time": dates,
-        "tv_spend": np.random.randint(100, 500, size=n),
-        "digital_spend": np.random.randint(50, 300, size=n),
-        "radio_spend": np.random.randint(20, 150, size=n),
-        "tv_grp": np.random.randint(10, 100, size=n),
-        "radio_grp": np.random.randint(20, 150, size=n),
-        "digital_imp": np.random.randint(10, 100, size=n),
-        "radio_imp": np.random.randint(20, 150, size=n),
-        "inflation": np.random.randint(10, 100, size=n),
+        "tv_spend": bounded_normal(300, 80, 100, 500, n),
+        "digital_spend": bounded_normal(170, 55, 50, 300, n),
+        "radio_spend": bounded_normal(80, 30, 20, 150, n),
+        "tv_grp": bounded_normal(55, 18, 10, 100, n),
+        "radio_grp": bounded_normal(85, 28, 20, 150, n),
+        "digital_imp": bounded_normal(55, 18, 10, 100, n),
+        "radio_imp": bounded_normal(85, 28, 20, 150, n),
+        "inflation": bounded_normal(50, 15, 10, 100, n),
         "color": colors_,
         "smartphone": smartphones_,
         "car_model": car_models_,

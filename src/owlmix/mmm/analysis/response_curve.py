@@ -210,7 +210,11 @@ class ResponseCurveAnalyzer(ColumnMixin):
         if not np.isfinite(x_min) or not np.isfinite(x_max):
             raise ValueError(f"Feature '{feature}' has no finite values to build a curve.")
 
-        grid = np.linspace(x_min, x_max, num_points)
+        rng_ = np.random.default_rng()
+        left_factor = rng_.uniform(0.9, 0.95)
+        right_factor = rng_.uniform(1.10, 1.25)
+
+        grid = np.linspace(x_min * left_factor, x_max * right_factor, num_points)
 
         base_df = self.df.copy()
         raw_results = []
@@ -241,6 +245,8 @@ class ResponseCurveAnalyzer(ColumnMixin):
         curve = {
             "feature": feature,
             "input_value": grid.tolist(),
+            "observed_input_min": float(x_min),
+            "observed_input_max": float(x_max),
             "predicted_target": final_arr.tolist(),
             "contribution": {
                 "contribution": self.feature_contribution(feature).tolist(),

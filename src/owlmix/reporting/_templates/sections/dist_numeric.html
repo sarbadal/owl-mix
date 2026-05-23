@@ -1,0 +1,46 @@
+{% if sections.dist_numeric is defined %}
+<section>
+    <h2>📊 Numerical Distribution Analysis</h2>
+    <p class="section-desc">
+        Distribution charts for numerical columns.
+    </p>
+
+    {% set dist_images = {} %}
+    {% if sections.dist_numeric.chart and sections.dist_numeric.chart.images %}
+        {% set dist_images = sections.dist_numeric.chart.images %}
+    {% endif %}
+
+    {% if dist_images and dist_images|length > 0 %}
+        <div style="overflow-x: auto; margin-bottom: 32px;">
+            <table class="dist-numeric-table" style="font-size: 0.95rem; width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc; width: 25%;">Column</th>
+                        <th style="border-right: 2px solid #ccc; text-align: center;">Distribution Chart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for column_name, image_src in dist_images.items() %}
+                    <tr>
+                        <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc; vertical-align: top;">
+                            {{ column_name }}
+                        </td>
+                        <td style="border-right: 2px solid #ccc; text-align: center;">
+                            {% if image_src %}
+                                <img src="{{ image_src }}"
+                                     alt="Distribution chart for {{ column_name }}"
+                                     style="width: 100%; max-height: 150px; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block; margin: 0 auto;">
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No numerical distribution charts available.</p>
+    {% endif %}
+</section>
+{% endif %}

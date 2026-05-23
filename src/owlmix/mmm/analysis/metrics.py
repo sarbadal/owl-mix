@@ -11,12 +11,22 @@ class ResponseMetrics:
 
     def current_spend(self):
         """Latest spend level"""
-        return float(self.x[-1])
+        # return float(self.x[-1])
+        return float(self.curve.get("observed_input_max", self.x[-1]))
 
     def average_spend(self, window=None):
         """Average spend"""
-        x = self.x[-window:] if window else self.x
-        return float(np.mean(x))
+        min_x = float(self.curve.get("observed_input_min", np.nanmin(self.x)))
+        max_x = float(self.curve.get("observed_input_max", np.nanmax(self.x)))
+
+        observed_x = self.x[(self.x >= min_x) & (self.x <= max_x)]
+        if observed_x.size == 0:
+            observed_x = np.array([min_x, max_x], dtype=float)
+
+        if window:
+            observed_x = observed_x[-window:]
+
+        return float(np.mean(observed_x))
 
     def roi(self):
         """Average ROI"""

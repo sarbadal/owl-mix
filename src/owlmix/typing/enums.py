@@ -76,4 +76,4 @@ class SectionEnum(BaseEnum):
     CORRELATION = ("correlation", "Correlation Analysis")
     RESPONSE_SUMMARY = ("response_summary", "Response Summary Analysis")
     VIF = ("vif", "Variance Inflation Factor Analysis")
-
+    DIST_NUMERIC = ("dist_numeric", "Distribution of Numerical Columns Analysis")

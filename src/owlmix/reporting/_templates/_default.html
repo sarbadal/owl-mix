@@ -8,10 +8,16 @@
 </head>
 <body>
     <div class="page">
-    <header>
-        <div class="report-tag">OwlMin Exploratory Data Analysis Report</div>
-        <h1>OwlMix</h1>
-        <p>Report generated on {{ report_datetime }}</p>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #f9f9f9; border-bottom: 1px solid #ddd;">
+        <h1 style="margin: 0; font-size: 1.5em;">
+            <a href="https://owl-mix-dev.readthedocs.io/" target="_blank" rel="noopener noreferrer">
+                OwlMix
+            </a>
+        </h1>
+        <div style="display: flex; flex-direction: column;">
+            <div class="report-tag">OwlMin Exploratory Data Analysis Report</div>
+            <p style="margin: 0; font-size: 0.9em;">Report generated on {{ report_datetime }}</p>
+        </div>
     </header>
 
     {% include "sections/acf_pacf_v2.html" %}
@@ -21,9 +27,11 @@
     {% include "sections/box_plot.html" %}
     {% include "sections/ccf.html" %}
     {% include "sections/response_summary.html" %}
+    {% include "sections/time_series_decomposition.html" %}
 
     <footer>
-        &copy; {{ year }} OwlMix. All rights reserved.
+        &copy; {{ year }} OwlMix. All rights reserved. 
+        <a href="https://owl-mix-dev.readthedocs.io/" target="_blank" rel="noopener noreferrer">Documentation</a> 
     </footer>
     </div>
 </body>

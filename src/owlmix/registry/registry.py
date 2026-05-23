@@ -11,9 +11,11 @@ from ..plotting.box_plot import BoxPlotter, BoxPlotParams
 from ..plotting.dual_axis_line import DualAxisLinePreparer, DualAxisLineDataConfig
 from ..plotting.vif import VIFPlotter, VIFPlotParams
 from ..plotting.correlation import CorrelationPlotter, CorrPlotParams
+from ..plotting.dist_numerical import NumericalDistributionPlotter, NumericalDistributionPlotParams
+from ..plotting.time_series import TimeSeriesPlotter, TimeSeriesPlotParams
 from ..analysis.ccf import CCFAnalyzer, CCFParams
 from ..mmm.analysis.response_curve import ResponseCurveAnalyzer, ResponseCurveParams
-from ..mmm.visualization.plotter import ResponsePlotter, ResponsePlotConfig
+from ..mmm.visualization.response_curve import ResponsePlotter, ResponsePlotConfig
 from ..mmm.visualization.marginal_roi import MarginalROIPlotter, MarginalROIPlotConfig
 from ..mmm.analysis.summary import ResponseSummary, SummaryParams
 
@@ -38,6 +40,8 @@ PLOTTERS_REGISTRY: dict[str, dict[str, type[BasePlotter] | type]] = {
     "dual_axis_line": {"plotter": DualAxisLinePreparer, "params": DualAxisLineDataConfig},
     "response_curve": {"plotter": ResponsePlotter, "params": ResponsePlotConfig},
     "marginal_roi": {"plotter": MarginalROIPlotter, "params": MarginalROIPlotConfig},
+    "numerical_distribution": {"plotter": NumericalDistributionPlotter, "params": NumericalDistributionPlotParams},
+    "time_series_decomposition": {"plotter": TimeSeriesPlotter, "params": TimeSeriesPlotParams},
 }
 
 SECTION_BUILDERS: Dict[str, SectionBuilder] = {}

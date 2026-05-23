@@ -7,11 +7,16 @@
 
     {% set box_data = sections.box_plot.data.original %}
     {% set scaler_data = sections.box_plot.data.scaler_data %}
+
+    {% set dist_images = {} %}
+    {% if sections.dist_numeric.chart and sections.dist_numeric.chart.images %}
+        {% set dist_images = sections.dist_numeric.chart.images %}
+    {% endif %}
     
     {% if box_data|length > 0 %}
         <div style="overflow-x: auto; margin-bottom: 32px;">
             <table class="box-plot-table" style="font-size: 0.85rem; width: 100%; min-width: 500px; border-collapse: collapse;">
-                <thead>
+                <thead style="font-size: 0.5em;">
                     <tr>
                         <th style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">Column</th>
                         <th style="border-right: 1px solid #eee;">Min</th>
@@ -22,6 +27,7 @@
                         <th style="border-right: 2px solid #ccc;">Outlier Count</th>
                         <th style="border-right: 2px solid #ccc; display: none;">Outliers</th>
                         <th style="border-right: 2px solid #ccc; text-align: center;">Box Plot</th>
+                        <th style="border-right: 2px solid #ccc; text-align: center;">Distribution Chart</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,11 +35,11 @@
                     {% set item_scaler = scaler_data[loop.index0] %}
                     <tr>
                         <td style="border-left: 2px solid #ccc; border-right: 2px solid #ccc;">{{ item.column }}</td>
-                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.min) if item.min is number else item.min }}</td>
-                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.q1) if item.q1 is number else item.q1 }}</td>
-                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.median) if item.median is number else item.median }}</td>
-                        <td style="border-right: 1px solid #eee;">{{ "%.3f"|format(item.q3) if item.q3 is number else item.q3 }}</td>
-                        <td style="border-right: 2px solid #ccc;">{{ "%.3f"|format(item.max) if item.max is number else item.max }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.0f"|format(item.min) if item.min is number else item.min }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.0f"|format(item.Q1) if item.Q1 is number else item.Q1 }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.0f"|format(item.median) if item.median is number else item.median }}</td>
+                        <td style="border-right: 1px solid #eee;">{{ "%.0f"|format(item.Q3) if item.Q3 is number else item.Q3 }}</td>
+                        <td style="border-right: 2px solid #ccc;">{{ "%.0f"|format(item.max) if item.max is number else item.max }}</td>
                         <td style="border-right: 2px solid #ccc;">{{ item.outliers_count }}</td>
                         <td style="border-right: 2px solid #ccc; display: none;">
                             {% if item.outliers is defined and item.outliers|length > 0 %}
@@ -51,6 +57,16 @@
                                 -
                             {% endif %}
                         </td>
+                        <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">
+                            {% if dist_images[item.column] is defined %}
+                            <a style="display:inline-block; width:300px; height:150px; border:1px solid #ddd; border-radius:6px; overflow:hidden; background:#fafafa;">
+                                <img src="{{ dist_images[item.column] }}" alt="Distribution chart for {{ item.column }}"
+                                     style="width: 100%; max-height: 140px; object-fit: contain; display: block; margin: 0 auto;">
+                            </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -63,9 +79,11 @@
     <!-- Chart row (always below table) -->
     {% if sections.box_plot.chart and sections.box_plot.chart.images %}
         <div style="width: 100%; display: flex; justify-content: center; margin-top: 32px; display: none;">
-            <div class="chart-card" style="padding: 16px; width: 100%; max-width: 1200px;">
+            <div class="chart-card" style="padding: 5px; width: 100%; max-width: 1200px;">
+                <a style="display:inline-block; width:300px; height:150px; border:1px solid #ddd; border-radius:6px; overflow:hidden; background:#fafafa;">
                 <img src="{{ sections.box_plot.chart.images.box_plot }}" alt="Box Plot Chart"
-                    style="width: 100%; object-fit: contain; border-radius: 10px; border: 1px solid #e0e8f5; box-shadow: 2px 2px 8px #eee; display: block;">
+                    style="width: 100%; object-fit: contain; display: block;">
+                </a>
             </div>
         </div>
     {% endif %}

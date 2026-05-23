@@ -10,8 +10,10 @@ from ..params import CausalityConfigArgs
 from ..params import CorrelationConfigArgs
 from ..params import CCFConfigArgs
 from ..params import VifConfigArgs
-from ..params.response_curve import ResponseCurveConfigArgs
-from ..params.response_summary import SummaryConfigArgs
+from ..params import ResponseCurveConfigArgs
+from ..params import SummaryConfigArgs
+from ..params import DistNumericConfigArgs
+from ..params import TimeSeriesPlotConfigArgs
 
 OUTPUT_DIR = "output"
 
@@ -37,7 +39,9 @@ class ConfigBuilder:
         self.ccf_config = Args.ccf.build(time_column=self.date_col, target_column=self.target_col)
         self.response_curve_config = Args.response_curve.build(target_column=self.target_col)
         self.response_summary_config = Args.response_summary.build(target_column=self.target_col)
-    
+        self.dist_numeric_config = Args.dist_numeric.build()
+        self.time_series_config = Args.time_series.build(date_column=self.date_col, target_column=self.target_col)
+
     def _validate_positive_int(self, value: Any, field_name: str) -> None:
         """Validate that a value is a positive integer."""
         if value is not None and (not isinstance(value, int) or value < 1):
@@ -60,6 +64,8 @@ class ConfigBuilder:
             "ccf": self.update_ccf_config,
             "response_curve": self.update_response_curve_config,
             "response_summary": self.update_response_summary_config,
+            "dist_numeric": self.update_dist_numeric_config,
+            "time_series": self.update_time_series_config,
         }
 
         for key, value in kwargs.items():
@@ -153,4 +159,26 @@ class ConfigBuilder:
             Self: The current instance of the ConfigBuilder.
         """
         self.response_summary_config = replace(self.response_summary_config, **kwargs)
+        return self
+
+    def update_dist_numeric_config(self, **kwargs: Unpack[DistNumericConfigArgs]) -> Self:
+        """
+        Update the Distribution of Numerical Columns configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Distribution of Numerical Columns configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.dist_numeric_config = replace(self.dist_numeric_config, **kwargs)
+        return self
+
+    def update_time_series_config(self, **kwargs: Unpack[TimeSeriesPlotConfigArgs]) -> Self:
+        """
+        Update the Time Series configuration settings based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the Time Series configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        self.time_series_config = replace(self.time_series_config, **kwargs)
         return self
