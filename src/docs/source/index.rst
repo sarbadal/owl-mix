@@ -138,12 +138,12 @@ focusing on the main analytical, plotting, utility, and typing modules.
    reporting/section/vif
    reporting/section/protocol-cls
 
-LOGO MMM Module Overview
+🧾 MMM Module Overview
 ---------------------------------------------------------------------
 
-- :doc:`MMM Overview <mmm/overview>`
-- :doc:`MMM Configuration Overview <mmm/config/overview>`
-- :doc:`MMM Analysis Overview <mmm/analysis/overview>`
+- :doc:`Overview <mmm/overview>`
+- :doc:`Configuration Overview <mmm/config/overview>`
+- :doc:`Analysis Overview <mmm/analysis/overview>`
 
 The MMM (Marketing Mix Modeling) module provides tools and utilities for building, 
 analyzing, and visualizing marketing mix models. It includes various submodules 
@@ -158,6 +158,7 @@ for configuration, analysis, modeling, data transformation, and visualization.
    mmm/config/overview
    mmm/analysis/overview
    mmm/analysis/classifier
+   mmm/analysis/contribution
 
 📁 Reporting Sections
 ---------------------
@@ -233,3 +234,21 @@ Here you can find the example html report generated from the EDA example in the 
 :doc:`Example: Exploratory Data Analysis <examples/example-eda>`
 
 `Open Example <_static/report/>`_
+
+Contributing
+------------
+
+:doc:`Contribution Overview <contribution/overview>`
+
+This section provides guidelines and instructions for contributing to the OwlMix 
+project, including how to report bugs, suggest features, and submit code 
+contributions through GitHub Issues and Pull Requests. It also outlines the contribution 
+workflow and best practices for ensuring that contributions are effective 
+and aligned with the project's goals.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contribution
+   :hidden:
+
+   contribution/overview
