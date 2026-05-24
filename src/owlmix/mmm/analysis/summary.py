@@ -10,11 +10,12 @@ from .response_curve import ResponseCurveAnalyzer
 from .classifier import ResponseCurveClassifier
 from .contribution import ContributionAnalyzer
 from .metrics import ResponseMetrics
+from ..models.base import ModelProtocol
 
 @dataclass
 class SummaryParams:
     """Configuration for summary report formatting"""
-    model: BaseModel = None
+    model: ModelProtocol = None
     feature_columns: list[str] = None
     target_column: str = None
     transformers: dict[str, TransformerPipeline] | None = None
@@ -38,13 +39,11 @@ class ResponseSummary(ColumnMixin):
             if col != params.target_column
         ]
         self.response_analyzer = ResponseCurveAnalyzer(
-            df=self.df.copy(), 
-            params=params
+            df=self.df.copy(), params=params
         )
 
     def generate(self) -> dict:
         curve = self.response_analyzer.fit(num_points=100, generate_curves=True)
-        # print(curve)
         summary = {}
         for feature in self.feature_columns:
             classifier = ResponseCurveClassifier(curve[feature])

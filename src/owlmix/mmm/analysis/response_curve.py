@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from tabulate import tabulate
 from typing import Self
 
-from ..models.base import BaseModel
+from ..models.base import ModelProtocol
 from ..models.sklearn import SimpleLinearModelSK
 from .s_curve_filler import SCurveFitter
 from ..pipeline.pipeline import TransformerPipeline
@@ -25,7 +25,7 @@ default_transformers_ = TransformerPipeline(
 
 @dataclass
 class ResponseCurveParams:
-    model: BaseModel = None
+    model: ModelProtocol = None
     feature_columns: list[str] = None
     target_column: str = None
     transformers: dict[str, TransformerPipeline] | None = None

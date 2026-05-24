@@ -17,65 +17,56 @@ class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
         self.intercept = intercept
 
     def fit(self, X: pd.DataFrame, y: pd.Series) -> Self:
-        X = X.copy()
+        self._validate_inputs(X, y)
+        self.feature_names_in_ = np.array(X.columns, dtype=object)
 
+        if self.coefficients is None:
+            return self._fit_from_data(X, y)
+
+        return self._fit_from_params()
+
+    def _fit_from_params(self) -> Self:
+        self.intercept_ = float(self.intercept)
+        self.coefficients_ = self.coefficients
+        return self
+
+    def _fit_from_data(self, X, y) -> Self:
+        X_clean, y_clean = self._prepare_data(X, y)
+        self._solve_least_squares(X_clean, y_clean, X.columns)
+        return self
+
+    def _validate_inputs(self, X, y):
         if not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be a pandas DataFrame with named columns.")
-
+            raise TypeError("X must be a pandas DataFrame.")
         if not isinstance(y, pd.Series):
             raise TypeError("y must be a pandas Series.")
 
-        # Keep sklearn-style feature metadata from original columns.
-        self.feature_names_in_ = np.array(list(X.columns), dtype=object)
+    def _prepare_data(self, X: pd.DataFrame, y: pd.Series) -> tuple[np.ndarray, np.ndarray]:
+        # Coerce to numeric and filter finite rows
+        X_arr = X.apply(pd.to_numeric, errors="coerce").to_numpy(dtype=float)
+        y_arr = pd.to_numeric(y, errors="coerce").to_numpy(dtype=float).flatten()
 
-        if self.coefficients is None:
-            # Coerce to numeric; invalid parses become NaN and are filtered out.
-            X_num = X.apply(pd.to_numeric, errors="coerce")
-            y_num = pd.to_numeric(y, errors="coerce")
+        if X_arr.ndim != 2 or X_arr.shape[0] != y_arr.shape[0]:
+            raise ValueError("Shape mismatch between X and y.")
 
-            X_arr = X_num.to_numpy(dtype=float)
-            y_arr = np.asarray(y_num, dtype=float)
+        mask = np.isfinite(X_arr).all(axis=1) & np.isfinite(y_arr)
+        X_clean, y_clean = X_arr[mask], y_arr[mask]
 
-            if X_arr.ndim != 2:
-                raise ValueError("X must be 2D.")
-            if y_arr.ndim != 1:
-                y_arr = y_arr.reshape(-1)
-            if X_arr.shape[0] != y_arr.shape[0]:
-                raise ValueError(
-                    f"X and y must have same number of rows. Got {X_arr.shape[0]} and {y_arr.shape[0]}."
-                )
+        if X_clean.shape[0] <= X_clean.shape[1]:
+            raise ValueError("Not enough valid rows to fit model.")
+            
+        return X_clean, y_clean
 
-            finite_mask = np.isfinite(X_arr).all(axis=1) & np.isfinite(y_arr)
-            if not finite_mask.any():
-                raise ValueError(
-                    "No valid rows to fit after removing NaN/inf values from X and y."
-                )
-
-            X_clean = X_arr[finite_mask]
-            y_clean = y_arr[finite_mask]
-
-            if X_clean.shape[0] <= X_clean.shape[1]:
-                raise ValueError(
-                    "Not enough valid rows to fit a stable linear model after filtering NaN/inf values."
-                )
-
-            X_design = np.hstack([np.ones((X_clean.shape[0], 1), dtype=float), X_clean])
-
-            try:
-                coef, *_ = np.linalg.lstsq(X_design, y_clean, rcond=None)
-            except np.linalg.LinAlgError as e:
-                raise ValueError(
-                    "Linear least squares failed to converge. "
-                    "Check for extreme scaling, collinearity, or remaining invalid values."
-                ) from e
-
+    def _solve_least_squares(self, X: pd.DataFrame, y: pd.Series, columns: list[str]):
+        # Add constant for intercept
+        X_design = np.column_stack([np.ones(X.shape[0]), X])
+        
+        try:
+            coef, *_ = np.linalg.lstsq(X_design, y, rcond=None)
             self.intercept_ = float(coef[0])
-            self.coefficients_ = dict(zip(X.columns, coef[1:]))
-        else:
-            self.intercept_ = float(self.intercept)
-            self.coefficients_ = self.coefficients
-
-        return self
+            self.coefficients_ = dict(zip(columns, coef[1:]))
+        except np.linalg.LinAlgError as e:
+            raise ValueError("Linear least squares failed to converge.") from e
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         check_is_fitted(self, attributes=["intercept_", "coefficients_"])

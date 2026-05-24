@@ -3,9 +3,8 @@ from scipy.optimize import curve_fit
  
  
 class SCurveFitter:
-    def __init__(self, func_type="exponential"):
+    def __init__(self, func_type: str = "exponential"):
         self.func_type = func_type
-        self.params = None
  
     def _exp_func(self, x, a, b):
         return a * (1 - np.exp(-b * x))
@@ -25,10 +24,10 @@ class SCurveFitter:
 
         self.func, initial_guess = registry[self.func_type]
         params, _ = curve_fit(self.func, x, y, p0=initial_guess, maxfev=10000)
-        self.params = params
+        self.params_ = params
  
     def predict(self, x):
-        if self.params is None:
-            raise ValueError("Model not fitted yet")
-        return self.func(x, *self.params)
+        if not hasattr(self, "params_"):
+            raise ValueError("Model is not fitted yet. Call fit() first.")
+        return self.func(x, *self.params_)
  
