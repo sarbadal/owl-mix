@@ -101,5 +101,5 @@ def test_report_generation():
     report_builder.save("result.json")
 
 if __name__ == "__main__":
-    # test_report_generation()
+    test_report_generation()
     test_render_html_report_from_json()
