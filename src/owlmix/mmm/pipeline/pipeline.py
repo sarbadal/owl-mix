@@ -1,3 +1,5 @@
+from typing import Self
+
 from ..transformers.base import BaseTransformer
 
 
@@ -5,17 +7,16 @@ class TransformerPipeline:
     def __init__(self, transformers: list[BaseTransformer]):
         self.transformers = transformers
 
-    def fit(self, x):
+    def fit(self, x: list[float]) -> Self:
         for transformer in self.transformers:
             transformer.fit_transform(x)
         return self
 
-    def transform(self, x):
+    def transform(self, x: list[float]) -> list[float]:
         for idx, transformer in enumerate(self.transformers):
-            if type(transformer) is BaseTransformer or transformer.__class__.transform is BaseTransformer.transform:
-                raise TypeError(
-                    f"Pipeline step {idx} is {type(transformer).__name__} with no transform() implementation. "
-                    "Use a concrete transformer like AdstockTransformer/HillTransformer/LogTransformer."
-                )
+            # Ensure it's a concrete subclass, not the abstract base
+            if type(transformer) is BaseTransformer:
+                raise TypeError(f"Step {idx} cannot be the BaseTransformer class.")
+                
             x = transformer.transform(x)
         return x

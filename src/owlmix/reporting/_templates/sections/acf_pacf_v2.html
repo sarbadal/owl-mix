@@ -32,7 +32,7 @@
                         <td rowspan="2" style="font-weight: bold;">{{ col.column }}</td>
                         <td style="border-right: 2px solid #ccc;">ACF</td>
                         {% for val in col.acf %}
-                            <td>{{ "%.3f"|format(val) if val is number else val }}</td>
+                            <td>{{ "%.2f"|format(val) if val is number else val }}</td>
                         {% endfor %}
                         {% for _ in range(max_lags - (col.acf|length)) %}
                             <td>-</td>
@@ -41,7 +41,7 @@
                     <tr>
                         <td style="border-right: 2px solid #ccc;">PACF</td>
                         {% for val in col.pacf %}
-                            <td>{{ "%.3f"|format(val) if val is number else val }}</td>
+                            <td>{{ "%.2f"|format(val) if val is number else val }}</td>
                         {% endfor %}
                         {% for _ in range(max_lags - (col.pacf|length)) %}
                             <td>-</td>
@@ -53,7 +53,7 @@
                             <!-- IMAGE place holder -->
                             {% set img = images[col.column] %}
                             {% if img is defined %}
-                                <img src="{{ img }}" alt="Chart for {{ col.column }}" style="max-width: 100%; display: block; margin: 0 auto;">
+                                <img src="{{ img }}" alt="Chart for {{ col.column }}" style="max-width: 80%; display: block; margin: 0 auto;">
                             {% else %}
                                 IMAGE place holder
                             {% endif %}
