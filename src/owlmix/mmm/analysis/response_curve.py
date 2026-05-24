@@ -35,24 +35,24 @@ class ResponseCurveParams:
 
 class ResponseCurveAnalyzer(ColumnMixin):
     def __init__(self, df: pd.DataFrame, params: ResponseCurveParams):
+        # 1. Data & Schema
+        self.params = params
         self.df = df.copy()
-        self._params = params
-        self.model = self._params.model
-        self.feature_cols = [
-            col
-            for col in  (params.feature_columns)
-            if col != self._params.target_column
-        ]
-        self.target = self._params.target_column
-        self.transformers = self._params.transformers or {}
+        self.target = self.params.target_column
+        self.feature_cols = [c for c in self.params.feature_columns if c != self.params.target_column]
         
-        if self._params.add_default_transformers:
+        # 2. Model & Strategy Setup
+        self.curve_type = self.params.curve_type
+        self.model = self.params.model
+        self._add_default_model()
+        
+        # 3. Transformer Pipeline
+        self.transformers = self.params.transformers or {}
+        if self.params.add_default_transformers:
             self._add_default_transformers()
         self._validate_transformers()
 
-        if self.model is None:
-            self._add_default_model()
-        self.curve_type = self._params.curve_type
+        # 4. State Storage
         self.fitted_models = {}
         self.curves = {}
 

@@ -18,16 +18,15 @@ class ResponseCurveClassifier:
  
         low = self.low_ratio * max_m
         high = self.high_ratio * max_m
- 
-        zones = []
- 
-        for m in marginal:
-            if m >= high:
-                zones.append("underspend")
-            elif m >= low:
-                zones.append("optimal")
-            else:
-                zones.append("saturated")
+
+        conditions = [
+            (marginal >= high),
+            (marginal >= low) & (marginal < high),
+            (marginal < low)
+        ]
+
+        choices = ["underspend", "optimal", "saturated"]
+        zones = np.select(conditions, choices, default="unknown").tolist()
  
         return {
             "zones": zones,

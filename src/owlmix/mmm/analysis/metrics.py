@@ -72,14 +72,17 @@ class ResponseMetrics:
         return float(current / peak)
 
     def classify_status(self, high_threshold=0.7, low_threshold=0.3):
-        """
-        Underinvested / Optimal / Saturated
-        """
+        """Underinvested / Optimal / Saturated based on efficiency ratio"""
         ratio = self.efficiency_ratio()
-        if ratio >= high_threshold:
-            return "underinvested"
-        elif ratio >= low_threshold:
-            return "optimal"
+
+        # Mapping thresholds to status (ordered from high to low !IMPORTANT)
+        config = {
+            high_threshold: "underinvested",
+            low_threshold: "optimal",
+        }
+        for threshold, status in config.items():
+            if ratio >= threshold:
+                return status
         return "saturated"
 
     def summary(self):
