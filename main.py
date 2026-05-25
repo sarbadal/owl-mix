@@ -86,7 +86,7 @@ def main():
     # report_builder.add_section_by_name("acf_pacf", verbose=True)
     # report_builder.add_section_by_name("vif", verbose=True)
 
-    # report_builder.add_output_dir("outputs")
+    report_builder.add_output_dir("outputs")
     report = report_builder.build(
         with_all_sections=True,
         verbose=True,

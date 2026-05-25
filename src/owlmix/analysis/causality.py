@@ -1,7 +1,10 @@
+import inspect
+import io
 import json
 import pandas as pd
 import numpy as np
 import warnings
+from contextlib import redirect_stdout
 from typing import Any, List, Dict, Optional, TypedDict, Unpack, Tuple
 from dataclasses import dataclass
 from statsmodels.tsa.stattools import grangercausalitytests
@@ -151,14 +154,31 @@ class CausalityAnalyzer(BaseAnalyzer, ColumnMixin):
             Tuple[Optional[GrangerRawResult], Optional[str]]: Results and error message if any.
         """
         try:
+            func = grangercausalitytests
+            try:
+                has_verbose = "verbose" in inspect.signature(func).parameters
+            except (TypeError, ValueError):
+                # Fallback if signature introspection is unavailable
+                has_verbose = True
+        
+            call_kwargs: Dict[str, Any] = {"maxlag": safe_lag}
+            if has_verbose:
+                call_kwargs["verbose"] = False
+
             with warnings.catch_warnings():
                 warnings.filterwarnings("error", category=RuntimeWarning)
+                warnings.filterwarnings(
+                    "ignore",
+                    message="verbose is deprecated since functions should not print results",
+                    category=FutureWarning,
+                    module=r"statsmodels\.tsa\.stattools",
+                )
                 with np.errstate(divide="raise", invalid="raise"):
-                    results = grangercausalitytests(
-                        data,
-                        maxlag=safe_lag,
-                        verbose=False
-                    )
+                    with redirect_stdout(io.StringIO()):
+                        results = func(
+                            data,
+                            **call_kwargs
+                        )
             return results, None
         except (RuntimeWarning, FloatingPointError) as e:
             return None, str(e)

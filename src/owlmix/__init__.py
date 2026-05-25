@@ -1,18 +1,21 @@
 import warnings
 
-from . import eda
-from . import report
 from . import typing
+from . import reporting
+from . import plotting
+from . import analysis
+from . import mmm
 from .utils.file_resolver import ConfigFileResolver
 
 from ._warnings import check_python_version
 
 __all__ = [
-    "eda",
-    "report",
     "file_resolver",
     "typing",
-    "transform",
+    "reporting",
+    "plotting",
+    "analysis",
+    "mmm"
 ]
 
 check_python_version()
