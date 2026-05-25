@@ -1,5 +1,7 @@
 import warnings
+import sys
 
+sys.dont_write_bytecode = True
 warnings.simplefilter('ignore', category=UserWarning)
 
 import pandas as pd
@@ -8,10 +10,13 @@ from owlmix.reporting import ReportBuilder, ReportHTMLRenderer
 from owlmix.typing.enums import SectionEnum
 
 
-def test_render_html_report_from_json():
+def render_html_report_from_json():
+    report_json_path = "outputs/report.json"
+    saved_html_path = "outputs/report.html"
+    
     renderer = ReportHTMLRenderer()
-    html_str = renderer.render_from_json("outputs/result.json")
-    renderer.save_html(html_str, "outputs/report.html")
+    html_str = renderer.render_from_json(report_json_path)
+    renderer.save_html(html_str, saved_html_path)
 
 
 def main():
@@ -35,7 +40,7 @@ def main():
 
     report_builder.config.update_config(
         acf_pacf={
-            "columns": ["sales", "digital_imp", "radio_spend"],  # , "tv_spend", "digital_imp", "radio_spend"],
+            "columns": ["digital_imp", "radio_spend"],  # , "tv_spend", "digital_imp", "radio_spend"],
             "n_lags": 10,
             "precision": 2
         },
@@ -81,13 +86,14 @@ def main():
     # report_builder.add_section_by_name("acf_pacf", verbose=True)
     # report_builder.add_section_by_name("vif", verbose=True)
 
+    # report_builder.add_output_dir("outputs")
     report = report_builder.build(
         with_all_sections=True,
         verbose=True,
     )
 
-    report_builder.save("outputs/result.json")
+    report_builder.save("report.json")
 
 if __name__ == "__main__":
     main()
-    test_render_html_report_from_json()
+    render_html_report_from_json()

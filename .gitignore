@@ -88,6 +88,6 @@ htmlcov/
 pyproject.toml
 tests/
 tests_/
-outpout/
+output/
 outputs/
 test_env/

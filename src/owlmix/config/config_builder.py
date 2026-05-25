@@ -15,7 +15,7 @@ from ..params import SummaryConfigArgs
 from ..params import DistNumericConfigArgs
 from ..params import TimeSeriesPlotConfigArgs
 
-OUTPUT_DIR = "output"
+OUTPUT_DIR = "outputs"
 
 
 class ConfigBuilder:

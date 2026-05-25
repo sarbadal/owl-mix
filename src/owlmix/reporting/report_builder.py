@@ -64,18 +64,29 @@ class ReportBuilder:
         self.df = df.copy(deep=True)
         self.target_col = target_col
         self.date_col = date_col
-        self.config = self._config()
+        self.config = self._build_config()
         self.sections: OrderedDict[str, SectionContent] = OrderedDict()
         self._report_data: Optional[Dict[str, Any]] = None
         self._added_sections: List[str] = []  # To track which sections have been added to avoid duplicates
 
-    def _config(self) -> ConfigBuilder:
+    def _build_config(self) -> ConfigBuilder:
         """Initializes and returns a ConfigBuilder instance based on the current DataFrame, target column, and date column."""
         return ConfigBuilder(
             df=self.df.copy(deep=True),
             target_col=self.target_col,
             date_col=self.date_col,
         )
+
+    def add_output_dir(self, output_dir: str) -> Self:
+        """
+        Updates the output directory in the configuration and returns the ReportBuilder instance for chaining.
+        Args:
+            output_dir (str): The path to the output directory.
+        Returns:
+            ReportBuilder: The current instance of ReportBuilder for method chaining.
+        """
+        self.config.output_dir = output_dir
+        return self
 
     def add_all_sections(self, verbose: bool = False) -> Self:
         """Adds all registered sections to the report by iterating through the 
@@ -162,11 +173,18 @@ class ReportBuilder:
         """
         Builds the report data structure, which can be output as JSON or used for further processing.
         Args:
-            output_path (Optional[str]): The path where the report should be saved as a JSON file. If None, the report is not saved to a file.
-            with_all_sections (bool): If True, includes all sections in the report, even if they were not explicitly added.
-            verbose (bool): If True, prints additional information during the build process.
+            output_path (Optional[str]): 
+                The path where the report should be saved as a JSON file. 
+                If None, the report is not saved to a file.
+            with_all_sections (bool): 
+                If True, includes all sections in the report, even if they 
+                were not explicitly added.
+            verbose (bool): 
+                If True, prints additional information during the build process.
         Returns:
-            Dict[str, Any]: A dictionary representing the report data, including sections and their associated data and charts.
+            Dict[str, Any]: 
+                A dictionary representing the report data, including sections 
+                and their associated data and charts.
         """
         if verbose:
             print("Building report...")
@@ -223,7 +241,8 @@ class ReportBuilder:
         """
         Save the generated report as a JSON file.
         Args:
-            outfile_name (Optional[str]): The name of the output JSON file. If None, defaults to "report.json".
+            outfile_name (Optional[str]): 
+                The name of the output JSON file. If None, defaults to "report.json".
         """
         # Check if the report data has already been built; if not, build it before saving
         if self._report_data is None:
