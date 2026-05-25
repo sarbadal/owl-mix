@@ -27,7 +27,7 @@ class BoxPlotter(BasePlotter):
             return None
         n_cols = min(self.params.n_plot_per_row, n)
         n_rows = math.ceil(n / n_cols)
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(3 * n_cols, 4 * n_rows), constrained_layout=True)
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(3 * n_cols, 4 * n_rows))
         axes = axes.flatten() if n > 1 else [axes]
 
         for idx, stats in enumerate(self.data):
