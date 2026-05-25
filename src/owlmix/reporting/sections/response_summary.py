@@ -55,7 +55,7 @@ def build_response_summary_section(report_builder: ReportBuilderProtocol) -> Dic
         }
     }
 
-    for feature in config.feature_columns:
+    for feature in analyzer.feature_columns:
         curve = data[feature]["curve"]
         current_spend=data[feature]["metrics"]["current_spend"]
         plotter = plotter_cls(curve=curve, current_spend=current_spend, params=plotter_params)

@@ -25,7 +25,7 @@ class ResponseSummary:
     model: BaseModel = None
     curve_type: str = "exponential"
     transformers: dict[str, TransformerPipeline] | None = None
-    feature_columns: list[str] = field(default_factory=list)
+    feature_columns: list[str] = None
     target_column: str = None
     add_default_transformers: bool = True
     line_color: str = "#1f77b4"  # blue

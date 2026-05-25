@@ -150,7 +150,7 @@ class ConfigBuilder:
         self.response_curve_config = replace(self.response_curve_config, **kwargs)
         return self
 
-    def update_response_summary_config(self, **kwargs: Unpack[ResponseSummaryConfigArgs]) -> Self:
+    def update_response_summary_config(self, **kwargs: Unpack[SummaryConfigArgs]) -> Self:
         """
         Update the Response Summary configuration settings based on provided keyword arguments.
         Args:

@@ -188,13 +188,14 @@ class ReportBuilder:
         """
         if verbose:
             print("Building report...")
-            if not with_all_sections and not self._added_sections:
-                print(
-                    "No sections have been added to the report. "
-                    "Use either add_all_sections(), include_sections(), or add_section_by_name() "
-                    "to add sections before building the report.\n"
-                    "Or set with_all_sections=True to include all registered sections in the report."
-                )
+        if not with_all_sections and not self._added_sections:
+            print(
+                "No sections have been added to the report. "
+                "Use either add_all_sections(), include_sections(), or add_section_by_name() "
+                "to add sections before building the report.\n"
+                "Or set with_all_sections=True to include all registered sections in the report."
+            )
+            return {}
         if with_all_sections and not self._added_sections:
             self.add_all_sections(verbose=verbose)
         if self._report_data is not None:

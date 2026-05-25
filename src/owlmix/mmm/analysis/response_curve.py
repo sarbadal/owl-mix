@@ -39,7 +39,11 @@ class ResponseCurveAnalyzer(ColumnMixin):
         self.params = params
         self.df = df.copy()
         self.target = self.params.target_column
-        self.feature_cols = [c for c in self.params.feature_columns if c != self.params.target_column]
+        self.feature_cols = [
+            c 
+            for c in self._get_numeric_columns(self.params.feature_columns) 
+            if c != self.params.target_column
+        ]
         
         # 2. Model & Strategy Setup
         self.curve_type = self.params.curve_type

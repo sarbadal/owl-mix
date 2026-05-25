@@ -11,6 +11,7 @@ from .classifier import ResponseCurveClassifier
 from .contribution import ContributionAnalyzer
 from .metrics import ResponseMetrics
 from ..models.base import ModelProtocol
+from ..pipeline.pipeline import TransformerPipeline
 
 @dataclass
 class SummaryParams:
