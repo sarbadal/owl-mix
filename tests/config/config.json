@@ -1,7 +1,0 @@
-{
-  "vif_chart": {
-    "title": "Chart title",
-    "alt_text": "alt text",
-    "description_file": "tests/config/html/vif_chart.html"
-  }
-}

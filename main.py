@@ -1,17 +1,7 @@
-import os, sys
 import warnings
-from pathlib import Path
-
-from statsmodels.graphics import correlation
 
 warnings.simplefilter('ignore', category=UserWarning)
 
-# Add src to the path
-CURRENT_DIR = Path(__file__).parent.parent
-SRC_DIR = CURRENT_DIR / "src"
-sys.path.append(str(SRC_DIR))
-
-#===============================================================================
 import pandas as pd
 from owlmix.utils.sample_data_generator import create_sample_data
 from owlmix.reporting import ReportBuilder, ReportHTMLRenderer
@@ -20,13 +10,12 @@ from owlmix.typing.enums import SectionEnum
 
 def test_render_html_report_from_json():
     renderer = ReportHTMLRenderer()
-    html_str = renderer.render_from_json(CURRENT_DIR / "tests/output/result.json")
-    renderer.save_html(html_str, CURRENT_DIR / "tests/output/report.html")
+    html_str = renderer.render_from_json("outputs/result.json")
+    renderer.save_html(html_str, "outputs/report.html")
 
 
-def test_report_generation():
+def main():
     df = create_sample_data(n=300, include_nan=False)
-    # print(df)
 
     report_builder = ReportBuilder(
         df=df,
@@ -34,6 +23,10 @@ def test_report_generation():
         date_col="time"
     )
 
+    # This is an another way to update the config for a specific section, you 
+    # can also update the config for all sections at once by passing a 
+
+    # dictionary to the update_config method.
     # report_builder.config.update_acf_pacf_config(
     #     columns=["sales"],
     #     n_lags=20,
@@ -75,10 +68,6 @@ def test_report_generation():
             ],
             "max_lag": 3
         },
-        response_curve={
-            "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
-            "target_column": "sales",
-        },
         response_summary={
             "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
             "target_column": "sales",
@@ -96,10 +85,9 @@ def test_report_generation():
         with_all_sections=True,
         verbose=True,
     )
-    # print(report)
 
-    report_builder.save("result.json")
+    report_builder.save("outputs/result.json")
 
 if __name__ == "__main__":
-    test_report_generation()
+    main()
     test_render_html_report_from_json()
