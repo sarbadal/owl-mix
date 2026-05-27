@@ -156,6 +156,7 @@ for configuration, analysis, modeling, data transformation, and visualization.
    mmm/analysis/classifier
    mmm/analysis/contribution
    mmm/analysis/response-curve
+   mmm/analysis/s-curve-fitter
 
 📁 Reporting Sections
 ---------------------
