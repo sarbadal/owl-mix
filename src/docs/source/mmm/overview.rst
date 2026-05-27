@@ -1,7 +1,7 @@
 .. _mmm.overview:
 
-MMM Module
-==========
+📁 mmm
+======
 
 The `mmm` (Marketing Mix Modeling) module provides a comprehensive suite of 
 tools for building, analyzing, and visualizing marketing mix models. 

@@ -1,7 +1,7 @@
 .. _mmm.analysis.contribution:
 
-Contribution Analysis
-=====================
+📁 analysis.contribution
+========================
 
 .. currentmodule:: mmm.analysis.contribution
 

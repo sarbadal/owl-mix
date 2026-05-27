@@ -1,7 +1,7 @@
 .. _mmm.analysis.classifier:
 
-Classifier Analysis
-===================
+📁 analysis.classifier
+==========================
 
 .. currentmodule:: mmm.analysis.classifier
 
@@ -66,7 +66,5 @@ Notes
 References
 ----------
 - :ref:`MMM Overview <mmm.overview>`
-- :ref:`MMM Analysis Overview <mmm.analysis.overview>`
-- :ref:`MMM Configuration Overview <mmm.config.overview>`
 
 :ref:`Back to Home <home>`

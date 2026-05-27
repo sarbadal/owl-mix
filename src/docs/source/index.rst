@@ -141,9 +141,7 @@ focusing on the main analytical, plotting, utility, and typing modules.
 🧾 MMM Module Overview
 ---------------------------------------------------------------------
 
-- :doc:`Overview <mmm/overview>`
-- :doc:`Configuration Overview <mmm/config/overview>`
-- :doc:`Analysis Overview <mmm/analysis/overview>`
+- :doc:`Overview <mmm/overview>` Documentation for the MMM module, providing an overview of its purpose, features, and structure.
 
 The MMM (Marketing Mix Modeling) module provides tools and utilities for building, 
 analyzing, and visualizing marketing mix models. It includes various submodules 
@@ -155,10 +153,9 @@ for configuration, analysis, modeling, data transformation, and visualization.
    :hidden:
 
    mmm/overview
-   mmm/config/overview
-   mmm/analysis/overview
    mmm/analysis/classifier
    mmm/analysis/contribution
+   mmm/analysis/response-curve
 
 📁 Reporting Sections
 ---------------------
