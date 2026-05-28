@@ -89,30 +89,30 @@ class ReportBuilder:
         return self
 
     def add_all_sections(self, verbose: bool = False) -> Self:
-        """Adds all registered sections to the report by iterating through the 
-        SECTION_BUILDERS registry and adding each section by name."""
+        """
+        Adds all registered sections to the report by iterating through the 
+        SECTION_BUILDERS registry and adding each section by name.
+        Args:
+            verbose (bool): If True, prints the names of the sections being added.
+        Returns:
+            ReportBuilder: The current instance of ReportBuilder for method chaining.
+        """
         for section_name in SECTION_BUILDERS.keys():
-            self.add_section_by_name(section_name)
-            self._added_sections.append(section_name)
-            if verbose:
-                print(f"Added section: {section_name}")
+            self.add_section_by_name(section_name, verbose=verbose)
         return self
 
     def include_sections(self, section_names: list[Union[str, SectionEnum]], verbose: bool = False) -> Self:
         """
         Keep only the specified sections in the report.
-        Args:
+        Args:            
             section_names (list[Union[str, SectionEnum]]): List of section names or SectionEnum members to include.
             verbose (bool): If True, prints the names of the sections being included.
         """
-        include_names = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
+        include_names = {s.value if isinstance(s, SectionEnum) else s for s in section_names}
         for section_name in SECTION_BUILDERS.keys():
             if section_name in include_names:
-                self.add_section_by_name(section_name)
-                self._added_sections.append(section_name)
-                if verbose:
-                    print(f"Included section: {section_name}")
-        self._report_data = None  # Invalidate cache if needed
+                self.add_section_by_name(section_name, verbose=verbose)
+        self._report_data = None
         return self
 
     def exclude_sections(self, section_names: list[Union[str, SectionEnum]], verbose: bool = False) -> Self:
@@ -124,15 +124,39 @@ class ReportBuilder:
             verbose (bool): 
                 If True, prints the names of the sections being excluded.
         """
-        exclude_sections = [s.value if isinstance(s, SectionEnum) else s for s in section_names]
-        include_sections = [s for s in SECTION_BUILDERS.keys() if s not in exclude_sections]   
+        exclude_names = {s.value if isinstance(s, SectionEnum) else s for s in section_names}
         for section_name in SECTION_BUILDERS.keys():
-            if section_name in include_sections:
-                self.add_section_by_name(section_name)
-                self._added_sections.append(section_name)
-                if verbose:
-                    print(f"Included section: {section_name}")
-        self._report_data = None  # Invalidate cache if needed
+            if section_name not in exclude_names:
+                self.add_section_by_name(section_name, verbose=verbose)
+        self._report_data = None
+        return self
+
+    def add_section_by_name(self, name: str, verbose: bool = False) -> Self:
+        """
+        Adds a section to the report by looking up a registered section builder function by name and executing it.
+        Args:            
+            name (str): The name of the section to add.
+            verbose (bool): If True, prints the name of the section being added.
+        Returns:            
+            Self: The current instance of the ReportBuilder.
+        Raises:            
+            ValueError: If no section builder is registered for the given name.
+        """
+        if name in self._added_sections:
+            return self
+
+        builder = SECTION_BUILDERS.get(name)
+        if not builder:
+            raise ValueError(f"No section builder registered for {name}")
+
+        section = builder(self)
+        self.add_section(name=name, data=section["data"], chart=section.get("chart"))
+
+        if verbose:
+            print(f"Added section: {name}")
+
+        self._added_sections.append(name)
+        self._report_data = None
         return self
 
     def add_section(self, name: str, data: Dict[str, Any], chart: Optional[Dict[str, Any]] = None) -> Self:
@@ -146,27 +170,6 @@ class ReportBuilder:
             Self: The current instance of the ReportBuilder.
         """
         self.sections[name] = SectionContent(data=data, chart=chart or {})
-        return self
-
-    def add_section_by_name(self, name: str, verbose: bool = False) -> Self:
-        """
-        Adds a section to the report by looking up a registered section builder function by name and executing it.
-        Args:
-            name (str): The name of the section to add.
-            verbose (bool): If True, prints the name of the section being added.
-        Returns:
-            Self: The current instance of the ReportBuilder.
-        Raises:
-            ValueError: If no section builder is registered for the given name.
-        """
-        builder = SECTION_BUILDERS.get(name)
-        if not builder:
-            raise ValueError(f"No section builder registered for {name}")
-        section = builder(self)
-        self.add_section(name=name, data=section["data"], chart=section.get("chart"))
-        if verbose:
-            print(f"Added section: {name}")
-        self._added_sections.append(name)
         return self
 
     def build(self, output_path: Optional[str] = None, with_all_sections: bool = False, verbose: bool = False) -> Dict[str, Any]:
@@ -186,6 +189,8 @@ class ReportBuilder:
                 A dictionary representing the report data, including sections 
                 and their associated data and charts.
         """
+        if self._report_data is not None:
+            return self._report_data  # Return cached report data if already built
         if verbose:
             print("Building report...")
         if not with_all_sections and not self._added_sections:
@@ -198,8 +203,6 @@ class ReportBuilder:
             return {}
         if with_all_sections and not self._added_sections:
             self.add_all_sections(verbose=verbose)
-        if self._report_data is not None:
-            return self._report_data  # Return cached report data if already built
         report_data = {
             "sections": {
                 section_name: {

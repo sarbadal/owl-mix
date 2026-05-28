@@ -120,7 +120,7 @@ class ReportHTMLRenderer:
             raise ValueError("output_path must be specified.")
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, mode="w") as f:
+        with open(output_path, mode="w", encoding="utf-8") as f:
             f.write(html_str)
 
     @property
