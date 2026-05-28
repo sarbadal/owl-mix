@@ -30,8 +30,8 @@ Class Reference
   :param curve_type: Type of S-curve to fit (e.g., "exponential", "logistic").
   :type curve_type: ``str``
    - Supported values: ``"exponential"``, ``"logistic"``
-    - exponential: ``f(x) = a * (1 - exp(-b * x))``
-    - logistic: ``f(x) = a / (1 + exp(-b * (x - c)))``
+   - exponential: ``f(x) = a * (1 - exp(-b * x))``
+   - logistic: ``f(x) = a / (1 + exp(-b * (x - c)))``
   :param transformers: Optional dictionary mapping feature names to transformer pipelines.
   :type transformers: ``dict[str, TransformerPipeline]`` or ``None``
 
@@ -53,9 +53,10 @@ Class Reference
     :returns: Predicted target values.
     :rtype: ``numpy.ndarray``
 
-**Note*: The `fit` method must be called before `predict`, and the specified `curve_type` must be supported.
+**Note** The `fit` method must be called before `predict`, and the specified `curve_type` must be supported.
 
-**Example Usage**:
+Example Usage
+-------------
 
 .. code-block:: python
 
