@@ -251,3 +251,20 @@ and aligned with the project's goals.
    :hidden:
 
    contribution/overview
+
+For Developers
+--------------
+
+:doc:`Developer Guide Overview <for-developer/add-a-new-section>`
+
+This section provides a step-by-step guide for developers on how to add a new reporting 
+section to the OwlMix library. It covers the entire process from creating analysis 
+and plotting classes, registering them in the central registries, wiring up configuration, 
+building the report section, and integrating it into the documentation and templates.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: For Developers
+   :hidden:
+
+   for-developer/add-a-new-section
