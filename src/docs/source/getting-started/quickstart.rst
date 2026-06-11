@@ -72,13 +72,4 @@ This guide shows how to quickly generate an EDA report using the `owlmix` packag
 3. **View the generated HTML report**  
    Open `output/report.html` in your browser to see the EDA report.
 
-**Sample HTML Report**
-
-.. toggle:: click to expand
-
-    .. raw:: html
-
-        <iframe src="../../_static/report.html" width="100%" height="600px" style="border:none;"></iframe>
-
-
 :ref:`Back to Home <home>`
