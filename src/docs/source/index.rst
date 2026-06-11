@@ -2,6 +2,14 @@
 
 Welcome to OwlMix's documentation!
 ==================================
+
+.. image:: https://img.shields.io/badge/GitHub-sarbadal%2Fowl--mix-181717?logo=github
+   :target: https://github.com/sarbadal/owl-mix
+   :alt: GitHub repository
+
+.. image:: https://img.shields.io/pypi/v/owl-mix?logo=pypi&logoColor=white
+   :target: https://pypi.org/project/owl-mix/
+   :alt: PyPI package
  
 OwlMix is a Python library for performing advanced exploratory data analysis (EDA),
 including lag analysis, correlation insights, and automated reporting.

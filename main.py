@@ -47,6 +47,12 @@ def main():
         strict=True,
     )
 
+    # json_config_path = Path("report_config.json")
+    # report_builder.config.update_config_from_json(
+    #     path=str(json_config_path),
+    #     strict=True,
+    # )
+
 
     # report_builder.config.update_config(
     #     acf_pacf={

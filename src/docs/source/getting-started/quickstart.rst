@@ -72,4 +72,37 @@ This guide shows how to quickly generate an EDA report using the `owlmix` packag
 3. **View the generated HTML report**  
    Open `output/report.html` in your browser to see the EDA report.
 
+Load Config from Dict, YAML, or JSON
+------------------------------------
+
+You can also load section configuration from a Python dictionary, YAML file, or JSON file.
+
+.. code-block:: python
+
+   # 1) From Python dict
+   config_dict = {
+       "acf_pacf": {
+           "columns": ["sales", "tv_spend"],
+           "n_lags": 10,
+           "precision": 2,
+       },
+       "ccf": {
+           "feature_columns": ["tv_spend", "digital_spend"],
+           "max_lag": 3,
+       },
+   }
+   report_builder.config.update_config_from_dict(config_dict, strict=True)
+
+   # 2) From YAML file
+   report_builder.config.update_config_from_yaml("report_config.yaml", strict=True)
+
+   # 3) From JSON file
+   report_builder.config.update_config_from_json("report_config.json", strict=True)
+
+Notes:
+
+- ``strict=True`` raises an error for unknown section keys.
+- The top-level config must be a dictionary.
+- Each section value must also be a dictionary.
+
 :ref:`Back to Home <home>`

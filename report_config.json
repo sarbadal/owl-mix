@@ -2,7 +2,8 @@
     "acf_pacf": {
         "columns": [
             "digital_imp",
-            "radio_spend"
+            "radio_spend",
+            "tv_spend"
         ],
         "n_lags": 10,
         "precision": 2
