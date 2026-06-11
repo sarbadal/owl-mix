@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![Docs](https://readthedocs.org/projects/owl-mix/badge/?version=latest)](https://owl-mix.readthedocs.io/)
-[![PyPI version](https://img.shields.io/pypi/v/owl-mix/)](https://pypi.org/project/owl-mix/)
+[![PyPI version](https://img.shields.io/pypi/v/owl-mix)](https://pypi.org/project/owl-mix/)
 
 **OwlMix** is a Python library for automated exploratory data analysis (EDA), 
 designed for time-series and marketing mix modeling (MMM) workflows. OwlMix helps 
