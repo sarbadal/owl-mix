@@ -1,5 +1,6 @@
 import warnings
 import sys
+from pathlib import Path
 
 sys.dont_write_bytecode = True
 warnings.simplefilter('ignore', category=UserWarning)
@@ -38,46 +39,55 @@ def main():
     #     precision=2
     # )
 
-    report_builder.config.update_config(
-        acf_pacf={
-            "columns": ["digital_imp", "radio_spend"],  # , "tv_spend", "digital_imp", "radio_spend"],
-            "n_lags": 10,
-            "precision": 2
-        },
-        vif={
-            # "features": [
-            #     "tv_spend",
-            #     "digital_spend",
-            #     "radio_spend"
-            # ],
-            "precision": 2
-        },
-        correlation={
-            # "columns": ["sales", "tv_spend"],
-            "n_lags": 8,
-            "precision": 5
-        },
-        box_plot={
-            "columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
-            "n_plot_per_row": 5,
-            "method": "zscore",
-            "threshold": 1.7 # default is 3 for method "zscore" and 1.5 for method "iqr"
-        },
-        ccf={
-            "feature_columns": [
-                "tv_spend",
-                "digital_spend",
-                # "radio_spend",
-                # "tv_grp",
-                # "digital_imp"
-            ],
-            "max_lag": 3
-        },
-        response_summary={
-            "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
-            "target_column": "sales",
-        },
+    # Preferred user API: load section configs from YAML.
+    # Example YAML path: config/report_config.yaml
+    config_yaml_path = Path("report_config.yaml")
+    report_builder.config.update_config_from_yaml(
+        path=str(config_yaml_path),
+        strict=True,
     )
+
+
+    # report_builder.config.update_config(
+    #     acf_pacf={
+    #         "columns": ["digital_imp", "radio_spend"],  # , "tv_spend", "digital_imp", "radio_spend"],
+    #         "n_lags": 10,
+    #         "precision": 2
+    #     },
+    #     vif={
+    #         # "features": [
+    #         #     "tv_spend",
+    #         #     "digital_spend",
+    #         #     "radio_spend"
+    #         # ],
+    #         "precision": 2
+    #     },
+    #     correlation={
+    #         # "columns": ["sales", "tv_spend"],
+    #         "n_lags": 8,
+    #         "precision": 5
+    #     },
+    #     box_plot={
+    #         "columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+    #         "n_plot_per_row": 5,
+    #         "method": "zscore",
+    #         "threshold": 1.7 # default is 3 for method "zscore" and 1.5 for method "iqr"
+    #     },
+    #     ccf={
+    #         "feature_columns": [
+    #             "tv_spend",
+    #             "digital_spend",
+    #             # "radio_spend",
+    #             # "tv_grp",
+    #             # "digital_imp"
+    #         ],
+    #         "max_lag": 3
+    #     },
+    #     response_summary={
+    #         "feature_columns": ["tv_spend", "digital_spend", "radio_spend", "tv_grp", "digital_imp"],
+    #         "target_column": "sales",
+    #     },
+    # )
 
     # report_builder.add_all_sections(verbose=True)
     # report_builder.exclude_sections([SectionEnum.CAUSALITY, "ccf"], verbose=True)

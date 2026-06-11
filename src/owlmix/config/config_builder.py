@@ -1,4 +1,6 @@
 import pandas as pd
+import yaml
+import json
 from dataclasses import replace
 from typing import Self, Unpack, Any
 
@@ -47,15 +49,9 @@ class ConfigBuilder:
         if value is not None and (not isinstance(value, int) or value < 1):
             raise ValueError(f"{field_name} must be a positive integer")
 
-    def update_config(self, **kwargs) -> Self:
-        """
-        Update configuration settings for various sections based on provided keyword arguments.
-        Args:
-            ``**kwargs``: Keyword arguments representing the configuration settings to be updated.
-        Returns:
-            Self: The current instance of the ConfigBuilder.
-        """
-        config_mapping = {
+    def _config_mapping(self) -> dict:
+        """Return a mapping of configuration section names to their corresponding update methods."""
+        return {
             "acf_pacf": self.update_acf_pacf_config,
             "vif": self.update_vif_config,
             "correlation": self.update_correlation_config,
@@ -67,6 +63,84 @@ class ConfigBuilder:
             "dist_numeric": self.update_dist_numeric_config,
             "time_series": self.update_time_series_config,
         }
+
+    def update_config_from_dict(self, config_dict: dict, strict: bool = True) -> Self:
+        """
+        Update configuration settings based on a dictionary.
+        Args:
+            config_dict (dict): A dictionary containing the configuration settings to be updated.
+            strict (bool): Whether to raise an error if the dictionary contains invalid keys. Default is True.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        config_mapping = self._config_mapping()
+
+        if not isinstance(config_dict, dict):
+            raise ValueError("Configuration must be a dictionary")
+
+        unknown_keys = [key for key in config_dict if key not in config_mapping]
+        if unknown_keys and strict:
+            allowed_keys = ", ".join(sorted(config_mapping.keys()))
+            unknown_keys_msg = ", ".join(sorted(unknown_keys))
+            raise ValueError(
+                f"Unknown config section(s): {unknown_keys_msg}. Allowed sections: {allowed_keys}"
+            )
+
+        filtered_config = {
+            key: value
+            for key, value in config_dict.items()
+            if key in config_mapping
+        }
+
+        for section_name, section_payload in filtered_config.items():
+            if not isinstance(section_payload, dict):
+                raise ValueError(
+                    f"Section '{section_name}' must be a dictionary, got {type(section_payload).__name__}"
+                )
+
+        return self.update_config(**filtered_config)
+
+    def update_config_from_yaml(self, path: str, strict: bool = True) -> Self:
+        """
+        Update configuration settings based on a YAML file.
+        Args:
+            path (str): The path to the YAML file containing the configuration settings.
+            strict (bool): Whether to raise an error if the YAML file contains invalid keys. Default is True.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        with open(path, "r", encoding="utf-8") as file:
+            yaml_config = yaml.safe_load(file) or {}
+        if not isinstance(yaml_config, dict):
+            raise ValueError("YAML configuration must be a dictionary at top level")
+
+        return self.update_config_from_dict(yaml_config, strict=strict)
+
+    def update_config_from_json(self, path: str, strict: bool = True) -> Self:
+        """
+        Update configuration settings based on a JSON file.
+        Args:
+            path (str): The path to the JSON file containing the configuration settings.
+            strict (bool): Whether to raise an error if the JSON file contains invalid keys. Default is True.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        with open(path, "r", encoding="utf-8") as file:
+            json_config = json.load(file)
+        if not isinstance(json_config, dict):
+            raise ValueError("JSON configuration must be a dictionary at top level")
+
+        return self.update_config_from_dict(json_config, strict=strict)
+
+    def update_config(self, **kwargs) -> Self:
+        """
+        Update configuration settings for various sections based on provided keyword arguments.
+        Args:
+            ``**kwargs``: Keyword arguments representing the configuration settings to be updated.
+        Returns:
+            Self: The current instance of the ConfigBuilder.
+        """
+        config_mapping = self._config_mapping()
 
         for key, value in kwargs.items():
             if key in config_mapping:
