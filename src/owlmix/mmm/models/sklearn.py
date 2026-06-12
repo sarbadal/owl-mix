@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.utils.validation import check_is_fitted
-from typing import Self
+from typing import Self, cast
 
 
 class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
@@ -12,7 +12,7 @@ class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
     - If not, fits coefficients using least squares.
     """
 
-    def __init__(self, coefficients: dict = None, intercept: float = 0.0):
+    def __init__(self, coefficients: dict | None = None, intercept: float = 0.0):
         self.coefficients = coefficients
         self.intercept = intercept
 
@@ -26,8 +26,10 @@ class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
         return self._fit_from_params()
 
     def _fit_from_params(self) -> Self:
+        if self.coefficients is None:
+            raise ValueError("coefficients must be provided when fitting from params")
         self.intercept_ = float(self.intercept)
-        self.coefficients_ = self.coefficients
+        self.coefficients_ = cast(dict[str, float], self.coefficients)
         return self
 
     def _fit_from_data(self, X, y) -> Self:
@@ -57,7 +59,7 @@ class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
             
         return X_clean, y_clean
 
-    def _solve_least_squares(self, X: pd.DataFrame, y: pd.Series, columns: list[str]):
+    def _solve_least_squares(self, X: np.ndarray, y: np.ndarray, columns: list[str]):
         # Add constant for intercept
         X_design = np.column_stack([np.ones(X.shape[0]), X])
         
@@ -74,16 +76,18 @@ class SimpleLinearModelSK(BaseEstimator, RegressorMixin):
         if not isinstance(X, pd.DataFrame):
             raise TypeError("X must be a pandas DataFrame with named columns.")
 
-        missing = [c for c in self.coefficients_ if c not in X.columns]
+        coefficients = cast(dict[str, float], self.coefficients_)
+
+        missing = [c for c in coefficients if c not in X.columns]
         if missing:
             raise ValueError(f"Missing required columns in X: {missing}")
 
-        X_used = X[list(self.coefficients_.keys())].apply(pd.to_numeric, errors="coerce")
+        X_used = X[list(coefficients.keys())].apply(pd.to_numeric, errors="coerce")
         X_arr = X_used.to_numpy(dtype=float)
 
         if not np.isfinite(X_arr).all():
             raise ValueError("X contains NaN or inf values in required feature columns.")
 
-        coef_arr = np.array([self.coefficients_[c] for c in X_used.columns], dtype=float)
+        coef_arr = np.array([float(coefficients[c]) for c in X_used.columns], dtype=float)
         y = self.intercept_ + X_arr @ coef_arr
         return y

@@ -37,7 +37,7 @@ def build_response_summary_section(report_builder: ReportBuilderProtocol) -> Dic
     )
 
     analyzer = analyzer_cls(df=report_builder.df, params=analyzer_params)
-    data = analyzer.generate()
+    data: Dict[str, Any] = analyzer.generate()
 
     plotter_params = plotter_params_cls(
         line_color=config.line_color,
@@ -45,7 +45,7 @@ def build_response_summary_section(report_builder: ReportBuilderProtocol) -> Dic
         label_color=config.label_color
     )
 
-    chart_item = {
+    chart_item: Dict[str, Any] = {
         "title": "Response Curves",
         "description": f"Response curves for target column: {config.target_column}.",
         "alt_text": "Response curves",

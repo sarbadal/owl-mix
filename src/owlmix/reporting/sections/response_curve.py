@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict
+from typing import Any, Dict, cast
 from ...registry.registry import register_section, ANALYZERS_REGISTRY, PLOTTERS_REGISTRY
 from .protocol_cls import ReportBuilderProtocol
 
@@ -36,8 +36,8 @@ def build_response_curve_section(report_builder: ReportBuilderProtocol) -> Dict[
         add_default_transformers=config.add_default_transformers
     )
 
-    analyzer = analyzer_cls(df=report_builder.df, params=analyzer_params)
-    data = analyzer.fit(num_points=100, generate_curves=True)
+    analyzer = cast(Any, analyzer_cls)(df=report_builder.df, params=analyzer_params)
+    data: Dict[str, Dict[str, Any]] = cast(Dict[str, Dict[str, Any]], analyzer.fit(num_points=100, generate_curves=True))
 
     plotter_params = plotter_params_cls(
         line_color=config.line_color,
@@ -45,16 +45,19 @@ def build_response_curve_section(report_builder: ReportBuilderProtocol) -> Dict[
         label_color=config.label_color
     )
 
-    chart_item = {
+    chart_item: Dict[str, Any] = {
         "title": "Response Curves",
         "description": f"Response curves for target column: {config.target_column}.",
         "alt_text": "Response curves",
         "images": {}
     }
 
-    for feature in config.feature_columns:
+    for feature in (config.feature_columns or list(data.keys())):
+        if feature not in data:
+            continue
         curve = data[feature]
-        plotter = plotter_cls(curve=curve, params=plotter_params)
+        current_spend = float(report_builder.df[feature].mean()) if feature in report_builder.df.columns else 0.0
+        plotter = cast(Any, plotter_cls)(curve=curve, current_spend=current_spend, params=plotter_params)
         response_curve_path = plotter.plot(
             output_dir=os.path.join(report_builder.config.output_dir, "charts")
         )

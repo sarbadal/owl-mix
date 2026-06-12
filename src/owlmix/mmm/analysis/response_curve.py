@@ -25,9 +25,9 @@ default_transformers_ = TransformerPipeline(
 
 @dataclass
 class ResponseCurveParams:
-    model: ModelProtocol = None
-    feature_columns: list[str] = None
-    target_column: str = None
+    model: ModelProtocol | None = None
+    feature_columns: list[str] | None = None
+    target_column: str | None = None
     transformers: dict[str, TransformerPipeline] | None = None
     curve_type: str = "exponential"
     add_default_transformers: bool = True
@@ -57,8 +57,8 @@ class ResponseCurveAnalyzer(ColumnMixin):
         self._validate_transformers()
 
         # 4. State Storage
-        self.fitted_models = {}
-        self.curves = {}
+        self.fitted_models: dict[str, dict[str, object]] = {}
+        self.curves: dict[str, dict[str, object]] = {}
 
     def _validate_transformers(self) -> None:
         for feature, transformer in self.transformers.items():
@@ -177,6 +177,9 @@ class ResponseCurveAnalyzer(ColumnMixin):
         return self.curves if generate_curves else self
 
     def _required_model_columns(self) -> list[str]:
+        if self.model is None:
+            raise ValueError("Model is not initialized.")
+
         if hasattr(self.model, "coefficients_") and isinstance(self.model.coefficients_, dict):
             return list(self.model.coefficients_.keys())
 
@@ -231,6 +234,8 @@ class ResponseCurveAnalyzer(ColumnMixin):
             temp[feature] = transformed
 
             x_pred = self._prepare_prediction_input(temp)
+            if self.model is None:
+                raise ValueError("Model is not initialized.")
             pred = float(self.model.predict(x_pred).mean())
             raw_results.append(pred)
 
@@ -279,6 +284,8 @@ class ResponseCurveAnalyzer(ColumnMixin):
         temp[feature] = 0
 
         x_pred = self._prepare_prediction_input(temp)
+        if self.model is None:
+            raise ValueError("Model is not initialized.")
         reduced_pred = self.model.predict(x_pred)
 
         full_x_pred = self._prepare_prediction_input(self.df)

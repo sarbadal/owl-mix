@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+from pathlib import Path
+from typing import Any
  
 from .config.loader import ConfigLoader
 from .core.time_builder import TimeSeriesBuilder
@@ -50,14 +52,14 @@ class MMMDataGenerator_OLD:
 
 class MMMDataGenerator:
  
-    def __init__(self, config: dict):
+    def __init__(self, config: dict[str, Any] | str | Path):
  
         # ✅ Accept BOTH:
         # - dict (already loaded)
         # - string (path to YAML)
  
-        if isinstance(config, str):
-            self.config = ConfigLoader.load(config)
+        if isinstance(config, (str, Path)):
+            self.config: dict[str, Any] = ConfigLoader(config).config
  
         elif isinstance(config, dict):
             self.config = config
@@ -68,7 +70,7 @@ class MMMDataGenerator:
             )
 
         self.time_builder = TimeSeriesBuilder(self.config)
-        self.media_simulator = MediaChannelSimulator(self.config)
+        self.media_simulator = MediaChannelSimulator(self.config["media_channels"])
         self.target_assembler = TargetAssembler(self.config)
  
         # Optional but recommended
@@ -77,7 +79,7 @@ class MMMDataGenerator:
         # Now safe
         self.media_channels = self._get_media_channels()
 
-    def _normalize_config(self, config: dict) -> dict:
+    def _normalize_config(self, config: dict[str, Any]) -> dict[str, Any]:
         """
         Ensures backward compatibility across:
         - media_channel
@@ -122,7 +124,7 @@ class MMMDataGenerator:
     # --------------------------------------------------
     # 🧠 Handle old + new schema
     # --------------------------------------------------
-    def _get_media_channels(self):
+    def _get_media_channels(self) -> list[str]:
     
         possible_keys = ["media_channels", "media_channel", "channels", "channel"]
     
@@ -168,7 +170,7 @@ class MMMDataGenerator:
     # --------------------------------------------------
     # 🔗 OPTIONAL: Correlation handler
     # --------------------------------------------------
-    def _apply_correlations(self, df):
+    def _apply_correlations(self, df: pd.DataFrame) -> pd.DataFrame:
  
         correlations = self.config.get("channel_correlations", [])
  

@@ -26,16 +26,16 @@ class NumericalDistributionPlotter(ColumnMixin):
     No DataFrame input, no recomputation.
     """
 
-    def __init__(self, df: pd.DataFrame, params: NumericalDistributionPlotParams = NumericalDistributionPlotParams):
+    def __init__(self, df: pd.DataFrame, params: NumericalDistributionPlotParams | None = None):
         self.df = df.copy()
-        self.params = params
+        self.params = params or NumericalDistributionPlotParams()
         self.columns = self._get_numeric_columns(self.params.columns)
 
     def _safe_name(self, value: str) -> str:
         _name = re.sub(r"[^A-Za-z0-9._-]+", "_", str(value)).strip("_")
-        return value
+        return _name
 
-    def _plot(self, col: str, output_dir: str) -> str:
+    def _plot(self, col: str, output_dir: str) -> str | None:
         fig, ax = plt.subplots()
         data = self.df[col].dropna().to_numpy(dtype=float)
         if len(data) == 0:
@@ -66,6 +66,7 @@ class NumericalDistributionPlotter(ColumnMixin):
             transparent=True
         )
         plt.close(fig)
+        return output_path
 
     def plot(self, output_dir: str = "outputs/charts") -> Dict[str, str]:
         """
@@ -76,5 +77,7 @@ class NumericalDistributionPlotter(ColumnMixin):
         saved: Dict[str, str] = {}
 
         for column in self.columns:
-            saved[column] = self._plot(column, output_dir)
+            path = self._plot(column, output_dir)
+            if path is not None:
+                saved[column] = path
         return saved

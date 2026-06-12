@@ -6,7 +6,7 @@ from tabulate import tabulate
 from typing import Self
 
 from ...utils.mixin import ColumnMixin
-from .response_curve import ResponseCurveAnalyzer
+from .response_curve import ResponseCurveAnalyzer, ResponseCurveParams
 from .classifier import ResponseCurveClassifier
 from .contribution import ContributionAnalyzer
 from .metrics import ResponseMetrics
@@ -16,9 +16,9 @@ from ..pipeline.pipeline import TransformerPipeline
 @dataclass
 class SummaryParams:
     """Configuration for summary report formatting"""
-    model: ModelProtocol = None
-    feature_columns: list[str] = None
-    target_column: str = None
+    model: ModelProtocol | None = None
+    feature_columns: list[str] | None = None
+    target_column: str | None = None
     transformers: dict[str, TransformerPipeline] | None = None
     curve_type: str = "exponential"
     add_default_transformers: bool = True
@@ -40,7 +40,15 @@ class ResponseSummary(ColumnMixin):
             if col != params.target_column
         ]
         self.response_analyzer = ResponseCurveAnalyzer(
-            df=self.df.copy(), params=params
+            df=self.df.copy(),
+            params=ResponseCurveParams(
+                model=params.model,
+                feature_columns=params.feature_columns,
+                target_column=params.target_column,
+                transformers=params.transformers,
+                curve_type=params.curve_type,
+                add_default_transformers=params.add_default_transformers,
+            )
         )
 
     def generate(self) -> dict:

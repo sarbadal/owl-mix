@@ -17,8 +17,8 @@ class BoxPlotParams:
 
 class BoxPlotter(BasePlotter):
 
-    def __init__(self, data: Dict[str, Dict[str, Any]], params: BoxPlotParams = BoxPlotParams):
-        super().__init__(data, params)
+    def __init__(self, data: Dict[str, Dict[str, Any]], params: BoxPlotParams | None = None):
+        super().__init__(data, params or BoxPlotParams())
 
     def generate(self, output_dir: str = "outputs/charts") -> Optional[str]:
         n = len(self.data)

@@ -28,7 +28,7 @@ class TimeSeriesPlotter:
         self.df = df.copy()
         self.params = params
 
-    def plot(self, output_dir: str = "outputs/charts") -> str:
+    def plot(self, output_dir: str = "outputs/charts") -> dict[str, str]:
         series = self._prepare_series()
         decomposition = self._decompose(series)
         observed_path = self._plot_observed(decomposition.observed, output_dir)
@@ -72,6 +72,8 @@ class TimeSeriesPlotter:
         df = df.dropna(subset=[self.params.date_column])
         df = df.sort_values(self.params.date_column)
         df.set_index(self.params.date_column, inplace=True)
+        if not isinstance(df.index, pd.DatetimeIndex):
+            df.index = pd.DatetimeIndex(df.index)
         freq = pd.infer_freq(df.index)
 
         if freq:

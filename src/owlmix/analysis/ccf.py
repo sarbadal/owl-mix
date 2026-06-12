@@ -1,7 +1,7 @@
 import json
 import numpy as np
 import pandas as pd
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any, cast
 from dataclasses import dataclass
 from tabulate import tabulate
 
@@ -62,16 +62,20 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
         params : CCFParams
             The parameters for CCF analysis.
     """
-    def __init__(self, df: pd.DataFrame, params: CCFParams, transformer: List[BaseTransformer] = None):
+    def __init__(self, df: pd.DataFrame, params: CCFParams, transformer: list[str] | str | None = None):
         super().__init__(df.copy(), params)
         self.feature_columns = self._get_numeric_columns(params.feature_columns)
         self.feature_columns = [
             col for col in self.feature_columns if col != self.params.target_column
         ]
-        self.transformer = transformer if transformer is not None else TRANSFORMERS
-        self.transformer = [self.transformer] if isinstance(self.transformer, str) else self.transformer
-        self.ccf_results = {}
-        self.summary_table = None
+        if transformer is None:
+            self.transformer = TRANSFORMERS.copy()
+        elif isinstance(transformer, str):
+            self.transformer = [transformer]
+        else:
+            self.transformer = transformer
+        self.ccf_results: dict[str, pd.DataFrame] = {}
+        self.summary_table: pd.DataFrame | None = None
 
     def _get_feature_versions(self, feature: str) -> Dict[str, pd.Series]:
         """Generate different versions of the feature column for analysis.
@@ -94,7 +98,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
                 versions[transformer_name] = transformed_series
         return versions
 
-    def compute(self) -> Dict[str, Dict[int, float]]:
+    def compute(self) -> dict[str, Any]:
         """Compute the CCF between the target column and feature columns for specified lags.
 
         Returns:
@@ -121,8 +125,8 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
                         "target_column": self.params.target_column,
                         "feature": feature,
                         "version": version_name,
-                        "max_correlation": round(max_corr_row['correlation'], 3),
-                        "lag_at_max": int(max_corr_row['lag']),
+                        "max_correlation": round(float(cast(float, max_corr_row['correlation'])), 3),
+                        "lag_at_max": int(cast(float, max_corr_row['lag'])),
                         "correlation_at_lag_0": correlation_at_lag_0
                     })
         self.summary_table = pd.DataFrame(summary_rows)
@@ -131,7 +135,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             "summary_table": self.summary_table.to_dict(orient='records')
         }
 
-    def _compute_ccf_for_feature(self, feature: str, series: pd.Series, version_name: str) -> list[dict]:
+    def _compute_ccf_for_feature(self, feature: str, series: pd.Series, version_name: str) -> pd.DataFrame:
         """Compute the CCF value for a given lag.
 
         Args:
@@ -162,7 +166,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             })
         return pd.DataFrame(results)
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
+    def print_results_json(self, results: dict[str, Any] | None = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 
@@ -178,7 +182,7 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
             }
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: dict = None) -> None:
+    def print_results(self, results: dict[str, Any] | None = None) -> None:
         """
         Print the results in a human-readable format.
 
@@ -191,11 +195,25 @@ class CCFAnalyzer(BaseAnalyzer, ColumnMixin):
         if self.ccf_results:
             combined_ccf_df = pd.concat(self.ccf_results.values(), ignore_index=True)
             print("Combined CCF Results for All Features:")
-            print(tabulate(combined_ccf_df, headers='keys', tablefmt='simple', floatfmt=".3f", showindex=False))
+            print(
+                tabulate(
+                    combined_ccf_df.values.tolist(),
+                    headers=combined_ccf_df.columns.tolist(),
+                    tablefmt='simple',
+                    floatfmt=".3f"
+                )
+            )
             print("\n")
         else:
             print("No CCF results to display.\n")
 
         if self.summary_table is not None:
             print("Summary Table:")
-            print(tabulate(self.summary_table, headers='keys', tablefmt='simple', floatfmt=".3f", showindex=False))
+            print(
+                tabulate(
+                    self.summary_table.values.tolist(),
+                    headers=self.summary_table.columns.tolist(),
+                    tablefmt='simple',
+                    floatfmt=".3f"
+                )
+            )

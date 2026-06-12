@@ -6,6 +6,9 @@ from typing import TypedDict, NotRequired
 class MediaChannelParams(TypedDict, total=False):
     shape: NotRequired[float]
     scale: NotRequired[float]
+    mean: NotRequired[float]
+    std: NotRequired[float]
+    sigma: NotRequired[float]
     clip_min: NotRequired[float]
     zero_fraction: NotRequired[float]
 
@@ -24,6 +27,7 @@ class MediaChannelConfig(TypedDict):
     type: str
     distribution: str
     params: MediaChannelParams
+    zero_fraction: NotRequired[float]
  
  
 class MediaChannelSimulator:
@@ -57,16 +61,17 @@ class MediaChannelSimulator:
  
         if dist == "gamma":
             data = np.random.gamma(p["shape"], p["scale"], n)
-        if dist == "normal":
+        elif dist == "normal":
             data = np.random.normal(p["mean"], p["std"], n)
-        if dist == "lognormal":
+        elif dist == "lognormal":
             data = np.random.lognormal(p["mean"], p["sigma"], n)
  
         if "clip_min" in p:
             data = np.clip(data, p["clip_min"], None)
  
-        if "zero_fraction" in cfg:
-            idx = np.random.choice(n, int(cfg["zero_fraction"] * n), replace=False)
+        zero_fraction = p.get("zero_fraction", cfg.get("zero_fraction", 0.0))
+        if zero_fraction > 0:
+            idx = np.random.choice(n, int(zero_fraction * n), replace=False)
             data[idx] = 0
  
         return data

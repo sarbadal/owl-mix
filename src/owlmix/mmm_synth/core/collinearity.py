@@ -3,8 +3,9 @@ import numpy as np
 from typing import TypedDict, NotRequired
 
 
-class CollinearityConfig(TypedDict):
+class CollinearityConfig(TypedDict, total=False):
     channels: list[str]
+    correlation: float
     collinearity: float
  
  
@@ -38,7 +39,7 @@ class MulticollinearityInjector:
         df = df.copy()
         for cfg in self.collinearity_config:
             latent = np.random.normal(0, 1, self.n)
-            strength = cfg["correlation"]
+            strength = cfg.get("correlation", cfg.get("collinearity", 0.0))
  
             for ch in cfg["channels"]:
                 if ch in df.columns:

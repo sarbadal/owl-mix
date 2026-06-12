@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from dataclasses import dataclass
 from statsmodels.tsa.stattools import acf, pacf
-from typing import List, Dict, Any
+from typing import List, Any
 from tabulate import tabulate
 
 from .base import BaseAnalyzer
@@ -19,7 +19,7 @@ class AcfPacfParams:
         n_lags (int): Number of lags to compute for ACF and PACF.
         precision (int): Decimal places to round the ACF and PACF values.
     """
-    columns: List[str] = None
+    columns: List[str] | None = None
     n_lags: int = 15
     precision: int = 4
 
@@ -45,7 +45,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
         self.n_lags = params.n_lags
         self.precision = params.precision
 
-    def compute(self) -> Dict[str, Dict[str, Any]]:
+    def compute(self) -> list[dict[str, Any]]:
         """
         Computes ACF and PACF values for the specified columns.
 
@@ -76,7 +76,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
             })
         return results
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
+    def print_results_json(self, results: list[dict[str, Any]] | None = None, indent: int = 2) -> None:
         """
         Prints the ACF and PACF results as pretty-formatted JSON.
         Args:
@@ -87,7 +87,7 @@ class AcfPacfAnalyzer(BaseAnalyzer, ColumnMixin):
             results = self.compute()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: list[dict] = None) -> None:
+    def print_results(self, results: list[dict[str, Any]] | None = None) -> None:
         """
         Prints the ACF and PACF results in a readable tabular format.
         Args:

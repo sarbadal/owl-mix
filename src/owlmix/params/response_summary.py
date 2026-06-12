@@ -22,11 +22,11 @@ class SummaryConfigArgs(TypedDict):
 @dataclass
 class ResponseSummary:
     """Configuration parameters for Response Summary analysis."""
-    model: BaseModel = None
+    model: BaseModel | None = None
     curve_type: str = "exponential"
     transformers: dict[str, TransformerPipeline] | None = None
-    feature_columns: list[str] = None
-    target_column: str = None
+    feature_columns: list[str] | None = None
+    target_column: str | None = None
     add_default_transformers: bool = True
     line_color: str = "#1f77b4"  # blue
     fitted_line_color: str = "#ff7f0e"  # orange

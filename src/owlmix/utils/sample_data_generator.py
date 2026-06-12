@@ -112,7 +112,7 @@ def bounded_normal(mean, std, low, high, size, seed=None):
     return truncnorm.rvs(a, b, loc=mean, scale=std, size=size, random_state=rng)
 
 
-def create_sample_data(n: int = 100, start_date: str = "2021-01-01", include_nan: bool = True, seed: int = None) -> pd.DataFrame:
+def create_sample_data(n: int = 100, start_date: str = "2021-01-01", include_nan: bool = True, seed: int | None = None) -> pd.DataFrame:
     """
     Create a sample Marketing Mix Modeling (MMM) dataset.
     

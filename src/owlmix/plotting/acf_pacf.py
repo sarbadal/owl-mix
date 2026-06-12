@@ -33,8 +33,8 @@ class AcfPacfPlotParams:
 
 class AcfPacfPlotter(BasePlotter):
 
-    def __init__(self, data: Dict[str, Dict[str, Any]], params: AcfPacfPlotParams = AcfPacfPlotParams):
-        super().__init__(data, params)
+    def __init__(self, data: Dict[str, Dict[str, Any]], params: AcfPacfPlotParams | None = None):
+        super().__init__(data, params or AcfPacfPlotParams())
         self.y_neg_break = self._get_dynamic_y_neg_break()
         self.y_pos_break = 0.2
         self.y_pos_resume = 0.9
@@ -105,7 +105,7 @@ class AcfPacfPlotter(BasePlotter):
         # Get mode-specific styles
         stem_fmt = getattr(params, f"{mode}_stem")
         marker_fmt = getattr(params, f"{mode}_marker")
-        color_conf = getattr(params, f"{params}.{mode}_conf", "blue") # fallback
+        color_conf = getattr(params, f"{mode}_conf", "blue") # fallback
 
         for ax in [top, btm]:
             ax.stem(lags, vals, basefmt=" ", linefmt=stem_fmt, markerfmt=marker_fmt)

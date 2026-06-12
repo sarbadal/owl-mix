@@ -6,3 +6,4 @@ statsmodels>=0.14.6
 scikit-learn>=1.8
 Jinja2>=3.1
 tabulate>=0.10.0
+PyYAML>=6.0.2

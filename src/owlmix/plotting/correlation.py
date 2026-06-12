@@ -15,8 +15,8 @@ class CorrPlotParams:
 
 class CorrelationPlotter(BasePlotter):
 
-    def __init__(self, data: Dict[str, Dict[str, Any]], params: CorrPlotParams = CorrPlotParams):
-        super().__init__(data, params)
+    def __init__(self, data: Dict[str, Dict[str, Any]], params: CorrPlotParams | None = None):
+        super().__init__(data, params or CorrPlotParams())
 
     def generate(self, output_dir: str = "outputs/charts") -> Tuple[str, str]:
         self.output_dir = output_dir

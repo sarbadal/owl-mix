@@ -6,6 +6,7 @@ import numpy as np
 import warnings
 from contextlib import redirect_stdout
 from typing import Any, List, Dict, Optional, TypedDict, Unpack, Tuple
+from typing import cast
 from dataclasses import dataclass
 from statsmodels.tsa.stattools import grangercausalitytests
 from sklearn.linear_model import LinearRegression
@@ -31,7 +32,7 @@ class GrangerResult(TypedDict, total=False):
     coefficient_sign: str
 
 
-GrangerRawResult = Dict[int, Dict[str, Any]]
+GrangerRawResult = Dict[int, Any]
 
 
 class WeightParams(TypedDict):
@@ -324,7 +325,7 @@ class CausalityAnalyzer(BaseAnalyzer, ColumnMixin):
             "coefficient_sign": coefficient_sign,
         }
 
-    def compute(self) -> List[GrangerResult]:
+    def compute(self) -> dict[str, object]:
         """
         Compute Granger causality results for all selected columns.
 
@@ -342,7 +343,7 @@ class CausalityAnalyzer(BaseAnalyzer, ColumnMixin):
             "error_threshold": self.error_threshold * 100
         }
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2):
+    def print_results_json(self, results: dict[str, object] | None = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 
@@ -354,7 +355,7 @@ class CausalityAnalyzer(BaseAnalyzer, ColumnMixin):
             results = self.compute()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: dict = None) -> None:
+    def print_results(self, results: dict[str, object] | None = None) -> None:
         """
         Print the results in a human-readable tabular format.
 
@@ -368,7 +369,8 @@ class CausalityAnalyzer(BaseAnalyzer, ColumnMixin):
         print(f"Combined Score Weights -> P-Value: {self.p_value_weight * 100}%, MAPE: {self.mape_weight * 100}%")
         print(f"Error Threshold for MAPE: {self.error_threshold * 100}%\n")
         table_data = []
-        for res in results.get("causality_test_results", []):
+        causality_results = cast(List[Dict[str, Any]], results.get("causality_test_results", []))
+        for res in causality_results:
             table_data.append([
                 res.get("variable"),
                 res.get("best_lag"),

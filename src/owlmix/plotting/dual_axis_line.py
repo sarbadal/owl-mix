@@ -23,8 +23,8 @@ def apply_transformation(series: pd.Series, transformer_name: str, lag: int = 0)
     if factory is None:
         return series
     transformer = factory()
-    if lag > 0:
-        transformer.lag = lag
+    if lag > 0 and transformer_name == "lag":
+        transformer = LagTransformer(lag=lag)
     return transformer.transform(series.copy(deep=True))
 
 
@@ -33,7 +33,7 @@ class DualAxisLineDataConfig:
     time_column: str
     target_column: str
     feature_column: str
-    smoothing_method: str = "rolling",  # "rolling" | "ema" | None
+    smoothing_method: str = "rolling"  # "rolling" | "ema" | None
     window: int = 3
     normalize: bool = True
 
@@ -101,7 +101,7 @@ class DualAxisLinePreparer:
         min_val = series.min()
         max_val = series.max()
         if max_val - min_val == 0:
-            return np.zeros(len(series))
+            return pd.Series(np.zeros(len(series)), index=series.index)
         return (series - min_val) / (max_val - min_val)  
 
     def _apply_normalization(self) -> Self:

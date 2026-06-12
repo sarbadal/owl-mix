@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, List, Callable, Optional, Any
+from typing import Dict, List, Callable, Optional, Any, Tuple
 
 
 class BaseResponseCurve(ABC):
@@ -102,9 +102,18 @@ class ResponseCurveAnalyzer:
         self.model = self._model_selector()
 
     def _model_selector(self) -> BaseResponseCurve:
+        def _df_transform(df: pd.DataFrame) -> pd.DataFrame:
+            transformed = df.copy(deep=True)
+            if not self.params.transformations:
+                return transformed
+            for col, func in self.params.transformations.items():
+                if col in transformed.columns:
+                    transformed[col] = func(transformed[col].to_numpy())
+            return transformed
+
         model_mapping = {
             "linear": LinearResponseCurve,
-            "nonlinear": lambda: NonLinearResponseCurve(transformation=self.params.transformations)
+            "nonlinear": lambda: NonLinearResponseCurve(transformation=_df_transform)
         }
         model_class = model_mapping.get(self.params.model_type.lower())
         if model_class is None:
@@ -113,15 +122,16 @@ class ResponseCurveAnalyzer:
 
     def _compute_baseline(self) -> Dict[str, float]:
         baseline_values = {}
-        for feature in self.params.feature_columns:
+        features = self.params.feature_columns or []
+        for feature in features:
             if self.params.baseline == "mean":
                 baseline_values[feature] = self.df[feature].mean()
-                return baseline_values
+                continue
             if self.params.baseline == "median":
                 baseline_values[feature] = self.df[feature].median()
-                return baseline_values
+                continue
             baseline_values[feature] = 0.0
-            return baseline_values
+        return baseline_values
 
     def _apply_transformation(self, feature: str, values: np.ndarray) -> np.ndarray:
         if self.params.transformations and feature in self.params.transformations:
@@ -129,10 +139,13 @@ class ResponseCurveAnalyzer:
         return values
 
     def _predict(self, df_row: pd.DataFrame) -> float:
-        return float(self.model.predict(df_row[self.params.feature_columns])[0])
+        features = self.params.feature_columns or []
+        pred = self.model.predict(df_row[features])
+        return float(pred.iloc[0])
 
     def generate_response_curve_json(self, feature: str, num_points: int = 100, value_range: Optional[Tuple[float, float]] = None) -> Dict[str, Any]:
-        if feature not in self.params.feature_columns:
+        features = self.params.feature_columns or []
+        if feature not in features:
             raise ValueError(f"Feature '{feature}' is not in the list of feature columns.")
         baseline_values = self._compute_baseline()
         min_value = value_range[0] if value_range else self.df[feature].min()
@@ -140,11 +153,11 @@ class ResponseCurveAnalyzer:
         test_values = np.linspace(min_value, max_value, num_points)
         input_values, predictions = [], []
         for value in test_values:
-            row = {col: baseline_values.get(col, self.df[col].mean()) for col in self.params.feature_columns}
+            row = {col: baseline_values.get(col, self.df[col].mean()) for col in features}
             row[feature] = value
             df_row = pd.DataFrame([row])
-            for col in self.params.feature_columns:
-                df_row[col] = self._apply_transformation(col, df_row[col].values)
+            for col in features:
+                df_row[col] = self._apply_transformation(col, np.asarray(df_row[col].values))
             pred = self._predict(df_row)
             input_values.append(value)
             predictions.append(pred)
@@ -155,9 +168,10 @@ class ResponseCurveAnalyzer:
             "predictions": predictions
         }
 
-    def generate_all_response_curves_json(self, num_points: int = 100) -> Dict[str, Any]:
-        response_curves = []
-        for feature in self.params.feature_columns:
+    def generate_all_response_curves_json(self, num_points: int = 100) -> List[Dict[str, Any]]:
+        features = self.params.feature_columns or []
+        response_curves: List[Dict[str, Any]] = []
+        for feature in features:
             response_curves.append(self.generate_response_curve_json(feature, num_points))
         return response_curves
 

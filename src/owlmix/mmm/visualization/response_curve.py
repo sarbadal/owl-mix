@@ -16,10 +16,10 @@ class ResponsePlotConfig:
 
 class ResponsePlotter:
     """Plots response curve with optional fitted curve and saves the chart as a PNG file."""
-    def __init__(self, curve: Dict, current_spend: float, params: ResponsePlotConfig = ResponsePlotConfig):
+    def __init__(self, curve: Dict, current_spend: float, params: ResponsePlotConfig | None = None):
         self.curve = curve
         self.current_spend = current_spend
-        self.params = params
+        self.params = params or ResponsePlotConfig()
 
     def plot(self, output_dir: str = "outputs/charts") -> str:
         """Main method to plot the response curve."""
@@ -128,3 +128,4 @@ class ResponsePlotter:
             )
             plt.close(fig)
             return save_path
+        return ""

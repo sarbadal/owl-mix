@@ -175,7 +175,7 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
         }
         return self.sort_results_by_vif(results)
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2):
+    def print_results_json(self, results: Dict[str, Any] | None = None, indent: int = 2) -> None:
         """
         Print the VIF analysis result in JSON format.
 
@@ -189,7 +189,7 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
             results = self.compute()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: dict = None) -> None:
+    def print_results(self, results: Dict[str, Any] | None = None) -> None:
         """
         Prints the VIF results in a readable tabular format.
 

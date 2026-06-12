@@ -59,12 +59,12 @@ class ReportBuilder:
         save(outfile_name: Optional[str] = None) -> None:
             Saves the generated report as a JSON file with the specified name.
     """
-    def __init__(self, df: pd.DataFrame, target_col: str, date_col: str, config: ConfigBuilder = ConfigBuilder):
+    def __init__(self, df: pd.DataFrame, target_col: str, date_col: str, config: ConfigBuilder | None = None):
         """Initializes the ReportBuilder with the provided DataFrame, target column, date column, and configuration builder."""
         self.df = df.copy(deep=True)
         self.target_col = target_col
         self.date_col = date_col
-        self.config = self._build_config()
+        self.config = config or self._build_config()
         self.sections: OrderedDict[str, SectionContent] = OrderedDict()
         self._report_data: Optional[Dict[str, Any]] = None
         self._added_sections: List[str] = []  # To track which sections have been added to avoid duplicates

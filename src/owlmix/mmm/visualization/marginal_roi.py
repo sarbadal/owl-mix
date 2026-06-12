@@ -40,10 +40,10 @@ def y_formatter(v: float, _) -> str:
 
 class MarginalROIPlotter:
     """Plots marginal ROI curve with optional fitted curve and saves the chart as a PNG file."""
-    def __init__(self, curve: Dict, classification: Dict, params: MarginalROIPlotConfig = MarginalROIPlotConfig):
+    def __init__(self, curve: Dict, classification: Dict, params: MarginalROIPlotConfig | None = None):
         self.curve = curve
         self.classification = classification
-        self.params = params
+        self.params = params or MarginalROIPlotConfig()
         self.min_threshold = classification["thresholds"]["low"]
         self.max_threshold = classification["thresholds"]["high"]
 

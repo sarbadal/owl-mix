@@ -196,7 +196,7 @@ class BoxPlotScalerConfig:
     plot: PlotConfig
 
 
-def build_box_plot_scaler_config(data: BoxPlotData, plot_config: PlotConfig = None) -> BoxPlotScalerConfig:
+def build_box_plot_scaler_config(data: BoxPlotData, plot_config: PlotConfig | None = None) -> BoxPlotScalerConfig:
     """Helper function to build BoxPlotScalerConfig from BoxPlotData and PlotConfig."""
     if plot_config is None:
         plot_config = PlotConfig()
@@ -211,9 +211,9 @@ class BoxPlotScaler:
     visualization or comparison across different columns."""
     def __init__(self, config: BoxPlotScalerConfig):
         self.config = config
-        self.domain_min = None
-        self.domain_max = None
-        self.tick_step = None
+        self.domain_min: float = 0.0
+        self.domain_max: float = 0.0
+        self.tick_step: float = 0.0
 
     def compute_domain(self):
         all_values = [self.config.data.min, self.config.data.max] + self.config.data.outliers
@@ -354,7 +354,7 @@ class BoxPlotScaler:
  
         return result
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
+    def print_results_json(self, results: dict[str, Any] | None = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 
@@ -367,7 +367,7 @@ class BoxPlotScaler:
             results = self.build()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: list[dict] = None, include_outliers: bool = False) -> None:
+    def print_results(self, results: dict[str, Any] | None = None, include_outliers: bool = False) -> None:
         """
         Print the results in a human-readable tabular format.
 
@@ -401,7 +401,7 @@ class BoxPlotScaler:
         print(tabulate(table, headers=headers, tablefmt='simple', colalign=colalign))
 
 
-def box_plot_scaler(data: list[BoxPlotData], plot_config: PlotConfig = None) -> Dict[str, Any]:
+def box_plot_scaler(data: list[BoxPlotData], plot_config: PlotConfig | None = None) -> list[dict[str, Any]]:
     """Helper function to compute scaled box plot data from BoxPlotData and PlotConfig."""
     results = []
     for item in data:

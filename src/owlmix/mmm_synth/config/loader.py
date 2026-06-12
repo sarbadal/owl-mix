@@ -10,7 +10,7 @@ class ConfigLoader:
         self.config_path = Path(config_path)
         self.config = self.load(config_path)
 
-    def load(self, path: str | Path = None) -> dict:
+    def load(self, path: str | Path | None = None) -> dict:
         path = self.config_path if path is None else Path(path)
         with open(path, mode="r") as f:
             config = yaml.safe_load(f)

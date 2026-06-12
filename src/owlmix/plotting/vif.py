@@ -1,10 +1,7 @@
 import os
 import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
 from dataclasses import dataclass
-from typing import TypedDict, NotRequired, Unpack
-from statsmodels.stats.outliers_influence import variance_inflation_factor
+from typing import Any
 
 from .base import BasePlotter
 
@@ -15,8 +12,8 @@ class VIFPlotParams:
 
 class VIFPlotter(BasePlotter):
 
-    def __init__(self, data: pd.DataFrame, params: VIFPlotParams = VIFPlotParams):
-        super().__init__(data, params)
+    def __init__(self, data: dict[str, Any], params: VIFPlotParams | None = None):
+        super().__init__(data, params or VIFPlotParams())
 
     def generate(self, output_dir: str = "outputs/charts") -> str:
         plt.figure(figsize=(12, 8))
