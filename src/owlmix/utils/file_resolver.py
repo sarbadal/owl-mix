@@ -31,8 +31,8 @@ class ConfigFileResolver:
 
     def __init__(self, config: Union[str, Path, dict]):
         self.raw_config = self._load_config(config)
-        self._cache = {}
-        self.resolved_config = None
+        self._cache: dict[str, str] = {}
+        self.resolved_config: dict[str, Any] | None = None
 
     @staticmethod
     def _load_config(config: Union[str, Path, dict]) -> dict:
@@ -44,7 +44,7 @@ class ConfigFileResolver:
             return config
         raise TypeError("config must be dict or path to JSON file")
 
-    def resolve(self) -> dict:
+    def resolve(self) -> dict[str, Any]:
         """Resolves all ``*_file`` keys and returns the updated config."""
         self.resolved_config = self._resolve_recursive(self.raw_config)
         return self.resolved_config

@@ -108,6 +108,8 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
             List[str]
                 List of color strings corresponding to each VIF value.
         """
+        if self.color_thresholds is None:
+            return ["black"] * len(vif_values)
         colors: List[str] = []
         for v in vif_values:
             for threshold, color in self.color_thresholds:
@@ -122,7 +124,7 @@ class VIFAnalyzer(BaseAnalyzer, ColumnMixin):
                     colors.append("black")
         return colors
 
-    def sort_results_by_vif(self, results: dict) -> dict:
+    def sort_results_by_vif(self, results: dict[str, Any]) -> dict[str, Any]:
         combined = list(zip(results["feature"], results["vif"], results["color"]))
         combined.sort(key=lambda x: x[1], reverse=True)
         if combined:

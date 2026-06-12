@@ -1,21 +1,26 @@
 from dataclasses import dataclass, field
 from typing import TypedDict, NotRequired, Unpack
 
-DEFAULT_COLOR_THRESHOLDS  = [(5, "green"), (10, "orange"), (float("inf"), "red")]
+DEFAULT_COLOR_THRESHOLDS: list[tuple[float, str]] = [
+    (5, "green"),
+    (10, "orange"),
+    (float("inf"), "red"),
+]
 
 class VifConfigArgs(TypedDict):
     target_column: NotRequired[str]
     features: NotRequired[list[str]]
     precision: NotRequired[int]
-    color_thresholds: NotRequired[list[tuple[int, str]]]
-
+    color_thresholds: NotRequired[list[tuple[float, str]]]
 
 @dataclass
 class Vif:
     target_column: str | None = None
     features: list[str] | None = None
     precision: int | None = 3
-    color_thresholds: list[tuple[int, str]] | None = field(default_factory=lambda: DEFAULT_COLOR_THRESHOLDS.copy())
+    color_thresholds: list[tuple[float, str]] | None = field(
+        default_factory=lambda: DEFAULT_COLOR_THRESHOLDS.copy()
+    )
 
 
 def build(**values: Unpack[VifConfigArgs]) -> Vif:

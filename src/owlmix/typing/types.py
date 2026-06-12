@@ -1,11 +1,10 @@
 # owlmix/typing/types.py
 import pandas as pd
-from typing import Callable, Dict, Protocol, Any, Self, Literal, Union
+from typing import Callable, Dict, Protocol, Any, Self, Literal, Union, TypeAlias
 from pathlib import Path
-from .enums import Period, ComparisonType, PlotMode, ChartID
+from .enums import Period, ComparisonType as ComparisonTypeEnum, PlotMode, ChartID
 
-
-PeriodType = Union[Period, str]
-ComparisonType = Union[ComparisonType, str]
-PlotModeType = Union[PlotMode, str]
-ChartIDType = Union[ChartID, str]
+PeriodType: TypeAlias = Period | str
+ComparisonType: TypeAlias = ComparisonTypeEnum | str
+PlotModeType: TypeAlias = PlotMode | str
+ChartIDType: TypeAlias = ChartID | str

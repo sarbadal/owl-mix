@@ -101,7 +101,7 @@ class ReportHTMLRenderer:
             report_data = json.load(f)
         return self.render(report_data)
 
-    def save_html(self, html_str: str = None, output_path: str | Path = None):
+    def save_html(self, html_str: str | None = None, output_path: str | Path | None = None) -> None:
         """
         Save the rendered HTML to a file.
         Args:

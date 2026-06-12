@@ -93,15 +93,17 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
             outliers = self.df[abs(z_scores) > self.params.threshold][col].tolist()
             return [round(float(outlier), self.params.precision) for outlier in outliers]
 
-    def compute(self) -> Dict[str, Dict[str, float]]:
+        raise AssertionError("Unreachable: method validated above")
+
+    def compute(self) -> List[Dict[str, Any]]:
         """
         Compute the statistics for box plots for each selected column.
 
         Returns:
-            Dict[str, Dict[str, float]]: A dictionary where keys are column names and values are dictionaries
+            List[Dict[str, Any]]: A list of dictionaries where each dictionary contains box plot statistics for a column.
             containing box plot statistics (min, Q1, median, mean, Q3, max, outliers).
         """
-        results: List[Dict[str, float]] = []
+        results: List[Dict[str, Any]] = []
         for col in self.columns:
             if pd.api.types.is_numeric_dtype(self.df[col]):
                 outliers = self._identify_outliers(col)
@@ -119,7 +121,7 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
                 results.append(stats)
         return results
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
+    def print_results_json(self, results: List[Dict[str, Any]] | None = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 
@@ -132,7 +134,7 @@ class BoxPlotAnalyzer(BaseAnalyzer, ColumnMixin):
             results = self.compute()
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: list[dict] = None, include_outliers: bool = False) -> None:
+    def print_results(self, results: List[Dict[str, Any]] | None = None, include_outliers: bool = False) -> None:
         """
         Print the results in a human-readable tabular format.
 

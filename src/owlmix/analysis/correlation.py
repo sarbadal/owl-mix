@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from typing import List, Dict, Optional
+from typing import Any, List, Dict, Optional
 from dataclasses import dataclass
 from tabulate import tabulate
 
@@ -54,9 +54,9 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
             Compute the correlation matrix for the selected columns.
         compute_lag_correlation() -> Dict[str, Dict[int, float]]
             Compute the correlation between a lagged version of a column and the original column for specified lags.
-        print_results_json(results: list[dict], indent: int)
+        print_results_json(results: list[dict] | None, indent: int)
             Print the results in JSON format.
-        print_results(results: dict)
+        print_results(results: dict | None)
             Print the results in a human-readable tabular format.
     """
 
@@ -65,6 +65,8 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         self.columns: List[str] = self._get_numeric_columns(params.columns)
         self.n_lags: int = params.n_lags
         self.precision: int = params.precision
+        self.corr_matrix: Dict[str, Dict[str, float]] = {}
+        self.lag_corr: Dict[str, Dict[int, float]] = {}
 
     def compute(self) -> Dict[str, Dict]:
         """
@@ -98,21 +100,22 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         Returns:
             Dict[str, Dict[int, float]]: Nested dictionary mapping lag values to their corresponding correlation.
         """
-        lag_corr = {}
+        lag_corr: Dict[str, Dict[int, float]] = {}
         for col in self.columns:
             lag_corr[col] = {}
             for lag in range(0, self.n_lags + 1):
                 shifted = self.df[col].shift(lag)
                 corr = shifted.corr(self.df[col])
                 lag_corr[col][lag] = round(corr, self.precision)
+        self.lag_corr = lag_corr
         return lag_corr
 
-    def print_results_json(self, results: list[dict] = None, indent: int = 2) -> None:
+    def print_results_json(self, results: dict[str, Any] | None = None, indent: int = 2) -> None:
         """
         Print the results in JSON format.
 
         Args:
-            results (list[dict], optional): The results to print. If None, uses the computed correlation and lagged correlation.
+            results (dict[str, Any], optional): The results to print. If None, uses the computed correlation and lagged correlation.
             indent (int): The indentation level for pretty-printing the JSON.
         """
         if results is None:
@@ -122,7 +125,7 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
             }
         print(json.dumps(results, indent=indent))
 
-    def print_results(self, results: dict = None) -> None:
+    def print_results(self, results: dict[str, Any] | None = None) -> None:
         """
         Print the results in a human-readable tabular format.
 
@@ -136,8 +139,15 @@ class CorrelationAnalyzer(BaseAnalyzer, ColumnMixin):
         corr_matrix = results.get("correlation_matrix", {})
         if corr_matrix:
             # Convert nested dict to a DataFrame-like structure for tabulate
-            df = pd.DataFrame(corr_matrix)
-            print(tabulate(df, headers='keys', tablefmt='simple', floatfmt=f".{self.precision}f"))
+            corr_df = pd.DataFrame(corr_matrix)
+            print(
+                tabulate(
+                    corr_df.values.tolist(),
+                    headers=corr_df.columns.tolist(),
+                    tablefmt="simple",
+                    floatfmt=f".{self.precision}f",
+                )
+            )
         else:
             print("No correlation matrix available.")
 
