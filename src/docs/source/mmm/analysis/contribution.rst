@@ -124,7 +124,5 @@ Example Use Case
 References
 ----------
 - :ref:`MMM Overview <mmm.overview>`
-- :ref:`MMM Analysis Overview <mmm.analysis.overview>`
-- :ref:`MMM Configuration Overview <mmm.config.overview>`
 
 :ref:`Back to Home <home>`

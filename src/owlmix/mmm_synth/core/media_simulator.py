@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from typing import TypedDict, NotRequired
+from typing import Callable, Literal, NotRequired, TypedDict
 
 
 class MediaChannelParams(TypedDict, total=False):
@@ -25,9 +25,13 @@ class MediaChannelConfig(TypedDict):
     """
     name: str
     type: str
-    distribution: str
+    distribution: Literal["gamma", "normal", "lognormal"]
     params: MediaChannelParams
     zero_fraction: NotRequired[float]
+
+
+DistributionType = Literal["gamma", "normal", "lognormal"]
+MediaDistributionGenerator = Callable[[MediaChannelParams, int], np.ndarray]
  
  
 class MediaChannelSimulator:
@@ -37,10 +41,33 @@ class MediaChannelSimulator:
         n (int): Number of data points to generate.
         channel_config (dict): Configuration dictionary for each media channel.
     """
-    VALID_DISTRIBUTIONS = ["gamma", "normal", "lognormal"]
-
     def __init__(self, channel_config: list[MediaChannelConfig]):
         self.channel_config = channel_config
+        self.dist_generators: dict[DistributionType, MediaDistributionGenerator] = {
+            "gamma": self._gen_gamma,
+            "normal": self._gen_normal,
+            "lognormal": self._gen_lognormal,
+        }
+
+    def _gen_gamma(self, params: MediaChannelParams, n: int) -> np.ndarray:
+        return np.random.gamma(params["shape"], params["scale"], n)
+
+    def _gen_normal(self, params: MediaChannelParams, n: int) -> np.ndarray:
+        return np.random.normal(params["mean"], params["std"], n)
+
+    def _gen_lognormal(self, params: MediaChannelParams, n: int) -> np.ndarray:
+        return np.random.lognormal(params["mean"], params["sigma"], n)
+
+    def _apply_post_processing(self, data: np.ndarray, params: MediaChannelParams, cfg: MediaChannelConfig, n: int) -> np.ndarray:
+        if "clip_min" in params:
+            data = np.clip(data, params["clip_min"], None)
+
+        zero_fraction = params.get("zero_fraction", cfg.get("zero_fraction", 0.0))
+        if zero_fraction > 0:
+            idx = np.random.choice(n, int(zero_fraction * n), replace=False)
+            data[idx] = 0
+
+        return data
  
     def _generate(self, cfg: MediaChannelConfig, n: int) -> np.ndarray:
         """
@@ -53,28 +80,15 @@ class MediaChannelSimulator:
         Raises:
             ValueError: If the specified distribution is unsupported.
         """
+        params = cfg["params"]
         dist = cfg["distribution"]
-        p = cfg["params"]
+        generator = self.dist_generators.get(dist)
 
-        if dist not in self.VALID_DISTRIBUTIONS:
+        if generator is None:
             raise ValueError(f"Unsupported distribution: {dist}")
- 
-        if dist == "gamma":
-            data = np.random.gamma(p["shape"], p["scale"], n)
-        elif dist == "normal":
-            data = np.random.normal(p["mean"], p["std"], n)
-        elif dist == "lognormal":
-            data = np.random.lognormal(p["mean"], p["sigma"], n)
- 
-        if "clip_min" in p:
-            data = np.clip(data, p["clip_min"], None)
- 
-        zero_fraction = p.get("zero_fraction", cfg.get("zero_fraction", 0.0))
-        if zero_fraction > 0:
-            idx = np.random.choice(n, int(zero_fraction * n), replace=False)
-            data[idx] = 0
- 
-        return data
+
+        data = generator(params, n)
+        return self._apply_post_processing(data, params, cfg, n)
  
     def simulate(self, n: int) -> pd.DataFrame:
         """

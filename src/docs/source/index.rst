@@ -166,6 +166,7 @@ for configuration, analysis, modeling, data transformation, and visualization.
    mmm/analysis/response-curve
    mmm/analysis/s-curve-fitter
    mmm/analysis/metrics
+   mmm/generate-synthetic-data
 
 📁 Reporting Sections
 ---------------------
