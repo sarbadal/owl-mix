@@ -1,39 +1,48 @@
 seed: 42
  
 dataset:
-  frequency: weekly
-  periods: 130
+  start_date: "2022-01-01"
+  end_date: "2025-12-31"
+  frequency: "weekly"
  
 target:
   name: weekly_new_subscribers
-  base_sales: 3000
-  noise_std: 150
+  base_level: 3000
+  seasonality:
+    yearly_amplitude: 0.25
+    weekly_amplitude: 0.15
  
 media_channels:
-  tv_grps:
+  
+  - name: tv_grps
     distribution: normal
-    mean: 150
-    std: 40
+    params:
+      mean: 150
+      std: 40
  
-  digital_video_views:
+  - name: digital_video_views
     distribution: lognormal
-    mean: 12
-    sigma: 0.4
+    params:
+      mean: 12
+      sigma: 0.4
  
-  paid_search_clicks:
+  - name: paid_search_clicks
     distribution: lognormal
-    mean: 10
-    sigma: 0.3
+    params:
+      mean: 10
+      sigma: 0.3
  
-  sms_campaign_volume:
+  - name: sms_campaign_volume
     distribution: normal
-    mean: 50000
-    std: 10000
+    params:
+      mean: 50000
+      std: 10000
  
-  call_center_outreach:
+  - name: call_center_outreach
     distribution: normal
-    mean: 20000
-    std: 5000
+    params:
+      mean: 20000
+      std: 5000
  
 control_variables:
   pricing_index:
@@ -65,11 +74,31 @@ transformations:
     saturation: sqrt
  
 channel_coefs:
-  tv_grps: 0.07
-  digital_video_views: 0.00002
-  paid_search_clicks: 0.003
-  sms_campaign_volume: 0.0005
-  call_center_outreach: 0.0007
+
+  tv_grps:
+    coefficient: 0.07
+    adstock: 0.6
+    saturation: 0.7
+
+  digital_video_views:
+    coefficient: 0.00002
+    adstock: 0.4
+    saturation: 0.3
+
+  paid_search_clicks:
+    coefficient: 0.003
+    adstock: 0.3
+    saturation: 0.2
+
+  sms_campaign_volume:
+    coefficient: 0.0005
+    adstock: 0.2
+    saturation: 0.1
+    
+  call_center_outreach:
+    coefficient: 0.0007
+    adstock: 0.2
+    saturation: 0.1
  
 multicollinearity:
   - base: digital_video_views
