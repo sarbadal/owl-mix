@@ -1,44 +1,57 @@
 seed: 42
  
 dataset:
-  frequency: weekly
-  periods: 156   # 3 years
+  start_date: "2020-01-01"
+  end_date: "2025-12-31"
+  frequency: "weekly"
  
 target:
   name: weekly_vehicle_sales
-  base_sales: 800
+  base_level: 800
   noise_std: 40
  
 media_channels:
-  tv_grps:
-    distribution: normal
-    mean: 120
-    std: 30
+  - name: "tv_grps"
+    type: "grps"
+    distribution: "normal"
+    params:
+      mean: 120
+      std: 30
  
-  digital_video_impressions:
-    distribution: lognormal
-    mean: 12
-    sigma: 0.4
+  - name: "digital_video_impressions"
+    type: "impressions"
+    distribution: "lognormal"
+    params:
+      mean: 12
+      sigma: 0.4
  
-  paid_search_clicks:
-    distribution: lognormal
-    mean: 10
-    sigma: 0.5
+  - name: "paid_search_clicks"
+    type: "clicks"
+    distribution: "lognormal"
+    params:
+      mean: 10
+      sigma: 0.5
  
-  radio_spend:
-    distribution: gamma
-    shape: 2
-    scale: 200
+  - name: "radio_spend"
+    type: "spend"
+    distribution: "gamma"
+    params:
+      shape: 2
+      scale: 200
  
-  ooh_impressions:
-    distribution: normal
-    mean: 50000
-    std: 10000
+  - name: "ooh_impressions"
+    type: "impressions"
+    distribution: "normal"
+    params:
+      mean: 50000
+      std: 10000
  
-  print_newspaper_circulation:
-    distribution: normal
-    mean: 200000
-    std: 40000
+  - name: "print_newspaper_circulation"
+    type: "circulation"
+    distribution: "normal"
+    params:
+      mean: 200000
+      std: 40000
  
 control_variables:
   price_index:
@@ -74,17 +87,42 @@ transformations:
     saturation: log
  
 channel_coefs:
-  tv_grps: 0.08
-  digital_video_impressions: 0.00002
-  paid_search_clicks: 0.002
-  radio_spend: 0.015
-  ooh_impressions: 0.00001
-  print_newspaper_circulation: 0.000005
+  tv_grps: 
+    coefficient: 0.05
+    adstock: 0.6
+    saturation: 0.7
+
+  digital_video_impressions:
+    coefficient: 0.03
+    adstock: 0.4
+    saturation: 0.6
+
+  paid_search_clicks:
+    coefficient: 0.02
+    adstock: 0.3
+    saturation: 0.5
+
+  ooh_impressions:
+    coefficient: 0.015
+    adstock: 0.7
+    saturation: 0.6
+
+  print_newspaper_circulation:
+    coefficient: 0.01
+    adstock: 0.8
+    saturation: 0.5
+
+  radio_spend:
+    coefficient: 0.025
+    adstock: 0.5
+    saturation: 0.65
  
 multicollinearity:
-  - base: tv_grps
-    correlated_with: digital_video_impressions
-    strength: 0.7
+  - channels: ["tv_grps", "ooh_impressions"]
+    correlation: 0.7
+
+  - channels: ["digital_video_impressions", "paid_search_clicks"]
+    correlation: 0.6
 
 noise:
   type: gaussian

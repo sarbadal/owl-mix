@@ -14,49 +14,13 @@ from .core.target_assembler import TargetAssembler
 from .core.time_builder import TimeSeriesBuilder
 from .core.media_simulator import MediaChannelSimulator
 from .core.target_assembler import TargetAssembler
- 
- 
-class MMMDataGenerator_OLD:
-    def __init__(self, config_path):
-        self.config = ConfigLoader.load(config_path)
-        np.random.seed(self.config.get("seed", 42))
- 
-    def generate(self):
-        time_df = TimeSeriesBuilder(self.config).build()
- 
-        media_df = MediaChannelSimulator(
-            len(time_df),
-            self.config["channels"]
-        ).simulate()
- 
-        media_df = MulticollinearityInjector(
-            len(time_df),
-            self.config["channels"],
-            self.config.get("collinearity", {})
-        ).apply(media_df)
- 
-        drivers_df = BusinessDriverSimulator(
-            len(time_df),
-            self.config
-        ).simulate()
- 
-        df = pd.concat([time_df, media_df, drivers_df], axis=1)
- 
-        effects_df = TransformationEngine().apply(df, self.config["channels"])
-        df = pd.concat([df, effects_df], axis=1)
- 
-        df["total_sales"] = TargetAssembler(self.config).assemble(df)
- 
-        return df.drop(columns=["time_index"])
 
 
 class MMMDataGenerator:
  
     def __init__(self, config: dict[str, Any] | str | Path):
- 
-        # ✅ Accept BOTH:
-        # - dict (already loaded)
-        # - string (path to YAML)
+        """Initializes the MMMDataGenerator with the provided configuration, which 
+        can be either a dictionary or a file path to a YAML configuration file."""
  
         if isinstance(config, (str, Path)):
             self.config: dict[str, Any] = ConfigLoader(config).config

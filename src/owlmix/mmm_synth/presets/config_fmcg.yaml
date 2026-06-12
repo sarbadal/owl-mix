@@ -2,7 +2,7 @@ seed: 42
  
 dataset:
   start_date: "2022-01-01"
-  end_date: "2023-12-31"
+  end_date: "2025-12-31"
   frequency: "weekly"
  
 target:
@@ -16,9 +16,7 @@ target:
 noise:
   type: "gaussian"
   std: 0.08
- 
- 
-# ✅ MEDIA INPUTS ONLY (no effects here)
+
 media_channels:
  
   - name: "tv_grps"
@@ -76,9 +74,7 @@ media_channels:
     params:
       mean: 9
       sigma: 0.6
- 
- 
-# ✅ EFFECTS SEPARATED (THIS FIXES YOUR ERROR)
+
 channel_coefs:
  
   tv_grps:
@@ -120,9 +116,7 @@ channel_coefs:
     coefficient: 0.028
     adstock: 0.4
     saturation: 0.7
- 
- 
-# ✅ MULTICOLLINEARITY
+
 channel_correlations:
  
   - channels: ["tv_grps", "ooh_impressions"]
@@ -133,9 +127,7 @@ channel_correlations:
  
   - channels: ["search_spend", "digital_impressions"]
     correlation: 0.7
- 
- 
-# ✅ EXTERNAL FACTORS
+
 external_factors:
  
   - name: "price_index"

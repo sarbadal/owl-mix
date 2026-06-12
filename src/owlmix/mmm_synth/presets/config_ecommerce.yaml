@@ -1,39 +1,48 @@
 seed: 42
  
 dataset:
-  frequency: daily
-  periods: 365
+  start_date: "2022-01-01"
+  end_date: "2025-12-31"
+  frequency: "weekly"
  
 target:
   name: daily_orders
-  base_sales: 5000
-  noise_std: 200
+  base_level: 5000
+  trend: 0.05
+  seasonality:
+    yearly_amplitude: 0.3
+    weekly_amplitude: 0.1
  
 media_channels:
-  facebook_ads_spend:
+  - name: facebook_ads_spend
     distribution: gamma
-    shape: 3
-    scale: 500
+    params:
+      shape: 2
+      scale: 1000
  
-  google_search_clicks:
+  - name: google_search_clicks
     distribution: lognormal
-    mean: 11
-    sigma: 0.3
- 
-  display_impressions:
+    params:
+      mean: 5.5
+      sigma: 0.5
+
+  - name: display_impressions
     distribution: lognormal
-    mean: 13
-    sigma: 0.5
+    params:
+      mean: 13
+      sigma: 0.5
  
-  influencer_spend:
+  - name: influencer_spend
     distribution: gamma
-    shape: 2
-    scale: 300
+    params:
+      shape: 2
+      scale: 300
  
-  affiliate_clicks:
+  - name: affiliate_clicks
     distribution: lognormal
-    mean: 9
-    sigma: 0.4
+    params:
+      mean: 10
+      sigma: 0.2
  
 control_variables:
   discount_rate:
@@ -43,8 +52,9 @@ control_variables:
  
   website_traffic:
     distribution: lognormal
-    mean: 12
-    sigma: 0.3
+    params:
+      mean: 12
+      sigma: 0.3
  
   competitor_price_index:
     distribution: normal
@@ -65,11 +75,31 @@ transformations:
     saturation: sqrt
  
 channel_coefs:
-  facebook_ads_spend: 0.01
-  google_search_clicks: 0.005
-  display_impressions: 0.00001
-  influencer_spend: 0.02
-  affiliate_clicks: 0.004
+
+  facebook_ads_spend:
+    coefficient: 0.03
+    adstock: 0.5
+    saturation: 0.5
+ 
+  google_search_clicks:
+    coefficient: 0.02
+    adstock: 0.2
+    saturation: 0.3
+ 
+  display_impressions:
+    coefficient: 0.01
+    adstock: 0.4
+    saturation: 0.2
+
+  influencer_spend:
+    coefficient: 0.015
+    adstock: 0.3
+    saturation: 0.4
+
+  affiliate_clicks:
+    coefficient: 0.01
+    adstock: 0.2
+    saturation: 0.3
  
 multicollinearity:
   - base: facebook_ads_spend

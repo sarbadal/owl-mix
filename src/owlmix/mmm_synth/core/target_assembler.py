@@ -66,6 +66,10 @@ class TargetAssembler:
  
         for channel, effect in latent_effects.items():
             coef = self.channel_coefs.get(channel, 1.0)
+            if isinstance(coef, dict):
+                coef = coef.get("coefficient", 1.0)
+            else:
+                coef = float(coef)
             sales += coef * effect
  
         # Step 3: add noise
@@ -95,6 +99,13 @@ class TargetAssembler:
             Transformed array.
         """
         config = self.transformations.get(channel, {})
+        if not config:
+            coef_cfg = self.channel_coefs.get(channel, {})
+            if isinstance(coef_cfg, dict):
+                config = {
+                    "adstock": coef_cfg.get("adstock", 0.0),
+                    "saturation": coef_cfg.get("saturation", None)
+                }
  
         # Adstock
         adstock_rate = config.get("adstock", 0.0)
@@ -147,3 +158,5 @@ class TargetAssembler:
         if sat_type == "hill":
             alpha = self.config.get("hill_alpha", 1.0)
             return (x ** alpha) / (1 + x ** alpha)
+        
+        return x
